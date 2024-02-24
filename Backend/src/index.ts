@@ -1,13 +1,25 @@
-import express from 'express'
-
+import express from 'express';
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 5000;
+const connectDB = require('./DB/Connect');
+require('dotenv').config();
+const cors = require('cors');
 
-app.get('/',(req,res)=>{
-    res.send('Hello World');
-});
+// Use the cors middleware to allow cross-origin requests
+app.use(cors());
 
-app.listen(port, ()=>
-{
-    console.log(`Connected successfully on port ${port}`)
-});
+app.use(express.json());
+
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URI as string);
+    console.log("Connected to MongoDB");
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}...`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+start();
