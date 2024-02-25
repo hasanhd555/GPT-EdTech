@@ -21,4 +21,4 @@ enrollmentSchema.methods.setCompletionStatus = function(status: boolean) {
     return this.points;
   };
 
-module.exports = mongoose.model('Enrollment', enrollmentSchema);
+  export default mongoose.model('Enrollment', enrollmentSchema);

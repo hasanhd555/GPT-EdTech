@@ -25,6 +25,5 @@ adminSchema.methods.getPassword = function() {
   return this.password;
 };
 
-const Admin = mongoose.model('Admin', adminSchema);
+export default mongoose.model('Admin', adminSchema);
 
-export default Admin;

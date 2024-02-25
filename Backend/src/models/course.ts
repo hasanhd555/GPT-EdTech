@@ -33,4 +33,4 @@ courseSchema.methods.getTitle = function() {
   };
 
 
-module.exports = mongoose.model('Course', courseSchema);
+  export default mongoose.model('Course', courseSchema);

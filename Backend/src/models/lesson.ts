@@ -28,4 +28,4 @@ lessonSchema.methods.setLessonNum = function(num: number) {
   };
   
 
-module.exports = mongoose.model('Lesson', lessonSchema);
+  export default mongoose.model('Lesson', lessonSchema);

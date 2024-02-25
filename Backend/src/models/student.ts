@@ -28,4 +28,4 @@ studentSchema.methods.getAge = function() { return this.age; };
 studentSchema.methods.getGender = function() { return this.gender; };
 studentSchema.methods.getProfilePicture = function() { return this.profile_picture; };
 
-module.exports = mongoose.model('Student', studentSchema);
+export default mongoose.model('Student', studentSchema);

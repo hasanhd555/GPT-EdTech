@@ -16,4 +16,4 @@ commentSchema.methods.setCommentText = function(text: string) {
     return this.comment_text;
   };
 
-module.exports = mongoose.model('Comment', commentSchema);
+  export default mongoose.model('Comment', commentSchema);

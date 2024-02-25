@@ -16,4 +16,4 @@ ratingSchema.methods.setRating = function(rating:number) {
     return this.rating;
   };
 
-module.exports = mongoose.model('Rating', ratingSchema);
+  export default mongoose.model('Rating', ratingSchema);

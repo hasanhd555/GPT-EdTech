@@ -18,9 +18,12 @@ const port = process.env.PORT || 5000;
 const connectDB = require('./DB/Connect');
 require('dotenv').config();
 const cors = require('cors');
-// Use the cors middleware to allow cross-origin requests
+// Importing Routes 
+const studentRouter = require('./routes/studentRoute');
 app.use(cors());
 app.use(express_1.default.json());
+// For Manager Routes
+app.use('/api/student', studentRouter);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield connectDB(process.env.MONGO_URI);
