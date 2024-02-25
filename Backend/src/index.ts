@@ -12,7 +12,7 @@ app.use(cors());
 
 app.use(express.json());
 
-// For Manager Routes
+// For Student Routes
 app.use('/api/student', studentRouter);
 
 const start = async () => {

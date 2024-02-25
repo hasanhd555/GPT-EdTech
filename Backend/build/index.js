@@ -22,7 +22,7 @@ const cors = require('cors');
 const studentRouter = require('./routes/studentRoute');
 app.use(cors());
 app.use(express_1.default.json());
-// For Manager Routes
+// For Student Routes
 app.use('/api/student', studentRouter);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
