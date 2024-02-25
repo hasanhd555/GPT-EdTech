@@ -34,6 +34,7 @@ exports.getOneStudent = getOneStudent;
 // Get all students
 const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log("In student getall");
         const students = yield student_1.default.find();
         res.status(http_status_codes_1.StatusCodes.OK).json(students);
     }
@@ -51,7 +52,8 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (existingStudent) {
             return res.status(http_status_codes_1.StatusCodes.CONFLICT).json({ error: "Email already in use" });
         }
-        const student = yield student_1.default.create({ username, email, password, name, age, gender, profile_picture });
+        const objStudent = { username, email, password, name, age, gender, profile_picture };
+        const student = yield student_1.default.create(objStudent);
         res.status(http_status_codes_1.StatusCodes.CREATED).json(student);
     }
     catch (error) {
@@ -62,6 +64,7 @@ exports.signup = signup;
 // Student login
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log("In student login");
         const { email, password } = req.body;
         const student = yield student_1.default.findOne({ email });
         if (!student || student.password !== password) {

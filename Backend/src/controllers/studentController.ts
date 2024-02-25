@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Student from '../models/student';
+import  {student_type}  from '../constant';
 
 // Get one specific student
 export const getOneStudent = async (req: Request, res: Response) => {
@@ -37,7 +38,8 @@ export const signup = async (req: Request, res: Response) => {
         if (existingStudent) {
             return res.status(StatusCodes.CONFLICT).json({ error: "Email already in use" });
         }
-        const student = await Student.create({ username, email, password, name, age, gender, profile_picture });
+        const objStudent : student_type = { username, email, password, name, age, gender, profile_picture };
+        const student = await Student.create(objStudent);
         res.status(StatusCodes.CREATED).json(student);
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error" });
