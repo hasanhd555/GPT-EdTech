@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Student from '../models/student';
-import  {student_type}  from '../constant';
+import  {student_type}  from '../Constant';
 
 // Get one specific student
 export const getOneStudent = async (req: Request, res: Response) => {
@@ -56,6 +56,21 @@ export const login = async (req: Request, res: Response) => {
             return res.status(StatusCodes.UNAUTHORIZED).json({ error: "Invalid credentials" });
         }
         res.status(StatusCodes.OK).json(student);
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error" });
+    }
+};
+
+// Update a specific student
+export const updateStudent = async (req: Request, res: Response) => {
+    const { id, ...updateData } = req.body; // Destructure the ID from the body
+
+    try {
+        const updatedStudent = await Student.findByIdAndUpdate(id, updateData, { new: true });
+        if (!updatedStudent) {
+            return res.status(StatusCodes.NOT_FOUND).json({ error: "Student not found" });
+        }
+        res.status(StatusCodes.OK).json(updatedStudent);
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error" });
     }
