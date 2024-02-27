@@ -12,7 +12,7 @@ import Styles from "./Navbar.module.css";
 function NavbarComp() {
   return (
     <Navbar expand="lg" className="bg-body-white shadow">
-      <Container fluid className="px-5">
+      <Container fluid className="px-5" style={{ fontWeight: "500" }}>
         <Navbar.Brand>
           <img
             src="/IntelliLearn Logo.svg"
@@ -28,7 +28,7 @@ function NavbarComp() {
             <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#link">Explore</Nav.Link>
             <Nav.Link href="#link">About Us</Nav.Link>
-            <Nav.Link href="#link">Contact</Nav.Link>
+            <Nav.Link href="#link">Contact Us</Nav.Link>
             <Nav.Link href="#link">Summarizer</Nav.Link>
 
             <Form className="d-flex px-2 border-secondary">
