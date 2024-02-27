@@ -1,110 +1,177 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as yup from "yup"; // Import yup for validation
+import { Container, Row, Col, Card, Button, Form as BootstrapForm, InputGroup, FormCheck } from "react-bootstrap"; // Import React Bootstrap components
+import validationSchema from "../Schemas/validationSchema";
 
 interface SignUpFormProps {
   // Define any props you might need here
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = (props) => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
+  // const [studentCredentialsShown,setStudentCredentialsShown] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordShown((passwordShown: boolean) => !passwordShown);
   };
-  
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = (values: any, actions: any) => {
     // Handle the form submission logic here
-    // You could call a props.onSubmit function or similar
+    console.log(values);
+    actions.setSubmitting(false);
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row">
-        <div className="col-md-6 offset-md-3">
-          <div className="card">
-            <div className="card-body">
+    <Container className="mt-5">
+      <Row>
+        <Col md={{ span: 6, offset: 3 }}>
+          <Card>
+            <Card.Body>
               <h2 className="card-title text-center mb-4">Sign Up</h2>
               <p className="text-center">
                 Create an account to unlock exclusive features.
               </p>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="fullName" className="form-label">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="fullName"
-                    placeholder="Enter your Name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    placeholder="Enter your Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">
-                    Password
-                  </label>
-                  <div className="input-group">
-                <input
-                  type={passwordShown ? 'text' : 'password'}
-                  className="form-control"
-                  id="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <span className="input-group-text">
-                  <FontAwesomeIcon 
-                    icon={passwordShown ? faEyeSlash : faEye} 
-                    onClick={togglePasswordVisibility} 
-                  />
-                </span>
-              </div>
-                </div>
-                <div className="mb-3 form-check">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="terms"
-                  />
-                  <label className="form-check-label" htmlFor="terms">
-                    I agree with Terms of Use and Privacy Policy
-                  </label>
-                </div>
-                <div className="d-grid">
-                  <button type="submit" className="btn btn-primary">
-                    Sign Up
-                  </button>
-                </div>
-              </form>
+              <Formik
+                initialValues={{
+                  fullName: "",
+                  age: "",
+                  username: "",
+                  email: "",
+                  password: "",
+                  terms: false,
+                }}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                {({ isSubmitting }) => (
+                  <Form>
+                    <div className="mb-3">
+                      <BootstrapForm.Label>Full Name</BootstrapForm.Label>
+                      <Field
+                        name="fullName"
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter your Name"
+                        as={BootstrapForm.Control}
+                      />
+                      <ErrorMessage
+                        name="fullName"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <BootstrapForm.Label>Age</BootstrapForm.Label>
+                      <Field
+                        name="age"
+                        type="number"
+                        className="form-control"
+                        placeholder="Enter your age"
+                        min="0"
+                        as={BootstrapForm.Control}
+                      />
+                      <ErrorMessage
+                        name="age"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <BootstrapForm.Label>Username</BootstrapForm.Label>
+                      <Field
+                        name="username"
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter your username"
+                        as={BootstrapForm.Control}
+                      />
+                      <ErrorMessage
+                        name="username"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <BootstrapForm.Label>Email</BootstrapForm.Label>
+                      <Field
+                        name="email"
+                        type="email"
+                        className="form-control"
+                        placeholder="Enter your Email"
+                        as={BootstrapForm.Control}
+                      />
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <BootstrapForm.Label>Password</BootstrapForm.Label>
+                      <InputGroup>
+                        <Field
+                          name="password"
+                          type={passwordShown ? "text" : "password"}
+                          className="form-control"
+                          placeholder="Password"
+                          as={BootstrapForm.Control}
+                        />
+                        <InputGroup.Text>
+                          <FontAwesomeIcon
+                            icon={passwordShown ? faEyeSlash : faEye}
+                            onClick={togglePasswordVisibility}
+                          />
+                        </InputGroup.Text>
+                      </InputGroup>
+                      <ErrorMessage
+                        name="password"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+                    <div className="mb-3 form-check">
+                      <Field
+                        name="terms"
+                        type="checkbox"
+                        className="form-check-input"
+                        id="terms"
+                        as={FormCheck.Input}
+                      />
+                      <BootstrapForm.Label
+                        className="form-check-label"
+                        htmlFor="terms"
+                      >
+                        I agree with Terms of Use and Privacy Policy
+                      </BootstrapForm.Label>
+                      <ErrorMessage
+                        name="terms"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+                    <div className="d-grid">
+                      <Button
+                        type="submit"
+                        className="btn btn-primary"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Submitting..." : "Sign Up"}
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
               <div className="mt-3 text-center">
                 Already have an account? <a href="/login">Login</a>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
