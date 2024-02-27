@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 // Controllers 
-const {signup,login,getOneStudent,getAllStudents,updateStudent } = require('../controllers/studentController');
+const {signup,login,getOneStudent,getAllStudents,updateStudent,uploadImage } = require('../controllers/studentController');
 
 // SignUp Route 
 router.route('/signup').post(signup);
@@ -13,6 +13,9 @@ router.route('/').get(getOneStudent);
 router.route('/all').get(getAllStudents);
 
 router.put('/update', updateStudent);
+
+router.post('/upload-image', uploadImage);
+
 
 
 module.exports = router;

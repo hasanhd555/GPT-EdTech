@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Student from '../models/student';
 import  {student_type}  from '../Constant';
+import { v2 as cloudinary } from 'cloudinary';
+
 
 // Get one specific student
 export const getOneStudent = async (req: Request, res: Response) => {
@@ -75,3 +77,27 @@ export const updateStudent = async (req: Request, res: Response) => {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error" });
     }
 };
+
+
+
+// Cloudinary configuration (usually you would place this in a separate config file)
+cloudinary.config({ 
+    cloud_name: 'do2hqf8du', 
+    api_key: '458569939539534', 
+    api_secret: '4LkbMXSeh-CG58fZPRWv12Tit6U',
+    secure: true
+  });
+  
+  // Endpoint to upload image to Cloudinary
+  export const uploadImage = async (req: Request, res: Response) => {
+      try {
+          const fileStr = req.body.data;
+          const uploadResponse = await cloudinary.uploader.upload(fileStr, {
+              upload_preset: 'gpt_edtech360',
+          });
+          res.json({ url: uploadResponse.url });
+      } catch (error) {
+          console.error(error);
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'An error occurred while uploading the image' });
+      }
+  };

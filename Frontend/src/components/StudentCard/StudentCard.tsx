@@ -91,36 +91,43 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
     }
   };
 
-  const handlePictureEdit = () => {
-    setEditPictureMode(!editPictureMode);
-  };
 
-  const handlePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, profile_picture: e.target.value });
-  };
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "gpt_edtech360");
 
-  const handlePictureSave = async () => {
-    // Make API call to update the profile picture using the formData.profile_picture
-    try {
-      const response = await fetch(`http://localhost:5001/api/student/update`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: studentId,
-          profile_picture: formData.profile_picture,
-        }),
-      });
+      try {
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/do2hqf8du/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+        const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Update profile picture URL in the database
+        const updateResponse = await fetch(
+          `http://localhost:5001/api/student/update`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: studentId,
+              profile_picture: data.url,
+            }),
+          }
+        );
+        const updatedStudent: student_type = await updateResponse.json();
+        setStudent(updatedStudent);
+      } catch (error) {
+        console.error("Error uploading image:", error);
       }
-      const updatedStudent: student_type = await response.json();
-      setStudent(updatedStudent);
-      setEditPictureMode(false);
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -153,7 +160,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
               />
             </div>
             <div className="change-pic-button">
-              {editPictureMode ? (
+              {/* {editPictureMode ? (
                 <>
                   <input
                     type="text"
@@ -172,12 +179,29 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                   </div>
                 </>
               ) : (
-                <Button variant="primary" onClick={handlePictureEdit}>
+                <Button
+                  variant="primary"
+                  onClick={handlePictureEdit}
+                  style={{ width: "200px" }}
+                >
                   Change Picture
                 </Button>
 
                 // <button onClick={handlePictureEdit}>Change Picture</button>
-              )}
+              )} */}
+              <input
+                type="file"
+                id="fileInput"
+                hidden
+                onChange={handleImageUpload}
+              />
+              <Button
+                variant="primary"
+                onClick={() => document.getElementById("fileInput")?.click()}
+                style={{ width: "200px" }}
+              >
+                Change Picture
+              </Button>
             </div>
           </div>
 
@@ -253,7 +277,11 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                     </Button>
                   </>
                 ) : (
-                  <Button variant="primary" onClick={handleEdit}>
+                  <Button
+                    variant="primary"
+                    style={{ width: "200px" }}
+                    onClick={handleEdit}
+                  >
                     Edit
                   </Button>
                 )}

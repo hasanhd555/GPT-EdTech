@@ -23,9 +23,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStudent = exports.login = exports.signup = exports.getAllStudents = exports.getOneStudent = void 0;
+exports.uploadImage = exports.updateStudent = exports.login = exports.signup = exports.getAllStudents = exports.getOneStudent = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const student_1 = __importDefault(require("../models/student"));
+const cloudinary_1 = require("cloudinary");
 // Get one specific student
 const getOneStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -103,3 +104,25 @@ const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.updateStudent = updateStudent;
+// Cloudinary configuration (usually you would place this in a separate config file)
+cloudinary_1.v2.config({
+    cloud_name: 'do2hqf8du',
+    api_key: '458569939539534',
+    api_secret: '4LkbMXSeh-CG58fZPRWv12Tit6U',
+    secure: true
+});
+// Endpoint to upload image to Cloudinary
+const uploadImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const fileStr = req.body.data;
+        const uploadResponse = yield cloudinary_1.v2.uploader.upload(fileStr, {
+            upload_preset: 'gpt_edtech360',
+        });
+        res.json({ url: uploadResponse.url });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'An error occurred while uploading the image' });
+    }
+});
+exports.uploadImage = uploadImage;
