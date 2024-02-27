@@ -14,16 +14,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 const connectDB = require('./DB/Connect');
 require('dotenv').config();
 const cors = require('cors');
 // Importing Routes 
 const studentRouter = require('./routes/studentRoute');
+const enrollmentRouter = require('./routes/enrollmentRoute');
 app.use(cors());
 app.use(express_1.default.json());
 // For Student Routes
 app.use('/api/student', studentRouter);
+// Use the enrollment route
+app.use('/api/enrollment', enrollmentRouter);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield connectDB(process.env.MONGO_URI);
