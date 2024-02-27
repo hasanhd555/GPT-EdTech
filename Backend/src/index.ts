@@ -1,26 +1,26 @@
-import express from 'express';
+import express from "express";
 const app = express();
 const port = process.env.PORT || 5001;
-const connectDB = require('./DB/Connect');
-require('dotenv').config();
-const cors = require('cors');
+const connectDB = require("./DB/Connect");
+require("dotenv").config();
+const cors = require("cors");
 
-// Importing Routes 
-const studentRouter = require('./routes/studentRoute');
-const enrollmentRouter = require('./routes/enrollmentRoute'); 
-
+// Importing Routes
+const studentRouter = require("./routes/studentRoute");
+const enrollmentRouter = require("./routes/enrollmentRoute");
+const adminRouter = require("./routes/adminRoute");
 
 app.use(cors());
 
 app.use(express.json());
 
 // For Student Routes
-app.use('/api/student', studentRouter);
+app.use("/api/student", studentRouter);
 
 // Use the enrollment route
-app.use('/api/enrollment', enrollmentRouter);
+app.use("/api/enrollment", enrollmentRouter);
 
-
+app.use("/api/admin", adminRouter);
 
 const start = async () => {
   try {
@@ -32,6 +32,6 @@ const start = async () => {
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 start();
