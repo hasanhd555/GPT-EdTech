@@ -23,7 +23,7 @@ const studentRouter = require('./routes/studentRoute');
 const enrollmentRouter = require('./routes/enrollmentRoute');
 app.use(cors());
 app.use(express_1.default.json());
-// For Manager Routes
+// For Student Routes
 app.use('/api/student', studentRouter);
 // Use the enrollment route
 app.use('/api/enrollment', enrollmentRouter);
