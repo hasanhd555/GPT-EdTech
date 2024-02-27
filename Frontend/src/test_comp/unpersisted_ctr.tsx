@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from '../redux/hooks/index';
-import { increment, decrement } from "../redux/slices/counter";
+import { increment, decrement } from "../redux/slices/unpersisted_counter";
 
-const Counter:React.FC =()=> {
-    const count = useAppSelector((state) => state.counter);
+const Unpersisted_Counter:React.FC =()=> {
+    const count = useAppSelector((state) => state.Unpersisted_counter);
     const dispatch = useAppDispatch();
 
     return (
@@ -14,5 +14,5 @@ const Counter:React.FC =()=> {
     );
   }
   
-  export default Counter;
+  export default Unpersisted_Counter;
   
