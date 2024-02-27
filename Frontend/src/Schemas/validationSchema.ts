@@ -6,6 +6,8 @@ const validationSchema = Yup.object().shape({
     username: Yup.string().required("Username is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string().required("Password is required").min(6, "Password must be at least 6 characters long"),
+    gender: Yup.string().required('Gender is required'),
+    role: Yup.string().required('Role is required'),
     terms: Yup.boolean().oneOf([true], "You must accept Terms of Use and Privacy Policy")
   });
 
