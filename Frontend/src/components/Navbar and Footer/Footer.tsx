@@ -71,6 +71,13 @@ function Footer() {
             </span>
           </Col>
         </Row>
+        <Row>
+          <Col>
+            <p className="text-center mt-5">
+              © 2024 IntelliLearn. All rights reserved.
+            </p>
+          </Col>
+        </Row>
       </Container>
     </footer>
   );
