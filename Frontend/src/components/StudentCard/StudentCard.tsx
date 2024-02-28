@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import styles from "./StudentCard.module.css";
-import { student_type } from "../../constant"; // Adjust the import path to where your Constants.ts file is located
+import { student_type } from "../../constant"; 
 import Button from "react-bootstrap/Button";
 
 type StudentCardProps = {
@@ -143,7 +143,6 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
       
       <div className={styles.studentCardSpace}>
         <div className={styles.studentCard}>
-          {/* Profile picture and change button remain unchanged */}
 
           <div className={styles.profileSection}>
             <div className={styles.profilePic}>
