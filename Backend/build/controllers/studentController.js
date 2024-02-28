@@ -8,13 +8,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.signup = exports.getAllStudents = exports.getOneStudent = void 0;
+exports.uploadImage = exports.updateStudent = exports.login = exports.signup = exports.getAllStudents = exports.getOneStudent = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const student_1 = __importDefault(require("../models/student"));
+const cloudinary_1 = require("cloudinary");
 // Get one specific student
 const getOneStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -22,12 +34,16 @@ const getOneStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const studentId = req.query.id;
         const student = yield student_1.default.findById(studentId);
         if (!student) {
-            return res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json({ error: "Student not found" });
+            return res
+                .status(http_status_codes_1.StatusCodes.NOT_FOUND)
+                .json({ error: "Student not found" });
         }
         res.status(http_status_codes_1.StatusCodes.OK).json(student);
     }
     catch (error) {
-        res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error" });
+        res
+            .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: "Server error" });
     }
 });
 exports.getOneStudent = getOneStudent;
@@ -39,7 +55,9 @@ const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(http_status_codes_1.StatusCodes.OK).json(students);
     }
     catch (error) {
-        res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error" });
+        res
+            .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: "Server error" });
     }
 });
 exports.getAllStudents = getAllStudents;
@@ -50,14 +68,26 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { username, email, password, name, age, gender, profile_picture } = req.body;
         const existingStudent = yield student_1.default.findOne({ email });
         if (existingStudent) {
-            return res.status(http_status_codes_1.StatusCodes.CONFLICT).json({ error: "Email already in use" });
+            return res
+                .status(http_status_codes_1.StatusCodes.CONFLICT)
+                .json({ error: "Email already in use" });
         }
-        const objStudent = { username, email, password, name, age, gender, profile_picture };
+        const objStudent = {
+            username,
+            email,
+            password,
+            name,
+            age,
+            gender,
+            profile_picture,
+        };
         const student = yield student_1.default.create(objStudent);
         res.status(http_status_codes_1.StatusCodes.CREATED).json(student);
     }
     catch (error) {
-        res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error" });
+        res
+            .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: "Server error" });
     }
 });
 exports.signup = signup;
@@ -67,13 +97,66 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("In student login");
         const { email, password } = req.body;
         const student = yield student_1.default.findOne({ email });
-        if (!student || student.password !== password) {
-            return res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({ error: "Invalid credentials" });
+        const validPassword = yield (student === null || student === void 0 ? void 0 : student.isPasswordValid(password));
+        if (!validPassword) {
+            console.log("FunctionReturns", student === null || student === void 0 ? void 0 : student.isPasswordValid(password));
+            return res
+                .status(http_status_codes_1.StatusCodes.UNAUTHORIZED)
+                .json({ error: "Invalid credentials" });
         }
         res.status(http_status_codes_1.StatusCodes.OK).json(student);
     }
     catch (error) {
-        res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error" });
+        res
+            .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: "Server error" });
     }
 });
 exports.login = login;
+// Update a specific student
+const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const _a = req.body, { id } = _a, updateData = __rest(_a, ["id"]); // Destructure the ID from the body
+    try {
+        const student = yield student_1.default.findById(id);
+        if (!student) {
+            return res
+                .status(http_status_codes_1.StatusCodes.NOT_FOUND)
+                .json({ error: "Student not found" });
+        }
+        // Update the Student object with new data
+        Object.assign(student, updateData);
+        // Save the updated Student, triggering pre-save hooks
+        const updatedStudent = yield student.save();
+        res.status(http_status_codes_1.StatusCodes.OK).json(updatedStudent);
+    }
+    catch (error) {
+        res
+            .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: "Server error" });
+    }
+});
+exports.updateStudent = updateStudent;
+// Cloudinary configuration (usually you would place this in a separate config file)
+cloudinary_1.v2.config({
+    cloud_name: "do2hqf8du",
+    api_key: "458569939539534",
+    api_secret: "4LkbMXSeh-CG58fZPRWv12Tit6U",
+    secure: true,
+});
+// Endpoint to upload image to Cloudinary
+const uploadImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const fileStr = req.body.data;
+        const uploadResponse = yield cloudinary_1.v2.uploader.upload(fileStr, {
+            upload_preset: "gpt_edtech360",
+        });
+        res.json({ url: uploadResponse.url });
+    }
+    catch (error) {
+        console.error(error);
+        res
+            .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: "An error occurred while uploading the image" });
+    }
+});
+exports.uploadImage = uploadImage;
