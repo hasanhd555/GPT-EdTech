@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import styles from "./StudentCard.module.css";
 import { student_type } from "../../constant"; 
@@ -139,8 +137,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
   console.log(`http://localhost:6000/api/student/?id=${studentId}`);
 
   return (
-    
-      
+
       <div className={styles.studentCardSpace}>
         <div className={styles.studentCard}>
 
