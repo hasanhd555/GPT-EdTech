@@ -1,5 +1,7 @@
+
+
 import React, { useState, useEffect } from "react";
-import "./StudentCard.css";
+import styles from "./StudentCard.module.css";
 import { student_type } from "../../constant"; // Adjust the import path to where your Constants.ts file is located
 import Button from "react-bootstrap/Button";
 
@@ -91,7 +93,6 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
     }
   };
 
-
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -138,17 +139,14 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
   console.log(`http://localhost:6000/api/student/?id=${studentId}`);
 
   return (
-    <div className="page">
-      <div className="heading">
-        <h2 className="welcome">Welcome to your Dashboard</h2>
-        <h2 className="user-profile">User Profile</h2>
-      </div>
-      <div className="student-card-space">
-        <div className="student-card">
+    
+      
+      <div className={styles.studentCardSpace}>
+        <div className={styles.studentCard}>
           {/* Profile picture and change button remain unchanged */}
 
-          <div className="profile-section">
-            <div className="profile-pic">
+          <div className={styles.profileSection}>
+            <div className={styles.profilePic}>
               <img
                 src={
                   editPictureMode
@@ -156,39 +154,11 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                     : student.profile_picture
                 }
                 alt={student.name}
-                className="profile-picture"
+                className={styles.profilePicture}
               />
             </div>
-            <div className="change-pic-button">
-              {/* {editPictureMode ? (
-                <>
-                  <input
-                    type="text"
-                    value={formData.profile_picture}
-                    onChange={handlePictureChange}
-                    placeholder="Enter new profile URL"
-                  />
-                  <div>
-                    <Button variant="danger" onClick={handlePictureEdit}>
-                      Cancel
-                    </Button>
-                    <span className="space"></span>
-                    <Button variant="success" onClick={handlePictureSave}>
-                      Save
-                    </Button>
-                  </div>
-                </>
-              ) : (
-                <Button
-                  variant="primary"
-                  onClick={handlePictureEdit}
-                  style={{ width: "200px" }}
-                >
-                  Change Picture
-                </Button>
-
-                // <button onClick={handlePictureEdit}>Change Picture</button>
-              )} */}
+            <div className={styles.changePicButton}>
+              
               <input
                 type="file"
                 id="fileInput"
@@ -205,19 +175,19 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
             </div>
           </div>
 
-          <div className="user-info">
-            <form onSubmit={handleSubmit} className="user-details">
-              <div className="studentName">
-                <div className="name">Mr. {student.name}</div>
-                <div className="role">Student</div>
+          <div className={styles.userInfo}>
+            <form onSubmit={handleSubmit} className={styles.userDetails}>
+              <div className={styles.studentName}>
+                <div className={styles.name}>Mr. {student.name}</div>
+                <div className={styles.role}>Student</div>
               </div>
 
-              <div className="info">
+              <div className={styles.info}>
                 {editMode ? (
                   <>
                     <div>
-                      <label htmlFor="email">Email: </label>
-                      <span className="space"></span>
+                      <label htmlFor={styles.email}>Email: </label>
+                      <span className={styles.space}></span>
                       <input
                         id="email"
                         name="email"
@@ -229,7 +199,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                     </div>
                     <div>
                       <label htmlFor="age">Age: </label>
-                      <span className="space"></span>
+                      <span className={styles.space}></span>
                       <input
                         id="age"
                         name="age"
@@ -241,7 +211,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                     </div>
                     <div>
                       <label htmlFor="gender">Gender: </label>
-                      <span className="space"></span>
+                      <span className={styles.space}></span>
                       <select
                         id="gender"
                         name="gender"
@@ -265,13 +235,13 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                 )}
               </div>
 
-              <div className="edit-button">
+              <div className={styles.editButton}>
                 {editMode ? (
                   <>
                     <Button variant="danger" onClick={handleEdit}>
                       Cancel
                     </Button>
-                    <span className="space"></span>
+                    <span className={styles.space}></span>
                     <Button variant="success" type="submit">
                       Save Changes
                     </Button>
@@ -290,7 +260,6 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
