@@ -43,7 +43,7 @@ export interface rating_type {
   rating: number;
 }
 
-export interface student_type  {
+export interface student_type {
   username: string;
   email: string;
   password: string;
