@@ -41,6 +41,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ studentId }) => {
 
   return (
     <div className={styles.userDashboardPage}>
+      
       <div className={styles.heading}>
         <h2 className={styles.welcome}>Welcome to your Dashboard</h2>
         <h2 className={styles.userProfile}>User Profile</h2>

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styles from "./StudentCard.module.css";
 import { student_type } from "../../constant"; 
 import Button from "react-bootstrap/Button";
+import Spinner from 'react-bootstrap/Spinner';
+
 
 type StudentCardProps = {
   studentId: string;
@@ -131,7 +133,8 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
   };
 
   if (!student) {
-    return <div>Loading...</div>;
+    // return <div>Loading...</div>;
+    return <div className="d-flex justify-content-center align-items-center pt-5"><Spinner animation="grow" variant="primary"/><Spinner animation="grow" variant="primary"/><Spinner animation="grow" variant="primary"/></div>
   }
 
   console.log(`http://localhost:6000/api/student/?id=${studentId}`);
