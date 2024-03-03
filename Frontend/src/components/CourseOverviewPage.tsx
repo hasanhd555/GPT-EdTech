@@ -1,11 +1,18 @@
-import React from "react";
-import NavbarComp from "./Navbar and Footer/Navbar";
-import Footer from "./Navbar and Footer/Footer";
-import { Container, Row, Col, Image, ListGroup } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Image,
+  ListGroup,
+  Button,
+  FormControl,
+  Form,
+} from "react-bootstrap";
 import StarRating from "./StarRating";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useAppSelector } from "../redux/hooks";
 
 interface Lesson {
   _id: string;
@@ -23,6 +30,8 @@ const CourseOverviewPage = () => {
   const navigate = useNavigate();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [commentText, setCommentText] = useState("");
+  const [courseID, setcourseID] = useState("");
   const [courseData, setCourseData] = useState({
     _id: "",
     title: "",
@@ -32,16 +41,55 @@ const CourseOverviewPage = () => {
   const [averageRating, setAverageRating] = useState({
     averageRating: 0,
   });
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCommentText(event.target.value);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    axios
+      .post("http://localhost:5001/api/course/comments/add-comment", {
+        course_id: courseID,
+        student_id: _id,
+        comment_text: commentText,
+      })
+      .then((response) => {
+        // Handle response
+        //   console.log(response.data);
+        axios
+          .post("http://localhost:5001/api/course/comments/get-by-id", {
+            id: courseID,
+          })
+          .then((response) => {
+            // Handle response
+            //   console.log(response.data);
+            const allComments = response?.data;
+            setComments(allComments);
+          })
+          .catch((error) => {
+            // Handle error
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error:", error);
+      });
+  };
 
   useEffect(() => {
     // Extracting id from URL
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
+
     // console.log("helloooo");
 
     if (id) {
       // Making API request using Axios
       //   console.log("Successfully fetched id from the url: ",id);
+      setcourseID(id);
       axios
         .post("http://localhost:5001/api/course/get-info", { id })
         .then((response) => {
@@ -151,17 +199,40 @@ const CourseOverviewPage = () => {
           >
             {/* Rating will be fetched and passed to StarRating component */}
             <StarRating rating={averageRating.averageRating} />
+            {_id !== null ? (
+              <Button
+                className="mt-5"
+                style={{ paddingLeft: "30%", paddingRight: "30%" }}
+              >
+                Enroll
+              </Button>
+            ) : null}
+
             <h2 className="text-decoration-underline mt-5">
               Community Comments
             </h2>
             {/* Community comments will be rendered here like a list */}
             <ListGroup className="w-75">
-              {comments.map((comment) => (
-                <ListGroup.Item className="p-3 mt-3 border-0">
+              {comments.map((comment, index) => (
+                <ListGroup.Item key={index} className="p-3 mt-3 border-0">
                   <h4>{comment.username}</h4>
                   <h6 className="text-black-50">{comment.comment_text}</h6>
                 </ListGroup.Item>
               ))}
+
+              <Form onSubmit={handleSubmit}>
+                <FormControl
+                  type="search"
+                  placeholder="Comment"
+                  className={`border-secondary mt-3`}
+                  aria-label="Search"
+                  value={commentText}
+                  onChange={handleChange}
+                />
+                <Button type="submit" className={`btn-primary mt-3`}>
+                  Submit
+                </Button>
+              </Form>
             </ListGroup>
           </Col>
         </Row>
