@@ -1,0 +1,59 @@
+/* Add to App.css or a separate CSS file that is imported into your project */
+
+.testimonial-carousel-container {
+    max-width: 540px; /* Adjust the width as needed */
+    margin: auto;
+    padding: 20px;
+    background: #f8f8f8; /* Background color for the testimonial area */
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* A subtle shadow */
+  }
+  
+  .carousel-inner {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .carousel-item {
+    display: none;
+    transition: transform 0.6s ease, opacity 0.6s ease;
+    position: absolute;
+    width: 100%;
+    right: 0;
+    left: 0;
+  }
+  
+  .carousel-item.active {
+    display: block;
+    position: relative;
+  }
+  
+  .carousel-control-prev,
+  .carousel-control-next {
+    filter: invert(100%); /* Adjusts the color of the arrows to be more visible */
+  }
+  
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-size: 100%, 100%;
+  }
+  
+  .blockquote {
+    font-size: 0.9rem; /* Adjust the font size as needed */
+    color: #555; /* Adjust the text color as needed */
+  }
+  
+  .blockquote-footer {
+    color: #666; /* Adjust the footer color as needed */
+    font-size: 0.8rem;
+  }
+  
+  /* Adjust the button positions as needed */
+  .carousel-control-prev {
+    left: -50px;
+  }
+  
+  .carousel-control-next {
+    right: -50px;
+  }
+  
