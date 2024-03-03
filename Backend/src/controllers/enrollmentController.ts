@@ -1,7 +1,8 @@
+// This controller will handle operations related to enrollments
 import { Request, Response } from 'express';
-import Enrollment from '../models/enrollment'; // Adjust the path according to your project structure
-import mongoose, { Schema } from 'mongoose';
-
+import Enrollment from '../models/enrollment';
+import '../models/course';
+import { Schema } from 'mongoose';
 
 
 interface CustomRequest extends Request {
@@ -9,26 +10,28 @@ interface CustomRequest extends Request {
     user_id: Schema.Types.ObjectId;
   };
 }
+
+
+// This function will retrieve all courses for a given user
 export const getCoursesForUser = async (req: CustomRequest, res: Response): Promise<void> => {
   try {
-    // Extrating the user id
+    // Assuming that 'user_id' is passed as a parameter in the request
     const { user_id } = req.body;
-    console.log(user_id)
+    console.log(user_id);
 
-    if (!user_id) {
-      res.status(400).json({ message: 'User ID is required' });
-      return;
-    }
-
-    // Fetching all enrollments for the user using user_id
-    const enrollments = await Enrollment.find({ user_id: user_id });
+    // Find all enrollments for the user and populate the course details
+    const enrollments = await Enrollment.find({ user_id: user_id }).populate('course_id').exec();
     console.log(enrollments);
 
-    const courseIds = enrollments.map(enrollment => enrollment.course_id);
+    // Extract the course details from the enrollments
+    const courses = enrollments.map(enrollment => enrollment.course_id);
 
-    res.json({ user_id, courses: courseIds });
+    // Send the course details as a response
+    res.status(200).json(courses);
   } catch (error) {
-    console.error(error); // Log the error for debugging
-    res.status(500).json({ message: 'Server Error' });
+    // If an error occurs, send an error message
+    const errorMessage = (error as Error).message;
+    res.status(500).json({ message: errorMessage });
   }
 };
+
