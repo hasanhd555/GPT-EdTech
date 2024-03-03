@@ -3,7 +3,7 @@
 .cardWidth {
 width: 100%; 
 /* max-width: 350px; */
-border: 10px solid red !important;
+/* border: 10px solid red !important; */
   height: auto;
   padding: 3%;
 }
