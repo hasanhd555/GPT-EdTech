@@ -3,16 +3,96 @@ import NavbarComp from "./Navbar and Footer/Navbar";
 import Footer from "./Navbar and Footer/Footer";
 import { Container, Row, Col, Image, ListGroup } from "react-bootstrap";
 import StarRating from "./StarRating";
+import { useLocation, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+interface Lesson {
+  _id: string;
+  lesson_num: number;
+  title: string;
+  content: string;
+}
 
 const CourseOverviewPage = () => {
+  const navigate = useNavigate();
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [comments, setComments] = useState([]);
+  const [courseData, setCourseData] = useState({
+    _id: "",
+    title: "",
+    description: "",
+    image_url: "",
+  });
+  const [averageRating, setAverageRating] = useState({
+    averageRating: 0,
+  });
+
+  useEffect(() => {
+    // Extracting id from URL
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    // console.log("helloooo");
+
+    if (id) {
+      // Making API request using Axios
+      //   console.log("Successfully fetched id from the url: ",id);
+      axios
+        .post("http://localhost:5001/api/course/get-info", { id })
+        .then((response) => {
+          // Handle response
+          //   console.log(response.data);
+          const course = response.data;
+          setCourseData(course);
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error:", error);
+        });
+      axios
+        .post("http://localhost:5001/api/course/lessons/get-by-id", { id })
+        .then((response) => {
+          // Handle response
+          //   console.log(response.data);
+          const chapters: Lesson[] = response.data;
+        //   console.log("Chapters: ", chapters);
+          setLessons(chapters);
+          //   console.log(lessons);
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error:", error);
+        });
+      axios
+        .post("http://localhost:5001/api/course/ratings/get-by-id", { id })
+        .then((response) => {
+          // Handle response
+          const avgRating = response.data;
+          setAverageRating(avgRating);
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error:", error);
+        });
+      axios
+        .post("http://localhost:5001/api/course/comments/get-by-id", { id })
+        .then((response) => {
+          // Handle response
+          //   console.log(response.data);
+          const allComments = response.data;
+          console.log(allComments);
+          setComments(allComments);
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error:", error);
+        });
+    }
+  }, [navigate]);
+
   return (
     <>
-      <NavbarComp></NavbarComp>
-      <Container
-        className=""
-        fluid
-        style={{backgroundColor: "#F7F7F8" }}
-      >
+      <Container className="" fluid style={{ backgroundColor: "#F7F7F8" }}>
         <Row
           className="mx-5"
           // style={{ border: "1px solid red" }}
@@ -22,21 +102,8 @@ const CourseOverviewPage = () => {
             // style={{ border: "1px solid green" }}
           >
             {/* will render course title and description in this column */}
-            <h1 className="">UI/UX Design Course</h1>
-            <p className=" mt-3 w-75">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
-              laudantium praesentium atque, adipisci eaque neque omnis aliquam
-              expedita maiores earum sed suscipit dignissimos unde perspiciatis
-              repellendus tenetur fugiat consequuntur ad odit enim obcaecati
-              quis! Sint sequi vitae amet iure nam nobis incidunt suscipit
-              perspiciatis rerum necessitatibus ipsa quod laudantium ipsam,
-              illum cumque debitis, veniam maxime commodi cum nulla atque?
-              Fugiat similique deleniti veritatis commodi animi, rerum, esse quo
-              saepe cum temporibus exercitationem eligendi itaque nesciunt
-              adipisci soluta quae illum perferendis minima? Earum culpa aliquam
-              fugit magni molestias expedita ducimus numquam consequatur? Earum
-              enim dolorum quasi nostrum quia omnis. Ipsa, labore!
-            </p>
+            <h1 className="">{courseData.title}</h1>
+            <p className=" mt-3 w-75">{courseData.description}</p>
           </Col>
           <Col
             className="d-flex flex-column p-5"
@@ -46,7 +113,7 @@ const CourseOverviewPage = () => {
 
             <Image
               fluid
-              src="http://res.cloudinary.com/do2hqf8du/image/upload/v1709468796/qqp692joki8suw0cvmrq.jpg"
+              src={courseData.image_url}
               alt="Course Page"
               className="m-auto"
               style={{ width: "30vw", height: "auto" }}
@@ -64,22 +131,13 @@ const CourseOverviewPage = () => {
             <h2 className="text-decoration-underline">Chapters</h2>
             {/* Chapters of course will be rendered here like a list */}
             <ListGroup className="w-75">
-              <ListGroup.Item className="p-3 mt-3">
-                <h4>Understanding UI/UX Design Principles</h4>
-                <h6 className="text-black-50">Chapter 01</h6>
-              </ListGroup.Item>
-              <ListGroup.Item className="p-3 mt-3">
-                <h4>Understanding UI/UX Design Principles</h4>
-                <h6 className="text-black-50">Chapter 01</h6>
-              </ListGroup.Item>
-              <ListGroup.Item className="p-3 mt-3">
-                <h4>Understanding UI/UX Design Principles</h4>
-                <h6 className="text-black-50">Chapter 01</h6>
-              </ListGroup.Item>
-              <ListGroup.Item className="p-3 mt-3">
-                <h4>Understanding UI/UX Design Principles</h4>
-                <h6 className="text-black-50">Chapter 01</h6>
-              </ListGroup.Item>
+              {lessons.map((lesson) => (
+                <ListGroup.Item key={lesson._id} className="p-3 mt-3">
+                  <h4>{lesson.title}</h4>
+                  <h6 className="text-black-50">Lesson {lesson.lesson_num}</h6>
+                  <p>{lesson.content}</p>
+                </ListGroup.Item>
+              ))}
             </ListGroup>
           </Col>
           <Col
@@ -87,7 +145,7 @@ const CourseOverviewPage = () => {
             // style={{ border: "1px solid orange" }}
           >
             {/* Rating will be fetched and passed to StarRating component */}
-            <StarRating rating={3.5} />
+            <StarRating rating={averageRating.averageRating} />
             <h2 className="text-decoration-underline mt-5">
               Community Comments
             </h2>
@@ -133,7 +191,6 @@ const CourseOverviewPage = () => {
           </Col>
         </Row>
       </Container>
-      <Footer></Footer>
     </>
   );
 };

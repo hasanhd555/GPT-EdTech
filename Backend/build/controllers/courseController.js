@@ -29,6 +29,7 @@ const getAllCourses = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.getAllCourses = getAllCourses;
 // Get a specific course by ID
 const getCourseById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("In getCourseById");
     try {
         const { id } = req.body;
         const course = yield course_1.default.findById(id);

@@ -16,6 +16,7 @@ export const getAllCourses = async (req: Request, res: Response) => {
 
 // Get a specific course by ID
 export const getCourseById = async (req: Request, res: Response) => {
+  console.log("In getCourseById")
     try {
       const { id } = req.body;
       const course = await Course.findById(id);

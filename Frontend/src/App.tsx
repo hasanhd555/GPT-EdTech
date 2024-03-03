@@ -22,6 +22,7 @@ function App() {
           path="/dash"
           element={<UserDashboard studentId={"65da8d92d14e603d876cb448"} />}
         />
+        <Route path="/course-overview" element={<CourseOverviewPage/>}/>
       </Routes>
       <Footer />
     </>
