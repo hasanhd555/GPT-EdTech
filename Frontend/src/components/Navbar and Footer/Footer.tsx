@@ -1,7 +1,9 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Nav } from "react-bootstrap";
 import Styles from "./Navbar.module.css";
+import { useNavigate } from "react-router-dom";
 
 function Footer() {
+  const navigate = useNavigate();
   return (
     <footer className={`bg-white text-dark py-5 ${Styles.footer}`}>
       <Container fluid>
@@ -31,19 +33,34 @@ function Footer() {
             <h5 className="mb-3">Pages</h5>
             <ul className="list-unstyled">
               <li>
-                <a href="#" className="text-decoration-none text-dark">
+                <Nav.Link
+                  onClick={() => {
+                    navigate("/");
+                  }}
+                  className="text-decoration-none text-dark"
+                >
                   Home
-                </a>
+                </Nav.Link>
               </li>
               <li>
-                <a href="#" className="text-decoration-none text-dark">
+                <Nav.Link
+                  onClick={() => {
+                    navigate("/explore-courses");
+                  }}
+                  className="text-decoration-none text-dark"
+                >
                   Explore
-                </a>
+                </Nav.Link>
               </li>
               <li>
-                <a href="#" className="text-decoration-none text-dark">
+                <Nav.Link
+                  onClick={() => {
+                    navigate("/");
+                  }}
+                  className="text-decoration-none text-dark"
+                >
                   Summarizer
-                </a>
+                </Nav.Link>
               </li>
             </ul>
           </Col>
@@ -51,14 +68,24 @@ function Footer() {
             <h5 className="mb-3">Get in Touch</h5>
             <ul className="list-unstyled">
               <li>
-                <a href="#" className="text-decoration-none text-dark">
+                <Nav.Link
+                  onClick={() => {
+                    navigate("/");
+                  }}
+                  className="text-decoration-none text-dark"
+                >
                   Contact Us
-                </a>
+                </Nav.Link>
               </li>
               <li>
-                <a href="#" className="text-decoration-none text-dark">
+                <Nav.Link
+                  onClick={() => {
+                    navigate("/");
+                  }}
+                  className="text-decoration-none text-dark"
+                >
                   About Us
-                </a>
+                </Nav.Link>
               </li>
             </ul>
           </Col>
