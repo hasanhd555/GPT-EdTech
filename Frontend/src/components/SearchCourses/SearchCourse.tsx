@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Container, Col, Row } from "react-bootstrap";
+import { NavigateFunction, useNavigate } from "react-router";
 import axios from "axios";
 import CourseCard from "../CourseCard/CourseCard";
+import Styles from "./SearchCourse.module.css";
 
 interface Course {
   _id: string;
@@ -15,6 +17,7 @@ function SearchCourse() {
   const location = useLocation();
   const [query, setQuery] = useState("");
   const [courses, setCourses] = useState<Course[]>([]);
+  const navigate: NavigateFunction = useNavigate();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -56,13 +59,20 @@ function SearchCourse() {
           </h2>
           <Row xs={1} md={2} lg={3} className="my-5">
             {courses.map((course: Course) => (
-              <Col key={course._id} className="">
-                <CourseCard
-                  key={course._id}
-                  title={course.title}
-                  description={course.description}
-                  imageUrl={course.image_url}
-                />
+              <Col
+                key={course._id}
+                className={`my-4 ${Styles.coursecardcontainer}`}
+              >
+                <div
+                  onClick={() => navigate(`/course-overview?id=${course?._id}`)}
+                >
+                  <CourseCard
+                    key={course._id}
+                    title={course.title}
+                    description={course.description}
+                    imageUrl={course.image_url}
+                  />
+                </div>
               </Col>
             ))}
           </Row>
