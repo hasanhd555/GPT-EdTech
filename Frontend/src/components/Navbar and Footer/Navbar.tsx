@@ -7,9 +7,26 @@ import {
   Button,
   InputGroup,
 } from "react-bootstrap";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import Styles from "./Navbar.module.css";
+import { useState } from "react";
 
 function NavbarComp() {
+  const navigate: NavigateFunction = useNavigate();
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value); // Update the searchValue
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const url = `/search?query=${encodeURIComponent(searchValue)}`;
+
+    navigate(url);
+  };
+
   return (
     <Navbar expand="lg" className="bg-body-white shadow">
       <Container fluid className="px-5" style={{ fontWeight: "500" }}>
@@ -26,14 +43,24 @@ function NavbarComp() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Explore</Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("/explore-courses");
+              }}
+            >
+              Explore
+            </Nav.Link>
             <Nav.Link href="#link">About Us</Nav.Link>
             <Nav.Link href="#link">Contact Us</Nav.Link>
             <Nav.Link href="#link">Summarizer</Nav.Link>
 
-            <Form className="d-flex px-2 border-secondary">
+            <Form
+              className="d-flex px-2 border-secondary"
+              onSubmit={handleSubmit}
+            >
               <InputGroup>
                 <Button
+                  type="submit"
                   variant="outline-secondary"
                   className={` ${Styles.customhighlight}`}
                 >
@@ -44,6 +71,8 @@ function NavbarComp() {
                   placeholder="Search a Course"
                   className={`border-secondary ${Styles.customhighlight}`}
                   aria-label="Search"
+                  value={searchValue}
+                  onChange={handleChange}
                 />
               </InputGroup>
             </Form>
