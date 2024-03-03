@@ -8,8 +8,23 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import Styles from "./Navbar.module.css";
+import { useNavigate } from "react-router-dom";
 
 function NavbarComp() {
+  const navigate=useNavigate()
+
+    // Function to handle login button click
+    const handleLoginClick = () => {
+      // Navigate to the login page (replace "/login" with the actual path)
+      navigate("/login");
+    };
+  
+    // Function to handle signup button click
+    const handleSignupClick = () => {
+      // Navigate to the signup page (replace "/signup" with the actual path)
+      navigate("/signup");
+    };
+
   return (
     <Navbar expand="lg" className="bg-body-white shadow">
       <Container fluid className="px-5" style={{ fontWeight: "500" }}>
@@ -49,10 +64,10 @@ function NavbarComp() {
             </Form>
           </Nav>
           <Nav>
-            <Button className="mx-2" variant="primary">
+            <Button className="mx-2" variant="primary" onClick={handleLoginClick}>
               Login
             </Button>
-            <Button variant="outline-primary">Sign Up</Button>
+            <Button variant="outline-primary" onClick={handleSignupClick}>Sign Up</Button>
           </Nav>
         </Navbar.Collapse>
       </Container>

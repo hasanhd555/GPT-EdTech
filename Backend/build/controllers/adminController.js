@@ -102,7 +102,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     catch (error) {
         res
             .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
-            .json({ error: error });
+            .json({ error: "Server error" });
     }
 });
 exports.login = login;

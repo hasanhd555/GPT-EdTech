@@ -65,11 +65,7 @@ exports.getAllStudents = getAllStudents;
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("In student signup");
-        console.log(req.body)
-        const { username, email, password, fullName, age, gender } = req.body;
-        const profile_picture="http://example.com/profile.jpg" //no profile picture at signup
-        const name=fullName //to circumvent schema
-        console.log("body fine")
+        const { username, email, password, name, age, gender, profile_picture } = req.body;
         const existingStudent = yield student_1.default.findOne({ email });
         if (existingStudent) {
             return res
@@ -85,14 +81,13 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             gender,
             profile_picture,
         };
-        console.log("bef creation")
         const student = yield student_1.default.create(objStudent);
         res.status(http_status_codes_1.StatusCodes.CREATED).json(student);
     }
     catch (error) {
         res
             .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
-            .json({ error: error });
+            .json({ error: "Server error" });
     }
 });
 exports.signup = signup;
