@@ -10,6 +10,7 @@ import NavbarComp from "./components/Navbar and Footer/Navbar";
 import Footer from "./components/Navbar and Footer/Footer";
 import SearchCourse from "./components/SearchCourses/SearchCourse";
 import ExploreCourses from "./components/ExploreCourses/ExploreCourses";
+import CourseOverviewPage from "./components/CourseOverviewPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/search" element={<SearchCourse />} />
         <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="/course-overview" element={<CourseOverviewPage/>}/>
       </Routes>
       <Footer />
     </>

@@ -5,8 +5,6 @@ import StudentCard from "../StudentCard/StudentCard";
 import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import { useAppSelector } from "../../redux/hooks";
-import { clearUserData } from "../../redux/slices/User_Slice";
-import { useDispatch } from "react-redux";
 
 interface Course {
   _id: string;
