@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const { getRatingsByCourseId } = require('../controllers/ratingController');
+const { getAverageRatingByCourseId } = require('../controllers/ratingController');
 // Get Ratings for a specific course by ID
-router.post('/get-by-id', getRatingsByCourseId);
+router.post('/get-by-id', getAverageRatingByCourseId);
 module.exports = router;

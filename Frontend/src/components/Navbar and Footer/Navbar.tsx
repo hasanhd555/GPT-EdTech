@@ -102,10 +102,23 @@ function NavbarComp() {
             </Form>
           </Nav>
           <Nav>
-            <Button className="mx-2" variant="primary">
+            <Button
+              className="mx-2"
+              variant="primary"
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
               Login
             </Button>
-            <Button variant="outline-primary">Sign Up</Button>
+            <Button
+              variant="outline-primary"
+              onClick={() => {
+                navigate("/signup");
+              }}
+            >
+              Sign Up
+            </Button>
           </Nav>
         </Navbar.Collapse>
       </Container>

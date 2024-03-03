@@ -1,9 +1,10 @@
 import React from "react";
 import UserDashboard from "./components/UserDashboard/UserDashboard";
 import "./App.css";
+import { BrowserRouter,Routes, Route } from "react-router-dom";
+import SignUpPage from "./pages/SignUpPage";
+import LoginPage from "./pages/LoginPage";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-import { Routes, Route } from "react-router-dom";
 import Counter from "./test_comp/counter";
 import Unpersisted_Counter from "./test_comp/unpersisted_ctr";
 import NavbarComp from "./components/Navbar and Footer/Navbar";
@@ -13,6 +14,7 @@ import ExploreCourses from "./components/ExploreCourses/ExploreCourses";
 
 function App() {
   return (
+
     <>
       <NavbarComp></NavbarComp>
       <Routes>
@@ -28,6 +30,7 @@ function App() {
       </Routes>
       <Footer />
     </>
+
   );
 }
 
