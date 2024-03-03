@@ -9,6 +9,7 @@ import Unpersisted_Counter from "./test_comp/unpersisted_ctr";
 import NavbarComp from "./components/Navbar and Footer/Navbar";
 import Footer from "./components/Navbar and Footer/Footer";
 import SearchCourse from "./components/SearchCourses/SearchCourse";
+import ExploreCourses from "./components/ExploreCourses/ExploreCourses";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
       <Routes>
         <Route path="/ctr_test" element={<Counter />} />
         <Route path="/unpersisted_ctr_test" element={<Unpersisted_Counter />} />
-        <Route path="/explore-courses" element={<Counter />} />
+        <Route path="/explore-courses" element={<ExploreCourses />} />
         <Route
           path="/dash"
           element={<UserDashboard studentId={"65da8d92d14e603d876cb448"} />}

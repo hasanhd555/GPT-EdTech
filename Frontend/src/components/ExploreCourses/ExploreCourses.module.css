@@ -1,0 +1,7 @@
+.coursecardcontainer {
+  transition: transform 0.2s;
+}
+
+.coursecardcontainer:hover {
+  transform: scale(1.05);
+}
