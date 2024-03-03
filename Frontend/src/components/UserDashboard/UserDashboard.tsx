@@ -3,9 +3,10 @@ import CourseCard from "../CourseCard/CourseCard";
 import styles from "./UserDashboard.module.css";
 import StudentCard from "../StudentCard/StudentCard";
 import axios from "axios";
-import { Row, Col } from 'react-bootstrap';
-
-
+import { Row, Col } from "react-bootstrap";
+import { useAppSelector } from "../../redux/hooks";
+import { clearUserData } from "../../redux/slices/User_Slice";
+import { useDispatch } from "react-redux";
 
 interface Course {
   _id: string;
@@ -14,12 +15,9 @@ interface Course {
   image_url: string;
 }
 
-interface UserDashboardProps {
-  studentId: string;
-}
-
-const UserDashboard: React.FC<UserDashboardProps> = ({ studentId }) => {
+const UserDashboard = () => {
   const [courses, setCourses] = useState<Course[]>([]);
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -27,7 +25,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ studentId }) => {
         const response = await axios.post(
           "http://localhost:5001/api/enrollment/courses",
           {
-            user_id: studentId,
+            user_id: _id,
           }
         );
         setCourses(response.data);
@@ -37,26 +35,25 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ studentId }) => {
     };
 
     fetchCourses();
-  }, [studentId]);
+  }, [_id]);
 
   return (
     <div className={styles.userDashboardPage}>
-      
       <div className={styles.heading}>
         <h2 className={styles.welcome}>Welcome to your Dashboard</h2>
         <h2 className={styles.userProfile}>User Profile</h2>
       </div>
-      <StudentCard studentId={studentId} />
+      <StudentCard studentId={_id} />
 
       <div className={styles.heading}>
         <h2 className={styles.userProfile}>Enrolled Courses</h2>
       </div>
-      
+
       <Row xs={1} md={2} lg={3} className="mx-5">
         {courses.map((course: Course) => (
-          <Col key={course._id} className="d-flex justify-content-center" >
+          <Col key={course._id} className="d-flex justify-content-center">
             <CourseCard
-            key={course._id}
+              key={course._id}
               title={course.title}
               description={course.description}
               imageUrl={course.image_url}
