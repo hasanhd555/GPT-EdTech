@@ -10,10 +10,15 @@ import {
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import Styles from "./Navbar.module.css";
 import { useState } from "react";
+import { useAppSelector } from "../../redux/hooks";
+import { clearUserData } from "../../redux/slices/User_Slice";
+import { useDispatch } from "react-redux";
 
 function NavbarComp() {
+  const dispatch = useDispatch();
   const navigate: NavigateFunction = useNavigate();
   const [searchValue, setSearchValue] = useState("");
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value); // Update the searchValue
@@ -25,6 +30,11 @@ function NavbarComp() {
     const url = `/search?query=${encodeURIComponent(searchValue)}`;
 
     navigate(url);
+  };
+
+  const handleClearUserData = () => {
+    dispatch(clearUserData());
+    navigate("/");
   };
 
   return (
@@ -102,23 +112,46 @@ function NavbarComp() {
             </Form>
           </Nav>
           <Nav>
-            <Button
-              className="mx-2"
-              variant="primary"
-              onClick={() => {
-                navigate("/login");
-              }}
-            >
-              Login
-            </Button>
-            <Button
-              variant="outline-primary"
-              onClick={() => {
-                navigate("/signup");
-              }}
-            >
-              Sign Up
-            </Button>
+            {email === null ? (
+              <>
+                <Button
+                  className="mx-2"
+                  variant="primary"
+                  onClick={() => {
+                    navigate("/login");
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    navigate("/signup");
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  className="mx-2 px-5"
+                  variant="primary"
+                  onClick={handleClearUserData}
+                >
+                  LogOut
+                </Button>
+                <Button
+                  type="submit"
+                  variant="outline-primary"
+                  onClick={() => {
+                    navigate("/dash");
+                  }}
+                >
+                  <span className="bi bi-person-circle"></span>
+                </Button>
+              </>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>

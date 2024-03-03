@@ -20,10 +20,7 @@ function App() {
         <Route path="/ctr_test" element={<Counter />} />
         <Route path="/unpersisted_ctr_test" element={<Unpersisted_Counter />} />
         <Route path="/explore-courses" element={<ExploreCourses />} />
-        <Route
-          path="/dash"
-          element={<UserDashboard studentId={"65da8d92d14e603d876cb448"} />}
-        />
+        <Route path="/dash" element={<UserDashboard />} />
         <Route path="/search" element={<SearchCourse />} />
         <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
