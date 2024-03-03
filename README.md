@@ -3,7 +3,7 @@
 ## Setup instructions
 To set up:
 1. Run `npm i` in both the frontend and the backend folders.
-2. Then run `npm start` in both folders to start the webpage.
+2. Then run `npm start` in both folders to start the web application.
 
 ## Directory structure
 ### Frontend
