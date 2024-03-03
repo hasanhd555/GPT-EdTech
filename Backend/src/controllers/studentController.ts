@@ -40,8 +40,8 @@ export const getAllStudents = async (req: Request, res: Response) => {
 export const signup = async (req: Request, res: Response) => {
   try {
     console.log("In student signup");
-    const { username, email, password, name, age, gender, profile_picture } =
-      req.body;
+    const { email, password, fullName, username, age, gender } = req.body;
+
     const existingStudent = await Student.findOne({ email });
     if (existingStudent) {
       return res
@@ -49,17 +49,21 @@ export const signup = async (req: Request, res: Response) => {
         .json({ error: "Email already in use" });
     }
     const objStudent: student_type = {
-      username,
-      email,
-      password,
-      name,
-      age,
-      gender,
-      profile_picture,
+      username: username,
+      email: email,
+      password: password,
+      name: fullName,
+      age: age,
+      gender: gender,
+      profile_picture:
+        "http://res.cloudinary.com/do2hqf8du/image/upload/v1709494602/jhprjpcx0k75zfyqmnry.svg",
     };
-    const student = await Student.create(objStudent);
+    const student = new Student(objStudent);
+    await student.save();
+
     res.status(StatusCodes.CREATED).json(student);
   } catch (error) {
+    console.log("Cannot Signup", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Server error" });

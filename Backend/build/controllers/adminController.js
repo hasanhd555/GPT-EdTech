@@ -75,7 +75,8 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             email,
             password,
         };
-        const admin = yield admin_1.default.create(objadmin);
+        const admin = new admin_1.default(objadmin);
+        yield admin.save();
         res.status(http_status_codes_1.StatusCodes.CREATED).json(admin);
     }
     catch (error) {

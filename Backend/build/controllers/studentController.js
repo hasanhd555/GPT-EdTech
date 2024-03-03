@@ -65,7 +65,7 @@ exports.getAllStudents = getAllStudents;
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("In student signup");
-        const { username, email, password, name, age, gender, profile_picture } = req.body;
+        const { email, password, fullName, username, age, gender } = req.body;
         const existingStudent = yield student_1.default.findOne({ email });
         if (existingStudent) {
             return res
@@ -73,18 +73,20 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 .json({ error: "Email already in use" });
         }
         const objStudent = {
-            username,
-            email,
-            password,
-            name,
-            age,
-            gender,
-            profile_picture,
+            username: username,
+            email: email,
+            password: password,
+            name: fullName,
+            age: age,
+            gender: gender,
+            profile_picture: "http://res.cloudinary.com/do2hqf8du/image/upload/v1709494602/jhprjpcx0k75zfyqmnry.svg",
         };
-        const student = yield student_1.default.create(objStudent);
+        const student = new student_1.default(objStudent);
+        yield student.save();
         res.status(http_status_codes_1.StatusCodes.CREATED).json(student);
     }
     catch (error) {
+        console.log("Cannot Signup", error);
         res
             .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ error: "Server error" });

@@ -51,7 +51,8 @@ export const signup = async (req: Request, res: Response) => {
       email,
       password,
     };
-    const admin = await Admin.create(objadmin);
+    const admin = new Admin(objadmin);
+    await admin.save();
     res.status(StatusCodes.CREATED).json(admin);
   } catch (error) {
     res
