@@ -31,6 +31,7 @@ const CourseOverviewPage = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentText, setCommentText] = useState("");
+  const [isEnrolled, setIsEnrolled] = useState(false);
   const [courseID, setcourseID] = useState("");
   const [courseData, setCourseData] = useState({
     _id: "",
@@ -45,6 +46,22 @@ const CourseOverviewPage = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCommentText(event.target.value);
+  };
+
+  const enrollCourse = () => {
+    axios
+      .post("http://localhost:5001/api/enrollment/enroll", {
+        user_id: _id,
+        course_id: courseID,
+      })
+      .then((response) => {
+        // Handle response
+        setIsEnrolled(true);
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error:", error);
+      });
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -90,6 +107,22 @@ const CourseOverviewPage = () => {
       // Making API request using Axios
       //   console.log("Successfully fetched id from the url: ",id);
       setcourseID(id);
+      axios
+        .post("http://localhost:5001/api/enrollment/get-enrollment", {
+          user_id: _id,
+          course_id: id,
+        })
+        .then((response) => {
+          // Handle response
+          if (response?.data?.length !== 0) {
+            setIsEnrolled(true);
+          }
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error:", error);
+        });
+
       axios
         .post("http://localhost:5001/api/course/get-info", { id })
         .then((response) => {
@@ -141,7 +174,7 @@ const CourseOverviewPage = () => {
           console.error("Error:", error);
         });
     }
-  }, [navigate]);
+  }, []);
 
   return (
     <>
@@ -200,12 +233,22 @@ const CourseOverviewPage = () => {
             {/* Rating will be fetched and passed to StarRating component */}
             <StarRating rating={averageRating.averageRating} />
             {_id !== null ? (
-              <Button
-                className="mt-5"
-                style={{ paddingLeft: "30%", paddingRight: "30%" }}
-              >
-                Enroll
-              </Button>
+              isEnrolled === false ? (
+                <Button
+                  className="mt-5"
+                  style={{ paddingLeft: "28%", paddingRight: "28%" }}
+                  onClick={enrollCourse}
+                >
+                  Enroll
+                </Button>
+              ) : (
+                <Button
+                  className="mt-5"
+                  style={{ paddingLeft: "28%", paddingRight: "28%" }}
+                >
+                  Go to Course
+                </Button>
+              )
             ) : null}
 
             <h2 className="text-decoration-underline mt-5">
@@ -220,19 +263,28 @@ const CourseOverviewPage = () => {
                 </ListGroup.Item>
               ))}
 
-              <Form onSubmit={handleSubmit}>
-                <FormControl
-                  type="search"
-                  placeholder="Comment"
-                  className={`border-secondary mt-3`}
-                  aria-label="Search"
-                  value={commentText}
-                  onChange={handleChange}
-                />
-                <Button type="submit" className={`btn-primary mt-3`}>
-                  Submit
-                </Button>
-              </Form>
+              {isEnrolled === false ? null : (
+                <>
+                  <Form onSubmit={handleSubmit}>
+                    <FormControl
+                      type="search"
+                      placeholder="Comment"
+                      className={`border-secondary mt-3`}
+                      aria-label="Search"
+                      value={commentText}
+                      onChange={handleChange}
+                    />
+                    <div>
+                      <Button
+                        type="submit"
+                        className={`btn-primary mt-3 w-100`}
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  </Form>
+                </>
+              )}
             </ListGroup>
           </Col>
         </Row>
