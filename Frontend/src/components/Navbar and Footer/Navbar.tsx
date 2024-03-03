@@ -42,7 +42,13 @@ function NavbarComp() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              Home
+            </Nav.Link>
             <Nav.Link
               onClick={() => {
                 navigate("/explore-courses");
@@ -50,9 +56,27 @@ function NavbarComp() {
             >
               Explore
             </Nav.Link>
-            <Nav.Link href="#link">About Us</Nav.Link>
-            <Nav.Link href="#link">Contact Us</Nav.Link>
-            <Nav.Link href="#link">Summarizer</Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("/about-us");
+              }}
+            >
+              About Us
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("/contact-us");
+              }}
+            >
+              Contact Us
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("/summarize");
+              }}
+            >
+              Summarizer
+            </Nav.Link>
 
             <Form
               className="d-flex px-2 border-secondary"
