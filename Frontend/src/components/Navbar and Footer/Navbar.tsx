@@ -7,23 +7,35 @@ import {
   Button,
   InputGroup,
 } from "react-bootstrap";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import Styles from "./Navbar.module.css";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAppSelector } from "../../redux/hooks";
+import { clearUserData } from "../../redux/slices/User_Slice";
+import { useDispatch } from "react-redux";
 
 function NavbarComp() {
-  const navigate=useNavigate()
+  const dispatch = useDispatch();
+  const navigate: NavigateFunction = useNavigate();
+  const [searchValue, setSearchValue] = useState("");
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
-    // Function to handle login button click
-    const handleLoginClick = () => {
-      // Navigate to the login page (replace "/login" with the actual path)
-      navigate("/login");
-    };
-  
-    // Function to handle signup button click
-    const handleSignupClick = () => {
-      // Navigate to the signup page (replace "/signup" with the actual path)
-      navigate("/signup");
-    };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value); // Update the searchValue
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const url = `/search?query=${encodeURIComponent(searchValue)}`;
+
+    navigate(url);
+  };
+
+  const handleClearUserData = () => {
+    dispatch(clearUserData());
+    navigate("/");
+  };
 
   return (
     <Navbar expand="lg" className="bg-body-white shadow">
@@ -40,15 +52,49 @@ function NavbarComp() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Explore</Nav.Link>
-            <Nav.Link href="#link">About Us</Nav.Link>
-            <Nav.Link href="#link">Contact Us</Nav.Link>
-            <Nav.Link href="#link">Summarizer</Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              Home
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("/explore-courses");
+              }}
+            >
+              Explore
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("/about-us");
+              }}
+            >
+              About Us
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("/contact-us");
+              }}
+            >
+              Contact Us
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("/summarize");
+              }}
+            >
+              Summarizer
+            </Nav.Link>
 
-            <Form className="d-flex px-2 border-secondary">
+            <Form
+              className="d-flex px-2 border-secondary"
+              onSubmit={handleSubmit}
+            >
               <InputGroup>
                 <Button
+                  type="submit"
                   variant="outline-secondary"
                   className={` ${Styles.customhighlight}`}
                 >
@@ -59,15 +105,53 @@ function NavbarComp() {
                   placeholder="Search a Course"
                   className={`border-secondary ${Styles.customhighlight}`}
                   aria-label="Search"
+                  value={searchValue}
+                  onChange={handleChange}
                 />
               </InputGroup>
             </Form>
           </Nav>
           <Nav>
-            <Button className="mx-2" variant="primary" onClick={handleLoginClick}>
-              Login
-            </Button>
-            <Button variant="outline-primary" onClick={handleSignupClick}>Sign Up</Button>
+            {email === null ? (
+              <>
+                <Button
+                  className="mx-2"
+                  variant="primary"
+                  onClick={() => {
+                    navigate("/login");
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    navigate("/signup");
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  className="mx-2 px-5"
+                  variant="primary"
+                  onClick={handleClearUserData}
+                >
+                  LogOut
+                </Button>
+                <Button
+                  type="submit"
+                  variant="outline-primary"
+                  onClick={() => {
+                    navigate("/dash");
+                  }}
+                >
+                  <span className="bi bi-person-circle"></span>
+                </Button>
+              </>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
