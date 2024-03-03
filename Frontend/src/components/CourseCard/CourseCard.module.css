@@ -1,32 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
 .cardWidth {
-    width: 300px; 
-    height: 225px; 
-    padding: 3%;
-  }
+  width: 300px;
+  height: 225px;
+  padding: 3%;
+}
 
-  /* CourseCard.module.css */
+/* CourseCard.module.css */
 .cardImage {
-    max-height: 20em;
-    /* width: 50px; */
-    /* margin: 10px; */
-  }
-  
-  .courseCard{
-    width: 70%;
-    border-radius: 3% !important;
-  }
+  max-height: 20em;
+  /* width: 50px; */
+  /* margin: 10px; */
+}
+
+.courseCard {
+  width: 70%;
+  border-radius: 3% !important;
+}
 /* CourseCard.module.css */
 .courseHeading {
-  font-family: 'Inter', sans-serif !important;
+  font-family: "Inter", sans-serif !important;
   font-size: 24px !important;
   font-weight: 700 !important;
 }
 
-.courseSubHeading
-{
-  font-family: 'Inter', sans-serif !important;
+.courseSubHeading {
+  font-family: "Inter", sans-serif !important;
   font-size: 12px !important;
   font-weight: 400 !important;
 }
