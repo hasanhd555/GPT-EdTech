@@ -1,7 +1,6 @@
-import React from "react";
 import UserDashboard from "./components/UserDashboard/UserDashboard";
 import "./App.css";
-import { BrowserRouter,Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -14,7 +13,6 @@ import ExploreCourses from "./components/ExploreCourses/ExploreCourses";
 
 function App() {
   return (
-
     <>
       <NavbarComp></NavbarComp>
       <Routes>
@@ -27,10 +25,11 @@ function App() {
           element={<UserDashboard studentId={"65da8d92d14e603d876cb448"} />}
         />
         <Route path="/search" element={<SearchCourse />} />
+        <Route path="/signup" element={<SignUpPage />}></Route>
+        <Route path="/login" element={<LoginPage />}></Route>
       </Routes>
       <Footer />
     </>
-
   );
 }
 
