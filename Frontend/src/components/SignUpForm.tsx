@@ -68,7 +68,58 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
       .then(() => {
         // Handle successful validation
         console.log(values);
-        actions.setSubmitting(false);
+  
+        // Construct the data to be sent in the API call
+        const requestData = {
+          email: values.email,
+          password: values.password,
+          // Add other fields based on the selected role
+          ...(selectedRole === "student"
+            ? {
+                fullName: values.fullName,
+                username: values.username,
+                age: values.age,
+                gender: values.gender,
+              }
+            : {}),
+        };
+  
+        // Make API call based on the selected role
+        if (selectedRole === "admin") {
+          // API call for admin registration
+          // Example using fetch:
+           fetch("http://localhost:5001/api/admin/signup", {
+             method: "POST",
+             headers: {
+               "Content-Type": "application/json",
+             },
+             body: JSON.stringify(requestData),
+           })
+             .then(response => response.json())
+             .then(data =>{ 
+              console.log(data);
+              window.alert("Signup successful!");
+            })
+             .catch(error => console.error("Error:", error));
+        } else if (selectedRole === "student") {
+          // API call for student registration
+          // Example using fetch:
+           fetch("http://localhost:5001/api/student/signup", {
+             method: "POST",
+             headers: {
+               "Content-Type": "application/json",
+             },
+             body: JSON.stringify(requestData),
+           })
+             .then(response => response.json())
+             .then(data => { 
+              console.log(data);
+              window.alert("Signup successful!");
+            })
+             .catch(error => console.error("Error:", error));
+        }
+  
+        actions.setSubmitting(false); // Uncomment this line if you want to stop the loading spinner
       })
       .catch((errors: yup.ValidationError) => {
         // Handle validation errors
@@ -76,6 +127,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
         actions.setSubmitting(false);
       });
   };
+  
 
   return (
     <Container className="mt-5">
