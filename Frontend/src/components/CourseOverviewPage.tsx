@@ -14,10 +14,15 @@ interface Lesson {
   content: string;
 }
 
+interface Comment {
+  username: string;
+  comment_text: string;
+}
+
 const CourseOverviewPage = () => {
   const navigate = useNavigate();
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [courseData, setCourseData] = useState({
     _id: "",
     title: "",
@@ -55,7 +60,7 @@ const CourseOverviewPage = () => {
           // Handle response
           //   console.log(response.data);
           const chapters: Lesson[] = response.data;
-        //   console.log("Chapters: ", chapters);
+          //   console.log("Chapters: ", chapters);
           setLessons(chapters);
           //   console.log(lessons);
         })
@@ -102,8 +107,8 @@ const CourseOverviewPage = () => {
             // style={{ border: "1px solid green" }}
           >
             {/* will render course title and description in this column */}
-            <h1 className="">{courseData.title}</h1>
-            <p className=" mt-3 w-75">{courseData.description}</p>
+            <h1 className="text-center">{courseData.title}</h1>
+            <p className=" mt-3 w-75 text-center">{courseData.description}</p>
           </Col>
           <Col
             className="d-flex flex-column p-5"
@@ -151,42 +156,12 @@ const CourseOverviewPage = () => {
             </h2>
             {/* Community comments will be rendered here like a list */}
             <ListGroup className="w-75">
-              <ListGroup.Item className="p-3 mt-3 border-0">
-                <h4>Musa Zulfiqar</h4>
-                <h6 className="text-black-50">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-                  ad sapiente deserunt earum, neque incidunt rerum ullam nihil
-                  ipsam, beatae omnis excepturi eaque hic nam debitis temporibus
-                  esse veritatis corrupti!
-                </h6>
-              </ListGroup.Item>
-              <ListGroup.Item className="p-3 mt-3 border-0">
-                <h4>Musa Zulfiqar</h4>
-                <h6 className="text-black-50">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-                  ad sapiente deserunt earum, neque incidunt rerum ullam nihil
-                  ipsam, beatae omnis excepturi eaque hic nam debitis temporibus
-                  esse veritatis corrupti!
-                </h6>
-              </ListGroup.Item>
-              <ListGroup.Item className="p-3 mt-3 border-0">
-                <h4>Musa Zulfiqar</h4>
-                <h6 className="text-black-50">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-                  ad sapiente deserunt earum, neque incidunt rerum ullam nihil
-                  ipsam, beatae omnis excepturi eaque hic nam debitis temporibus
-                  esse veritatis corrupti!
-                </h6>
-              </ListGroup.Item>
-              <ListGroup.Item className="p-3 mt-3 border-0">
-                <h4>Musa Zulfiqar</h4>
-                <h6 className="text-black-50">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-                  ad sapiente deserunt earum, neque incidunt rerum ullam nihil
-                  ipsam, beatae omnis excepturi eaque hic nam debitis temporibus
-                  esse veritatis corrupti!
-                </h6>
-              </ListGroup.Item>
+              {comments.map((comment) => (
+                <ListGroup.Item className="p-3 mt-3 border-0">
+                  <h4>{comment.username}</h4>
+                  <h6 className="text-black-50">{comment.comment_text}</h6>
+                </ListGroup.Item>
+              ))}
             </ListGroup>
           </Col>
         </Row>
