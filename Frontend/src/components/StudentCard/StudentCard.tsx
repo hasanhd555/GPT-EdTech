@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
-import styles from "./StudentCard.module.css";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Spinner,
+  Form,
+  Card,
+  Image,
+} from "react-bootstrap";
 import { student_type } from "../../constant";
-import Button from "react-bootstrap/Button";
-import Spinner from "react-bootstrap/Spinner";
+import styles from './StudentCard.module.css'; // Make sure this path is correct
 
 type StudentCardProps = {
   studentId: string | null;
@@ -11,7 +19,6 @@ type StudentCardProps = {
 const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
   const [student, setStudent] = useState<student_type | null>(null);
   const [editMode, setEditMode] = useState(false);
-  const [editPictureMode, setEditPictureMode] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     age: 0,
@@ -20,25 +27,25 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
   });
 
   useEffect(() => {
-    const fetchStudentData = async (id: string) => {
-      try {
-        const response = await fetch(
-          `http://localhost:5001/api/student/?id=${id}`
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+    const fetchStudentData = async () => {
+      if (studentId) {
+        try {
+          const response = await fetch(
+            `http://localhost:5001/api/student/?id=${studentId}`
+          );
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data: student_type = await response.json();
+          setStudent(data);
+        } catch (error) {
+          console.error("Fetching student data failed:", error);
+          setStudent(null);
         }
-        const data: student_type = await response.json();
-        setStudent(data);
-      } catch (e) {
-        console.error(e);
-        setStudent(null);
       }
     };
 
-    if (studentId) {
-      fetchStudentData(studentId);
-    }
+    fetchStudentData();
   }, [studentId]);
 
   useEffect(() => {
@@ -57,10 +64,15 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
     setEditMode(!editMode);
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  const handleChange: React.ChangeEventHandler<
+    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  > = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const target = e.target;
+    setFormData({ ...formData, [target.name]: target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -134,133 +146,143 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
   if (!student) {
     // return <div>Loading...</div>;
     return (
-      <div className="d-flex justify-content-center align-items-center pt-5">
-        <Spinner animation="grow" variant="primary" />
-        <Spinner animation="grow" variant="primary" />
-        <Spinner animation="grow" variant="primary" />
-      </div>
+      <Container
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
+        <Spinner animation="border" variant="primary" />
+      </Container>
     );
   }
 
   console.log(`http://localhost:6000/api/student/?id=${studentId}`);
 
   return (
-    <div className={styles.studentCardSpace}>
-      <div className={styles.studentCard}>
-        <div className={styles.profileSection}>
-          <div className={styles.profilePic}>
-            <img
-              src={
-                editPictureMode
-                  ? formData.profile_picture
-                  : student.profile_picture
-              }
-              alt={student.name}
-              className={styles.profilePicture}
-            />
-          </div>
-          <div className={styles.changePicButton}>
-            <input
-              type="file"
-              id="fileInput"
-              hidden
-              onChange={handleImageUpload}
-            />
-            <Button
-              variant="primary"
-              onClick={() => document.getElementById("fileInput")?.click()}
-              style={{ width: "200px" }}
-            >
-              Change Picture
-            </Button>
-          </div>
-        </div>
-
-        <div className={styles.userInfo}>
-          <form onSubmit={handleSubmit} className={styles.userDetails}>
-            <div className={styles.studentName}>
-              <div className={styles.name}>Mr. {student.name}</div>
-              <div className={styles.role}>Student</div>
-            </div>
-
-            <div className={styles.info}>
-              {editMode ? (
-                <>
-                  <div>
-                    <label htmlFor={styles.email}>Email: </label>
-                    <span className={styles.space}></span>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="Enter email" // Placeholder added for accessibility
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="age">Age: </label>
-                    <span className={styles.space}></span>
-                    <input
-                      id="age"
-                      name="age"
-                      type="number"
-                      value={formData.age}
-                      onChange={handleChange}
-                      placeholder="Enter age" // Placeholder added for accessibility
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="gender">Gender: </label>
-                    <span className={styles.space}></span>
-                    <select
-                      id="gender"
-                      name="gender"
-                      value={formData.gender}
-                      onChange={handleChange}
-                    >
-                      <option value="">Select Gender</option>{" "}
-                      {/* Default option added */}
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div>Email: {student.email}</div>
-                  <div>Age: {student.age}</div>
-                  <div>Gender: {student.gender}</div>
-                </>
-              )}
-            </div>
-
-            <div className={styles.editButton}>
-              {editMode ? (
-                <>
-                  <Button variant="danger" onClick={handleEdit}>
-                    Cancel
+    <Container>
+      <Row className="justify-content-center">
+      <Col lg={10}> {/* Changed from md={8} to lg={10} to increase card width */}
+      <Card className={styles.cardLarge}>
+            <Card.Body>
+              <Row>
+                <Col md={4} className="d-flex align-items-center flex-column">
+                  <Image
+                    roundedCircle
+                    src={student.profile_picture || "placeholder-image-url"}
+                    alt={student.name}
+                    style={{ width: "150px", height: "150px" }}
+                  />
+                  <Button
+                    variant="primary"
+                    className="mt-2"
+                    onClick={() =>
+                      document.getElementById("profilePicUpload")?.click()
+                    }
+                  >
+                    Change Picture
                   </Button>
-                  <span className={styles.space}></span>
-                  <Button variant="success" type="submit">
-                    Save Changes
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  variant="primary"
-                  style={{ width: "200px" }}
-                  onClick={handleEdit}
-                >
-                  Edit
-                </Button>
-              )}
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+                  <input
+                    id="profilePicUpload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    placeholder="Profile Pic"
+                    style={{ display: "none" }}
+                  />
+                </Col>
+                <Col style={{ borderLeft: "2px dotted #96BDF7" }} md={8}>
+                <Card.Title className={styles.cardTitleLarge}>{`Mr. ${student.name}`}</Card.Title> {/* Added custom class for larger title */}
+                  <Card.Subtitle className="mb-2 text-muted">
+                    Student
+                  </Card.Subtitle>
+                  {editMode ? (
+                    <Form onSubmit={handleSubmit}>
+                      <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm={2}>
+                          Email
+                        </Form.Label>
+                        <Col sm={10}>
+                          <Form.Control
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder="Enter email"
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm={2}>
+                          Age
+                        </Form.Label>
+                        <Col sm={10}>
+                          <Form.Control
+                            type="number"
+                            name="age"
+                            value={formData.age}
+                            onChange={handleChange}
+                            placeholder="Enter age"
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm={2}>
+                          Gender
+                        </Form.Label>
+                        <Col sm={10}>
+                          <Form.Control
+                            as="select"
+                            name="gender"
+                            value={formData.gender}
+                            onChange={handleChange}
+                            title="Select Gender"
+                          >
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                          </Form.Control>
+                        </Col>
+                      </Form.Group>
+                      <Row>
+                        <Col sm={12} className="d-flex justify-content-end">
+                          <Button
+                            variant="danger"
+                            onClick={handleEdit}
+                            className="mr-2"
+                          >
+                            Cancel
+                          </Button>
+                          <Button variant="success" type="submit">
+                            Save Changes
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Form>
+                  ) : (
+                    <div>
+                      <div>Email: {student.email}</div>
+                      <div>Age: {student.age}</div>
+                      <div>Gender: {student.gender}</div>
+                      <div style={{ textAlign: "right" }}>
+                    
+                        <Button
+                          className=""
+                          variant="primary"
+                          onClick={handleEdit}
+                          style={{"width":'25%'}}
+                        >
+                          Edit
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

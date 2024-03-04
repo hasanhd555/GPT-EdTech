@@ -20,7 +20,8 @@
   /* border: 2px solid purple; */
   width: 20vw;
   font-family: "Vietnam Pro", sans-serif; 
-  font-size: 38px;
+  /* font-size: 38px; */
+  font-size: 2.5rem;
   letter-spacing: -0.05em; 
   font-weight: 800;
   text-align: center;
@@ -28,8 +29,9 @@
 
 .heading .userProfile {
   font-family: "Vietnam Pro", sans-serif; 
-  font-size: 35px;
+  /* font-size: 35px; */
+  font-size: 2.1rem;
   font-weight: 500;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.03rem;
   margin-top: 10vh;
 }
