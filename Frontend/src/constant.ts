@@ -24,6 +24,7 @@ export interface admin_type {
   }
   
   export interface lesson_type {
+    _id: string;
     lesson_num: number;
     title: string;
     content: string;
