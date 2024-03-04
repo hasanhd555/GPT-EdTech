@@ -5,16 +5,14 @@ import Spinner from "react-bootstrap/Spinner";
 import CourseCard from "../CourseCard/CourseCard";
 import { NavigateFunction, useNavigate } from "react-router";
 import Styles from "./ExploreCourses.module.css";
+import { course_type } from "../../constant";
 
-interface Course {
-  _id: string;
+interface ExploreCoursesProps {
   title: string;
-  description: string;
-  image_url: string;
 }
 
-function ExploreCourses() {
-  const [courses, setCourses] = useState<Course[]>([]);
+function ExploreCourses({ title }: ExploreCoursesProps) {
+  const [courses, setCourses] = useState<course_type[]>([]);
   const navigate: NavigateFunction = useNavigate();
 
   useEffect(() => {
@@ -41,9 +39,10 @@ function ExploreCourses() {
         </div>
       ) : (
         <>
-          <h2>Explore Our Courses</h2>
+        
+          <h2 className="fw-bold">{title}</h2>
           <Row xs={1} md={2} lg={3} className="my-5">
-            {courses.map((course: Course) => (
+            {courses.map((course: course_type) => (
               <Col
                 key={course._id}
                 className={`my-4 ${Styles.coursecardcontainer}`}

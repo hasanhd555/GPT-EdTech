@@ -18,11 +18,12 @@ function App() {
     <>
       <NavbarComp></NavbarComp>
       <Routes>
-        <Route path="/" element={<ExploreCourses />} />
+        <Route path="/" element={<ExploreCourses title="Explore Our Courses"/>} />
         <Route path="/ctr_test" element={<Counter />} />
         <Route path="/unpersisted_ctr_test" element={<Unpersisted_Counter />} />
-        <Route path="/explore-courses" element={<ExploreCourses />} />
-        <Route path="/dash" element={<AdminDashboard />} />
+        <Route path="/explore-courses" element={<ExploreCourses title="Explore Our Courses"/>} />
+        <Route path="/dash-admin" element={<AdminDashboard />} />
+        <Route path="/dash-student" element={<UserDashboard />} />
         <Route path="/search" element={<SearchCourse />} />
         <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>

@@ -5,16 +5,10 @@ import StudentCard from "../StudentCard/StudentCard";
 import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import { useAppSelector } from "../../redux/hooks";
-
-interface Course {
-  _id: string;
-  title: string;
-  description: string;
-  image_url: string;
-}
+import { course_type } from "../../constant";
 
 const UserDashboard = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<course_type[]>([]);
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
   useEffect(() => {
@@ -48,7 +42,7 @@ const UserDashboard = () => {
       </div>
 
       <Row xs={1} md={2} lg={3} className="mx-5">
-        {courses.map((course: Course) => (
+        {courses.map((course: course_type) => (
           <Col key={course._id} className="d-flex justify-content-center">
             <CourseCard
               key={course._id}

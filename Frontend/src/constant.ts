@@ -14,6 +14,7 @@ export interface admin_type {
     description: string;
     image_url: string;
     admin_id: string;
+    _id: string;
   }
   
   export interface enrollment_type {
