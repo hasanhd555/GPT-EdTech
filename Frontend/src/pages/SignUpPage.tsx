@@ -1,25 +1,26 @@
-import React from 'react'
-import SignUpForm from '../components/SignUpForm'
-import TestimonialCarousel from '../components/TestimonialCarousel';
+import React from "react";
+import SignUpForm from "../components/SignUpForm";
+import TestimonialCarousel from "../components/TestimonialCarousel";
+import { Row, Col, Container } from "react-bootstrap";
 
 const SignUpPage = () => {
   return (
-    <div>
+    <>
       {/* <div>Navbar</div> Will insert later */}
-      <div className="container mt-4">
-        <div className="row d-flex align-items-center">
+      <Container fluid>
+        <Row className="d-flex align-items-center">
           {" "}
-          <div className="col-md-6">
+          <Col>
             <TestimonialCarousel />
-          </div>
-          <div className="col-md-6">
+          </Col>
+          <Col className="d-flex align-items-center justify-content-center">
             <SignUpForm />
-          </div>
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Container>
       {/* <div>Footer</div> Will insert later */}
-    </div>
+    </>
   );
-}
+};
 
-export default SignUpPage
+export default SignUpPage;

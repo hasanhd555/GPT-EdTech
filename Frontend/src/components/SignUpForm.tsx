@@ -68,7 +68,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
       .then(() => {
         // Handle successful validation
         console.log(values);
-  
+
         // Construct the data to be sent in the API call
         const requestData = {
           email: values.email,
@@ -83,42 +83,42 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
               }
             : {}),
         };
-  
+
         // Make API call based on the selected role
         if (selectedRole === "admin") {
           // API call for admin registration
           // Example using fetch:
-           fetch("http://localhost:5001/api/admin/signup", {
-             method: "POST",
-             headers: {
-               "Content-Type": "application/json",
-             },
-             body: JSON.stringify(requestData),
-           })
-             .then(response => response.json())
-             .then(data =>{ 
+          fetch("http://localhost:5001/api/admin/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+          })
+            .then((response) => response.json())
+            .then((data) => {
               console.log(data);
               window.alert("Signup successful!");
             })
-             .catch(error => console.error("Error:", error));
+            .catch((error) => console.error("Error:", error));
         } else if (selectedRole === "student") {
           // API call for student registration
           // Example using fetch:
-           fetch("http://localhost:5001/api/student/signup", {
-             method: "POST",
-             headers: {
-               "Content-Type": "application/json",
-             },
-             body: JSON.stringify(requestData),
-           })
-             .then(response => response.json())
-             .then(data => { 
+          fetch("http://localhost:5001/api/student/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+          })
+            .then((response) => response.json())
+            .then((data) => {
               console.log(data);
               window.alert("Signup successful!");
             })
-             .catch(error => console.error("Error:", error));
+            .catch((error) => console.error("Error:", error));
         }
-  
+
         actions.setSubmitting(false); // Uncomment this line if you want to stop the loading spinner
       })
       .catch((errors: yup.ValidationError) => {
@@ -127,12 +127,11 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
         actions.setSubmitting(false);
       });
   };
-  
 
   return (
-    <Container className="mt-5">
+    <Container fluid className="mt-5 mb-5">
       <Row>
-        <Col md={{ span: 6, offset: 3 }}>
+        <Col md={{ span: 8, offset: 2 }}>
           <Card>
             <Card.Body>
               <h2 className="card-title text-center mb-4">Sign Up</h2>
