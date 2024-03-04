@@ -1,4 +1,5 @@
 import UserDashboard from "./components/UserDashboard/UserDashboard";
+import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage";
@@ -21,7 +22,7 @@ function App() {
         <Route path="/ctr_test" element={<Counter />} />
         <Route path="/unpersisted_ctr_test" element={<Unpersisted_Counter />} />
         <Route path="/explore-courses" element={<ExploreCourses />} />
-        <Route path="/dash" element={<UserDashboard />} />
+        <Route path="/dash" element={<AdminDashboard />} />
         <Route path="/search" element={<SearchCourse />} />
         <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>

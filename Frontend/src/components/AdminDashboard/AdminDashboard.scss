@@ -1,0 +1,16 @@
+.width-5em{
+    width: 20em;
+}
+
+.red-border{
+    border: 2px solid red;
+}
+
+.coursecardcontainer {
+    transition: transform 0.2s;
+  }
+  
+  .coursecardcontainer:hover {
+    transform: scale(1.05);
+  }
+  
