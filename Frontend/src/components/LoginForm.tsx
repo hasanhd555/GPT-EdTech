@@ -141,9 +141,9 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
   };
 
   return (
-    <Container className="mt-5">
+    <Container fluid className="mt-5 mb-5 w-100">
       <Row>
-        <Col md={{ span: 6, offset: 3 }}>
+        <Col md={{ span: 8, offset: 2 }}>
           <Card>
             <Card.Body>
               <h2 className="card-title text-center mb-4">Login</h2>
@@ -194,6 +194,45 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                       </InputGroup>
                       <ErrorMessage
                         name="password"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+                    <div
+                      role="group"
+                      className="mb-3"
+                      aria-labelledby="role-group"
+                    >
+                      <BootstrapForm.Label className="mr-3">
+                        Role
+                      </BootstrapForm.Label>
+                      <div className="d-flex">
+                        {" "}
+                        <div>
+                          <Field
+                            name="role"
+                            type="radio"
+                            value="admin"
+                            as={BootstrapForm.Check}
+                            id="admin"
+                            label="admin"
+                            // onClick={handleRoleChange}
+                          />
+                        </div>
+                        <div className="mx-3">
+                          <Field
+                            name="role"
+                            type="radio"
+                            value="student"
+                            as={BootstrapForm.Check}
+                            id="student"
+                            label="student"
+                            // onClick={handleRoleChange}
+                          />
+                        </div>
+                      </div>
+                      <ErrorMessage
+                        name="role"
                         component="div"
                         className="text-danger"
                       />

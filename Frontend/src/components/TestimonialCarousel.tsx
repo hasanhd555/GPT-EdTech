@@ -39,7 +39,6 @@ const testimonialsData = [
   },
 ];
 
-
 const TestimonialCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
