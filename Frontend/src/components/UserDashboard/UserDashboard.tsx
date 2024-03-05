@@ -5,6 +5,7 @@ import StudentCard from "../StudentCard/StudentCard";
 import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import { useAppSelector } from "../../redux/hooks";
+import { useNavigate } from "react-router-dom";
 
 interface Course {
   _id: string;
@@ -14,10 +15,14 @@ interface Course {
 }
 
 const UserDashboard = () => {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState<Course[]>([]);
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
   useEffect(() => {
+    if (_id === null || isAdmin === true) {
+      navigate("/");
+    }
     const fetchCourses = async () => {
       try {
         const response = await axios.post(
