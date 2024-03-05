@@ -232,7 +232,7 @@ const CourseOverviewPage = () => {
           >
             {/* Rating will be fetched and passed to StarRating component */}
             <StarRating rating={averageRating.averageRating} />
-            {_id !== null ? (
+            {_id !== null && isAdmin === false ? (
               isEnrolled === false ? (
                 <Button
                   className="mt-5"
@@ -263,7 +263,7 @@ const CourseOverviewPage = () => {
                 </ListGroup.Item>
               ))}
 
-              {isEnrolled === false ? null : (
+              {isEnrolled === false || isAdmin === true ? null : (
                 <>
                   <Form onSubmit={handleSubmit}>
                     <FormControl

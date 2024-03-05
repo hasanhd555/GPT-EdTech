@@ -35,6 +35,7 @@ export interface question_type {
   correct_answer: number;
   options: string[];
   course_id: string;
+  concept: string;
 }
 
 export interface rating_type {

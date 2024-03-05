@@ -25,16 +25,33 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const questionSchema = new mongoose_1.Schema({
-    question_text: { type: String, required: [true, 'Question text is required'] },
-    correct_answer: { type: Number, required: [true, 'Correct answer is required'] },
-    options: { type: [String], required: [true, 'Options are required'] },
-    course_id: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Course', required: [true, 'Course ID is required'] }
+    question_text: {
+        type: String,
+        required: [true, "Question text is required"],
+    },
+    correct_answer: {
+        type: Number,
+        required: [true, "Correct answer is required"],
+    },
+    options: { type: [String], required: [true, "Options are required"] },
+    course_id: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "Course",
+        required: [true, "Course ID is required"],
+    },
+    concept: { type: String, required: [true, "Concept is required"] },
 });
 questionSchema.methods.setQuestionText = function (text) {
     this.question_text = text;
 };
 questionSchema.methods.getQuestionText = function () {
     return this.question_text;
+};
+questionSchema.methods.setQuestionConcept = function (text) {
+    this.concept = text;
+};
+questionSchema.methods.getQuestionConcept = function () {
+    return this.concept;
 };
 questionSchema.methods.setCorrectAnswer = function (answer) {
     this.correct_answer = answer;
@@ -51,4 +68,4 @@ questionSchema.methods.removeOption = function (option) {
         this.options.splice(index, 1);
     }
 };
-exports.default = mongoose_1.default.model('Question', questionSchema);
+exports.default = mongoose_1.default.model("Question", questionSchema);
