@@ -1,0 +1,12 @@
+
+.customBoxShadow {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); /* Example shadow, adjust as needed */
+  }
+
+  .customText{
+    font-weight:500;
+    font-size: larger;
+}
+.subHeading{
+      font-size: larger;
+  }

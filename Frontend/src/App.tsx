@@ -11,6 +11,7 @@ import Footer from "./components/Navbar and Footer/Footer";
 import SearchCourse from "./components/SearchCourses/SearchCourse";
 import ExploreCourses from "./components/ExploreCourses/ExploreCourses";
 import CourseOverviewPage from "./components/CourseOverviewPage";
+import LeaderBoard from "./components/LeaderBoard/LeaderBoard";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/course-overview" element={<CourseOverviewPage/>}/>
+        <Route path="/leaderboard" element={<LeaderBoard />}></Route>
       </Routes>
       <Footer />
     </>
