@@ -60,24 +60,20 @@ const Leaderboard: React.FC = () => {
             {students[1] && (
               <Col xs={12} md={12} lg={4}>
                 <div
-                  className={`d-flex flex-column flex-lg-row  justify-content-around bg-primary rounded p-2 text-white ${styles.customBoxShadow}`}
-                  style={{ fontSize: "1rem" }}
+                  className={`d-flex flex-column flex-lg-row justify-content-around align-items-center bg-primary rounded p-2 text-white ${styles.customBoxShadow} ${styles.rankingItem} ${styles.topThreeRanking}`}
                 >
-                  <div className="d-flex justify-content-center">
-                    <img
-                      src={medals.silver}
-                      alt="Rank 2"
-                      style={{ width: "100%", height: "auto", flexShrink: 1 }}
-                    />
-                  </div>
                   <div
-                    className={`d-flex justify-content-center align-items-center px-2 ${styles.customText}`}
+                    className="d-flex justify-content-center"
+                    style={{ flexShrink: 0 }}
                   >
+                    <img src={medals.silver} alt="Rank 2" style={{ maxWidth: '100%', height: 'auto' }}/>
+                  </div>
+                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '40%', textAlign: 'center' }}>
+
                     {students[1].studentUsername}
                   </div>
-                  <div
-                    className={`d-flex justify-content-center align-items-center px-2 ${styles.customText}`}
-                  >
+                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '20%', textAlign: 'center' }}>
+
                     {students[1].totalPoints} score
                   </div>
                 </div>
@@ -88,25 +84,21 @@ const Leaderboard: React.FC = () => {
             {students[0] && (
               <Col xs={12} md={12} lg={4}>
                 <div
-                  className={`d-flex flex-column flex-lg-row  justify-content-around bg-primary rounded p-2 text-white ${styles.customBoxShadow}`}
-                  style={{ fontSize: "1rem" }}
+                  className={`d-flex flex-column flex-lg-row justify-content-around align-items-center bg-primary rounded p-2 text-white ${styles.customBoxShadow} ${styles.rankingItem} ${styles.topThreeRanking}`}
                 >
-                  <div className="d-flex justify-content-center">
-                    <img
-                      src={medals.gold}
-                      alt="Rank 1"
-                      style={{ width: "100%", height: "auto", flexShrink: 1 }}
-                    />
+                  <div
+                    className="d-flex justify-content-center"
+                    style={{ flexShrink: 0 }}
+                  >
+                    <img src={medals.gold} alt="Rank 1" style={{ maxWidth: '100%', height: 'auto' }}/>
                   </div>
 
-                  <div
-                    className={`d-flex justify-content-center align-items-center px-2 ${styles.customText}`}
-                  >
+                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '40%', textAlign: 'center' }}>
+
                     {students[0].studentUsername}
                   </div>
-                  <div
-                    className={`d-flex justify-content-center align-items-center px-2 ${styles.customText}`}
-                  >
+                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '20%', textAlign: 'center' }}>
+
                     {students[0].totalPoints} score
                   </div>
                 </div>
@@ -117,24 +109,20 @@ const Leaderboard: React.FC = () => {
             {students[2] && (
               <Col xs={12} md={12} lg={4}>
                 <div
-                  className={`d-flex flex-column flex-lg-row  justify-content-around bg-primary rounded p-2 text-white ${styles.customBoxShadow}`}
-                  style={{ fontSize: "1rem" }}
+                  className={`d-flex flex-column flex-lg-row justify-content-around align-items-center bg-primary rounded p-2 text-white ${styles.customBoxShadow} ${styles.rankingItem} ${styles.topThreeRanking}`}
                 >
-                  <div className="d-flex justify-content-center">
-                    <img
-                      src={medals.bronze}
-                      alt="Rank 3"
-                      style={{ width: "100%", height: "auto", flexShrink: 1 }}
-                    />
-                  </div>
                   <div
-                    className={`d-flex justify-content-center align-items-center px-2 ${styles.customText}`}
+                    className="d-flex justify-content-center"
+                    style={{ flexShrink: 0 }}
                   >
+                    <img src={medals.bronze} alt="Rank 3" style={{ maxWidth: '100%', height: 'auto' }}/>
+                  </div>
+                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '40%', textAlign: 'center' }}>
+
                     {students[2].studentUsername}
                   </div>
-                  <div
-                    className={`d-flex justify-content-center align-items-center px-2 ${styles.customText}`}
-                  >
+                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '20%', textAlign: 'center' }}>
+
                     {students[2].totalPoints} score
                   </div>
                 </div>

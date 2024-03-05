@@ -16,10 +16,10 @@ const RankingItem: React.FC<RankingItemProps> = ({
 }) => {
   return (
     <div
-      className={`d-flex justify-content-between align-items-center p-2 ${styles.rankingItem}`}
+      className={`d-flex justify-content-between align-items-center p-2`}
     >
       <Container fluid>
-        <Row className={`d-flex justify-content-around bg-primary rounded p-2 text-white ${styles.customBoxShadow}`}>
+        <Row className={`d-flex justify-content-around bg-primary rounded p-2 text-white ${styles.customBoxShadow} ${styles.rankingItem}`}>
           <Col>
             <span className={`${styles.customText}`}>@{studentUsername}</span>
           </Col>
