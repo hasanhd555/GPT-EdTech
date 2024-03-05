@@ -17,6 +17,7 @@ function QuizPage() {
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
   const [incorrectIndices, setIncorrectIndices] = useState<number[]>([]);
+  const [incorrectConcepts, setIncorrectConcepts] = useState<string[]>([]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -66,7 +67,7 @@ function QuizPage() {
     const incorrectIndicesCalc = selectedOptions.reduce(
       (acc: number[], selectedOption, index) => {
         if (selectedOption !== correctAnswers[index]) {
-          acc.push(index + 1);
+          acc.push(index);
         }
         return acc;
       },
@@ -79,6 +80,14 @@ function QuizPage() {
     setIncorrectCount(incorrectCountCalc);
     setIncorrectIndices(incorrectIndicesCalc);
 
+    const incorrectConcepts = incorrectIndicesCalc.map(
+      (index) => questions[index].concept
+    );
+    setIncorrectConcepts(incorrectConcepts);
+
+    if (incorrectConcepts) {
+      setIncorrectIndices(incorrectIndicesCalc.map((value) => value + 1));
+    }
     // Show modal
     setShowModal(true);
   };
@@ -132,9 +141,10 @@ function QuizPage() {
           {/* Display quiz results */}
           <p>Total Points: {totalPoints}</p>
           <p>Your Points: {correctCount * 10}</p>
-          <p>Correct Answers: {correctCount}</p>
-          <p>Incorrect Answers: {incorrectCount}</p>
+          <p>Total Correct Answers: {correctCount}</p>
+          <p>Total Incorrect Answers: {incorrectCount}</p>
           <p>Incorrect Questions: {incorrectIndices.join(", ") || "None"}</p>
+          <p>Incorrect Concepts: {incorrectConcepts.join(", ") || "None"}</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
