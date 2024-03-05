@@ -1,25 +1,40 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Card, Container } from "react-bootstrap";
+import { Button, Card, Container, Modal } from "react-bootstrap";
 import { question_type } from "../../constant";
 
+interface SelectedOptions {
+  [key: number]: number; // key represents the question index, value represents the selected option index
+}
+
 function QuizPage() {
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState<question_type[]>([]);
   const [courseid, setCourseId] = useState("");
+  const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [incorrectCount, setIncorrectCount] = useState(0);
+  const [incorrectIndices, setIncorrectIndices] = useState<number[]>([]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const id: string | null = params.get("id");
     if (id !== null) {
       setCourseId(id);
-      console.log("id set", id);
       axios
         .post("http://localhost:5001/api/course/quiz/get-by-id", {
           course_id: id,
         })
         .then((response) => {
           setQuestions(response?.data);
-          console.log(response);
+          setCorrectAnswers(
+            response?.data.map(
+              (question: question_type) => question?.correct_answer
+            )
+          );
+          setSelectedOptions(Array(response?.data.length).fill(0)); // Initialize selectedOptions array
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -27,20 +42,46 @@ function QuizPage() {
     }
   }, []);
 
-  //   useEffect(() => {
-  //     if (courseid !== null) {
-  //       console.log("Not null");
-  //       axios
-  //         .post("http://localhost:5001/api/course/quiz/get-by-id", { courseid })
-  //         .then((response) => {
-  //           setQuestions(response?.data);
-  //           console.log(response);
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error:", error);
-  //         });
-  //     }
-  //   }, [courseid]);
+  const handleOptionSelect = (questionIndex: number, optionIndex: number) => {
+    setSelectedOptions((prevSelectedOptions) => {
+      const updatedOptions = [...prevSelectedOptions];
+      updatedOptions[questionIndex] = optionIndex + 1;
+      return updatedOptions;
+    });
+  };
+
+  const isOptionSelected = (questionIndex: number, optionIndex: number) => {
+    return selectedOptions[questionIndex] === optionIndex + 1;
+  };
+
+  const handleSubmit = () => {
+    // Calculate statistics
+    const totalPointsCalc = questions.length * 10;
+    const correctCountCalc = selectedOptions.reduce(
+      (acc, selectedOption, index) =>
+        selectedOption === correctAnswers[index] ? acc + 1 : acc,
+      0
+    );
+    const incorrectCountCalc = questions.length - correctCountCalc;
+    const incorrectIndicesCalc = selectedOptions.reduce(
+      (acc: number[], selectedOption, index) => {
+        if (selectedOption !== correctAnswers[index]) {
+          acc.push(index + 1);
+        }
+        return acc;
+      },
+      []
+    );
+
+    // Set statistics
+    setTotalPoints(totalPointsCalc);
+    setCorrectCount(correctCountCalc);
+    setIncorrectCount(incorrectCountCalc);
+    setIncorrectIndices(incorrectIndicesCalc);
+
+    // Show modal
+    setShowModal(true);
+  };
 
   return (
     <Container className="my-5 text-left px-5">
@@ -49,20 +90,26 @@ function QuizPage() {
       </h1>
       <h4 className="text-center">Your Time has Begun</h4>
       <h4 className="text-center">Good Luck</h4>
-      
-      {questions.map((question: question_type, index) => (
-        <Card className="text-left my-4 border-primary" key={index}>
+
+      {questions.map((question: question_type, questionIndex) => (
+        <Card className="text-left my-4 border-primary" key={questionIndex}>
           <Card.Body className="px-5">
-            <h2>Question {index + 1}:</h2>
+            <h2>Question {questionIndex + 1}:</h2>
             <Card.Text>{question.question_text}</Card.Text>
             <div className="d-grid gap-2 text-start">
-              {question?.options?.map((option, index) => (
+              {question?.options?.map((option, optionIndex) => (
                 <Button
-                  variant="outline-primary"
+                  variant={
+                    isOptionSelected(questionIndex, optionIndex)
+                      ? "primary"
+                      : "outline-primary"
+                  }
                   className="text-start"
                   size="lg"
+                  key={optionIndex}
+                  onClick={() => handleOptionSelect(questionIndex, optionIndex)}
                 >
-                  {String.fromCharCode(65 + index)}) {option}
+                  {String.fromCharCode(65 + optionIndex)}) {option}
                 </Button>
               ))}
             </div>
@@ -71,10 +118,30 @@ function QuizPage() {
       ))}
 
       <div className="d-grid gap-2 my-5 ">
-        <Button variant="primary" size="lg">
+        <Button variant="primary" size="lg" onClick={handleSubmit}>
           Submit
         </Button>
       </div>
+
+      {/* Modal for quiz results */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Quiz Results</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {/* Display quiz results */}
+          <p>Total Points: {totalPoints}</p>
+          <p>Your Points: {correctCount * 10}</p>
+          <p>Correct Answers: {correctCount}</p>
+          <p>Incorrect Answers: {incorrectCount}</p>
+          <p>Incorrect Questions: {incorrectIndices.join(", ") || "None"}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 }
