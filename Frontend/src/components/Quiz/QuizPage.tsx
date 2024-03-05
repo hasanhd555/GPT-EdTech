@@ -3,14 +3,13 @@ import { useEffect, useState } from "react";
 import { Button, Card, Container, Modal } from "react-bootstrap";
 import { question_type } from "../../constant";
 import { Rating } from "react-simple-star-rating";
-
-interface SelectedOptions {
-  [key: number]: number; // key represents the question index, value represents the selected option index
-}
+import { useAppSelector } from "../../redux/hooks";
+import { useNavigate } from "react-router-dom";
 
 function QuizPage() {
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState<question_type[]>([]);
-  const [courseid, setCourseId] = useState("");
   const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -29,10 +28,29 @@ function QuizPage() {
   };
 
   useEffect(() => {
+    // Error Handling User Not Logged In
+    if (_id == null) {
+      navigate("/");
+    }
     const params = new URLSearchParams(window.location.search);
     const id: string | null = params.get("id");
     if (id !== null) {
-      setCourseId(id);
+      // Error Handling For Unathorzied quiz access
+      axios
+        .post("http://localhost:5001/api/enrollment/get-enrollment", {
+          user_id: _id,
+          course_id: id,
+        })
+        .then((response) => {
+          // Handle response
+          if (response?.data?.length === 0) {
+            navigate("/");
+          }
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error:", error);
+        });
       axios
         .post("http://localhost:5001/api/course/quiz/get-by-id", {
           course_id: id,
@@ -166,6 +184,7 @@ function QuizPage() {
             Back to the Dashboard
           </Button>
         </Modal.Footer>
+        {/* Need to add back to dashboard navigate along with enrollment point updation */}
       </Modal>
     </Container>
   );
