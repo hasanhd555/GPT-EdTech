@@ -1,44 +1,40 @@
-
 .customBoxShadow {
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); /* Example shadow, adjust as needed */
-  }
-
-  .customText{
-    font-weight:500;
-    font-size: larger;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
 }
-.subHeading{
-      font-size: larger;
-  }
 
+.customText {
+  font-weight: 500;
+  font-size: larger;
+}
+.subHeading {
+  font-size: larger;
+}
 
-   /* Add a media query for smaller screens */
 @media (max-width: 1024px) {
-    .customText {
-      font-size: smaller; /* Decrease the font size */
-    }
+  .customText {
+    font-size: smaller;
   }
+}
 
+.rankingItem {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 0px solid transparent;
+  border-radius: 10px;
+}
 
-   .rankingItem {
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
-    border: 0px solid transparent; /* Explicitly set border to none */
-    border-radius: 10px; /* Set border-radius for a rounded look */
-  }
-  
-  .rankingItem:hover {
-    transform: scale(1.05); /* Slightly increase the size */
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6); /* Make the shadow more prominent */
-    background-color: #f0f0f0; /* Change background color on hover, set your desired color */
-    border: 0px solid transparent; /* Ensure border stays removed on hover */
-  }
-  
-  .rankingItem img {
-    max-width: 100%; /* Make image responsive */
-    height: auto; /* Maintain aspect ratio */
-  }
+.rankingItem:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6);
+  background-color: #f0f0f0;
+  border: 0px solid transparent;
+}
 
-  .topThreeRanking{
-    display: flex;
-  flex-wrap: wrap; /* This allows items to wrap onto the next line if needed */
-  }
+.rankingItem img {
+  max-width: 100%;
+  height: auto;
+}
+
+.topThreeRanking {
+  display: flex;
+  flex-wrap: wrap;
+}

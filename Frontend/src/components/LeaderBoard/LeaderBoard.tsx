@@ -40,12 +40,12 @@ const Leaderboard: React.FC = () => {
 
   return (
     <Container fluid style={{ backgroundColor: "#f7f7f8" }}>
-      <Row className="pt-3">
+      <Row className="pt-5">
         <Col className="text-center">
           <h1>Student</h1>
         </Col>
       </Row>
-      <Row className="pb-3">
+      <Row className="pb-4">
         <Col className="text-center">
           <h1>Leaderboard</h1>
         </Col>
@@ -66,14 +66,22 @@ const Leaderboard: React.FC = () => {
                     className="d-flex justify-content-center"
                     style={{ flexShrink: 0 }}
                   >
-                    <img src={medals.silver} alt="Rank 2" style={{ maxWidth: '100%', height: 'auto' }}/>
+                    <img
+                      src={medals.silver}
+                      alt="Rank 2"
+                      style={{ maxWidth: "100%", height: "auto" }}
+                    />
                   </div>
-                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '40%', textAlign: 'center' }}>
-
+                  <div
+                    className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`}
+                    style={{ flexBasis: "40%", textAlign: "center" }}
+                  >
                     {students[1].studentUsername}
                   </div>
-                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '20%', textAlign: 'center' }}>
-
+                  <div
+                    className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`}
+                    style={{ flexBasis: "20%", textAlign: "center" }}
+                  >
                     {students[1].totalPoints} score
                   </div>
                 </div>
@@ -90,15 +98,23 @@ const Leaderboard: React.FC = () => {
                     className="d-flex justify-content-center"
                     style={{ flexShrink: 0 }}
                   >
-                    <img src={medals.gold} alt="Rank 1" style={{ maxWidth: '100%', height: 'auto' }}/>
+                    <img
+                      src={medals.gold}
+                      alt="Rank 1"
+                      style={{ maxWidth: "100%", height: "auto" }}
+                    />
                   </div>
 
-                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '40%', textAlign: 'center' }}>
-
+                  <div
+                    className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`}
+                    style={{ flexBasis: "40%", textAlign: "center" }}
+                  >
                     {students[0].studentUsername}
                   </div>
-                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '20%', textAlign: 'center' }}>
-
+                  <div
+                    className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`}
+                    style={{ flexBasis: "20%", textAlign: "center" }}
+                  >
                     {students[0].totalPoints} score
                   </div>
                 </div>
@@ -115,14 +131,22 @@ const Leaderboard: React.FC = () => {
                     className="d-flex justify-content-center"
                     style={{ flexShrink: 0 }}
                   >
-                    <img src={medals.bronze} alt="Rank 3" style={{ maxWidth: '100%', height: 'auto' }}/>
+                    <img
+                      src={medals.bronze}
+                      alt="Rank 3"
+                      style={{ maxWidth: "100%", height: "auto" }}
+                    />
                   </div>
-                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '40%', textAlign: 'center' }}>
-
+                  <div
+                    className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`}
+                    style={{ flexBasis: "40%", textAlign: "center" }}
+                  >
                     {students[2].studentUsername}
                   </div>
-                  <div className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`} style={{ flexBasis: '20%', textAlign: 'center' }}>
-
+                  <div
+                    className={`d-flex flex-grow-1 justify-content-center align-items-center px-2 ${styles.customText}`}
+                    style={{ flexBasis: "20%", textAlign: "center" }}
+                  >
                     {students[2].totalPoints} score
                   </div>
                 </div>
