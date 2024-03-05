@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Card, Container, Modal } from "react-bootstrap";
 import { question_type } from "../../constant";
+import { Rating } from "react-simple-star-rating";
 
 interface SelectedOptions {
   [key: number]: number; // key represents the question index, value represents the selected option index
@@ -18,6 +19,14 @@ function QuizPage() {
   const [incorrectCount, setIncorrectCount] = useState(0);
   const [incorrectIndices, setIncorrectIndices] = useState<number[]>([]);
   const [incorrectConcepts, setIncorrectConcepts] = useState<string[]>([]);
+  const [rating, setRating] = useState(2);
+
+  const handleRating = (rate: number) => {
+    setRating(rate);
+
+    console.log(rate);
+    // other logic
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -145,10 +154,16 @@ function QuizPage() {
           <p>Total Incorrect Answers: {incorrectCount}</p>
           <p>Incorrect Questions: {incorrectIndices.join(", ") || "None"}</p>
           <p>Incorrect Concepts: {incorrectConcepts.join(", ") || "None"}</p>
+          <h5>Rate this Course</h5>
+          <Rating
+            onClick={handleRating}
+            allowFraction={true}
+            /* Available Props */
+          />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
+          <Button variant="primary" onClick={() => setShowModal(false)}>
+            Back to the Dashboard
           </Button>
         </Modal.Footer>
       </Modal>
