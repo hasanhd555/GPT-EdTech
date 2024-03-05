@@ -19,6 +19,10 @@ import { NavigateFunction, useNavigate } from "react-router-dom";
 const validationSchema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
   password: yup.string().required("Password is required"),
+  role: yup
+  .mixed()
+  .oneOf(['admin', 'student'], "Role is required")
+  .required("Role is required")
 });
 
 interface LoginFormProps {
@@ -27,11 +31,19 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = (props) => {
   const [passwordShown, setPasswordShown] = useState(false);
+  const [Role,setRole] =useState("")
+  const [Inval_cred,setInval_cred]=useState(false)
   const dispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
 
   const togglePasswordVisibility = () => {
     setPasswordShown((passwordShown: boolean) => !passwordShown);
+  };
+
+  const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedRole = event.target.value;
+    setRole(selectedRole);
+    
   };
 
   const handleAdminLogin = async (email: any, password: any) => {
@@ -63,24 +75,17 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
 
   const handleServerError = async (response: any, actions: any) => {
     // Handle the case where the server returns an error
+    console.log("response",response)
     const errorData = await response.json();
     console.error("Login failed:", errorData);
-    alert(`login failed: ${errorData}`);
+    //alert(`login failed: ${errorData}`);
 
     // You can also handle specific error cases here
     if (response.status === 401) {
       // Unauthorized - Invalid credentials
       // Display an error message to the user
       console.log("401 error");
-
-      // Check if the error message indicates a student
-      if (errorData && errorData.role === "student") {
-        // Handle student login logic here
-        console.log("Login failed for student");
-      } else {
-        // Handle other unauthorized cases
-        console.log("Unauthorized access");
-      }
+      setInval_cred(true)
     } else {
       // Other server errors
       // Display a generic error message to the user
@@ -93,55 +98,43 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
 
   const handleSubmit = async (values: any, actions: any) => {
     try {
-      // Extract email and password from form values
       const { email, password } = values;
-      console.log(values);
-
-      // Attempt admin login
-      const adminResponse = await handleAdminLogin(email, password);
-
-      // Check if the admin login was successful
-      if (adminResponse.ok) {
-        // Parse the response JSON
-        const adminData = await adminResponse.json();
-        console.log("Admin login successful:", adminData);
-        const _id = adminData["_id"];
-        const email = adminData["email"];
-        dispatch(setUserData({ isAdmin: true, email: email, _id: _id }));
+      const role = Role;
+  
+      let loginResponse;
+  
+      if (role === "admin") {
+        console.log("submitted for admin")
+        loginResponse = await handleAdminLogin(email, password);
+      } else if (role === "student") {
+        console.log("submitted for student")
+        loginResponse = await handleStudentLogin(email, password);
+      }
+  
+      if (loginResponse && loginResponse.ok) {
+        const userData = await loginResponse.json();
+        const _id = userData["_id"];
+        const userEmail = userData["email"];
+        dispatch(setUserData({ isAdmin: role === "admin", email: userEmail, _id: _id }));
+        actions.setSubmitting(false);
+        navigate("/")
+        console.log("navigated");
       } else {
-        // Handle server errors for admin
-        await handleServerError(adminResponse, actions);
-
-        // If it's a 401 error, attempt student login
-        if (adminResponse.status === 401) {
-          const studentResponse = await handleStudentLogin(email, password);
-
-          // Check if the student login was successful
-          if (studentResponse.ok) {
-            // Parse the response JSON for student
-            const studentData = await studentResponse.json();
-            console.log("Student login successful:", studentData);
-            const _id = studentData["_id"];
-            const email = studentData["email"];
-            dispatch(setUserData({ isAdmin: false, email: email, _id: _id }));
-          } else {
-            // Handle server errors for student
-            await handleServerError(studentResponse, actions);
-          }
-        }
+        await handleServerError(loginResponse, actions);
       }
     } catch (error) {
-      // Handle any unexpected errors
       console.error("Unexpected error:", error);
     } finally {
-      // Set submitting to false to enable the form
       actions.setSubmitting(false);
-      navigate("/");
     }
   };
+  
 
   return (
     <Container fluid className="mt-5 mb-5 w-100">
+      {Inval_cred && <div className="alert alert-danger" role="alert">
+      Login failed. Invalid Credentials!
+      </div>}
       <Row>
         <Col md={{ span: 8, offset: 2 }}>
           <Card>
@@ -154,6 +147,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                 initialValues={{
                   email: "",
                   password: "",
+                  role: "",
                 }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
@@ -216,7 +210,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                             as={BootstrapForm.Check}
                             id="admin"
                             label="admin"
-                            // onClick={handleRoleChange}
+                             onClick={handleRoleChange}
                           />
                         </div>
                         <div className="mx-3">
@@ -227,7 +221,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                             as={BootstrapForm.Check}
                             id="student"
                             label="student"
-                            // onClick={handleRoleChange}
+                             onClick={handleRoleChange}
                           />
                         </div>
                       </div>
