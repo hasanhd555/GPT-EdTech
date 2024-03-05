@@ -99,3 +99,46 @@ export const enrollStudent = async (
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getTotalPoints = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const totalPointsPerStudent = await Enrollment.aggregate([
+      {
+        $group: {
+          _id: "$user_id", // Group by user_id
+          totalPoints: { $sum: "$points" } // Sum up all points for each group
+        }
+      },
+      {
+        $lookup: {
+          from: "students", // Assuming your Student collection is named 'students'
+          localField: "_id",
+          foreignField: "_id",
+          as: "studentDetails"
+        }
+      },
+      {
+        $unwind: "$studentDetails" // Unwind to flatten the studentDetails array
+      },
+      {
+        $project: {
+          _id: 0, // Exclude this from the final projection
+          studentUsername: "$studentDetails.username",
+          totalPoints: 1,
+          // studentId: "$_id",
+          // studentName: "$studentDetails.name", 
+          // studentEmail: "$studentDetails.email",
+        }
+      },
+      {
+        $sort: { totalPoints: -1 } // Add this line to sort by totalPoints in descending order
+      }
+    ]);
+
+    res.status(200).json(totalPointsPerStudent);
+  } catch (error) {
+    console.error("Error getting total points per student:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+

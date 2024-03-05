@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.enrollStudent = exports.getCourseEnrollement = exports.getCoursesForUser = void 0;
+exports.getTotalPoints = exports.enrollStudent = exports.getCourseEnrollement = exports.getCoursesForUser = void 0;
 const enrollment_1 = __importDefault(require("../models/enrollment"));
 require("../models/course");
 // This function will retrieve all courses for a given user
@@ -86,3 +86,45 @@ const enrollStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.enrollStudent = enrollStudent;
+const getTotalPoints = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const totalPointsPerStudent = yield enrollment_1.default.aggregate([
+            {
+                $group: {
+                    _id: "$user_id", // Group by user_id
+                    totalPoints: { $sum: "$points" } // Sum up all points for each group
+                }
+            },
+            {
+                $lookup: {
+                    from: "students", // Assuming your Student collection is named 'students'
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "studentDetails"
+                }
+            },
+            {
+                $unwind: "$studentDetails" // Unwind to flatten the studentDetails array
+            },
+            {
+                $project: {
+                    _id: 0, // Exclude this from the final projection
+                    studentUsername: "$studentDetails.username",
+                    totalPoints: 1,
+                    // studentId: "$_id",
+                    // studentName: "$studentDetails.name", 
+                    // studentEmail: "$studentDetails.email",
+                }
+            },
+            {
+                $sort: { totalPoints: -1 } // Add this line to sort by totalPoints in descending order
+            }
+        ]);
+        res.status(200).json(totalPointsPerStudent);
+    }
+    catch (error) {
+        console.error("Error getting total points per student:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+exports.getTotalPoints = getTotalPoints;
