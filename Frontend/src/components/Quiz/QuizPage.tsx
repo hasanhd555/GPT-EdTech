@@ -5,6 +5,7 @@ import { question_type } from "../../constant";
 import { Rating } from "react-simple-star-rating";
 import { useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 function QuizPage() {
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
@@ -127,6 +128,28 @@ function QuizPage() {
       <h4 className="text-center">Your Time has Begun</h4>
       <h4 className="text-center">Good Luck</h4>
 
+      <div className="d-flex justify-content-center my-5">
+        <CountdownCircleTimer
+          isPlaying
+          duration={questions?.length * 10}
+          colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+          colorsTime={[7, 5, 2, 0]}
+          onComplete={handleSubmit}
+        >
+          {({ remainingTime }) => {
+            const hours = Math.floor(remainingTime / 3600);
+            const minutes = Math.floor((remainingTime % 3600) / 60);
+            const seconds = remainingTime % 60;
+
+            return (
+              <h1>
+                {hours}:{minutes}:{seconds}
+              </h1>
+            );
+          }}
+        </CountdownCircleTimer>
+      </div>
+
       {questions.map((question: question_type, questionIndex) => (
         <Card className="text-left my-4 border-primary" key={questionIndex}>
           <Card.Body className="px-5">
@@ -176,6 +199,19 @@ function QuizPage() {
           <Rating
             onClick={handleRating}
             allowFraction={true}
+            showTooltip={true}
+            tooltipArray={[
+              "Terrible",
+              "Terrible+",
+              "Bad",
+              "Bad+",
+              "Average",
+              "Average+",
+              "Great",
+              "Great+",
+              "Awesome",
+              "Awesome+",
+            ]}
             /* Available Props */
           />
         </Modal.Body>
