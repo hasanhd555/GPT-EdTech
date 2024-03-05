@@ -63,14 +63,13 @@ const Leaderboard: React.FC = () => {
                   className={`d-flex flex-column flex-lg-row  justify-content-around bg-primary rounded p-2 text-white ${styles.customBoxShadow}`}
                   style={{ fontSize: "1rem" }}
                 >
-                    <div className="d-flex justify-content-center">
-                  <img
-                    src={medals.silver}
-                    alt="Rank 2"
-                    style={{ width: "100%", height: "auto" , flexShrink: 1 }}
-                  />
-
-                    </div>
+                  <div className="d-flex justify-content-center">
+                    <img
+                      src={medals.silver}
+                      alt="Rank 2"
+                      style={{ width: "100%", height: "auto", flexShrink: 1 }}
+                    />
+                  </div>
                   <div
                     className={`d-flex justify-content-center align-items-center px-2 ${styles.customText}`}
                   >
@@ -92,12 +91,14 @@ const Leaderboard: React.FC = () => {
                   className={`d-flex flex-column flex-lg-row  justify-content-around bg-primary rounded p-2 text-white ${styles.customBoxShadow}`}
                   style={{ fontSize: "1rem" }}
                 >
-                    <div className="d-flex justify-content-center">
+                  <div className="d-flex justify-content-center">
+                    <img
+                      src={medals.gold}
+                      alt="Rank 1"
+                      style={{ width: "100%", height: "auto", flexShrink: 1 }}
+                    />
+                  </div>
 
-                  <img 
-                  src={medals.gold} alt="Rank 1" style={{  width: "100%", height: "auto" ,flexShrink: 1 }} />
-                    </div>
-                  
                   <div
                     className={`d-flex justify-content-center align-items-center px-2 ${styles.customText}`}
                   >
@@ -119,15 +120,13 @@ const Leaderboard: React.FC = () => {
                   className={`d-flex flex-column flex-lg-row  justify-content-around bg-primary rounded p-2 text-white ${styles.customBoxShadow}`}
                   style={{ fontSize: "1rem" }}
                 >
-                    <div className="d-flex justify-content-center">
-                  <img
-                    src={medals.bronze}
-                    alt="Rank 3"
-                    
-                    style={{ width: "100%", height: "auto" , flexShrink: 1 }}
-                  />
-
-                    </div>
+                  <div className="d-flex justify-content-center">
+                    <img
+                      src={medals.bronze}
+                      alt="Rank 3"
+                      style={{ width: "100%", height: "auto", flexShrink: 1 }}
+                    />
+                  </div>
                   <div
                     className={`d-flex justify-content-center align-items-center px-2 ${styles.customText}`}
                   >
@@ -144,8 +143,12 @@ const Leaderboard: React.FC = () => {
           </Row>
           <Row className="pt-3 pb-3">
             <Col className={` text-black ${styles.subHeading}`}>Username</Col>
-            <Col className={`text-center text-black ${styles.subHeading}`}>Rank</Col>
-            <Col className={`text-center text-black ${styles.subHeading}`}>Score</Col>
+            <Col className={`text-center text-black ${styles.subHeading}`}>
+              Rank
+            </Col>
+            <Col className={`text-center text-black ${styles.subHeading}`}>
+              Score
+            </Col>
           </Row>
           <Row>
             {students.slice(3).map((student, index) => (
