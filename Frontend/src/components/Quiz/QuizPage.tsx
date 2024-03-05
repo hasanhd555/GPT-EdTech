@@ -131,7 +131,7 @@ function QuizPage() {
       <div className="d-flex justify-content-center my-5">
         <CountdownCircleTimer
           isPlaying
-          duration={questions?.length * 10}
+          duration={questions?.length * 300}
           colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
           colorsTime={[7, 5, 2, 0]}
           onComplete={handleSubmit}
