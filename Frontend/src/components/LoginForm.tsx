@@ -132,7 +132,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
 
   return (
     <Container fluid className="mt-5 mb-5 w-100">
-      {Inval_cred && <div className="alert alert-danger" role="alert">
+      {Inval_cred && <div className="alert alert-danger text-center" role="alert">
       Login failed. Invalid Credentials!
       </div>}
       <Row>
