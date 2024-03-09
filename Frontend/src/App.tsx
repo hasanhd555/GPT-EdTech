@@ -13,6 +13,7 @@ import ExploreCourses from "./components/ExploreCourses/ExploreCourses";
 import CourseOverviewPage from "./components/CourseOverviewPage";
 import QuizPage from "./components/Quiz/QuizPage";
 import CourseContentPage from "./pages/CourseContentPage";
+import LeaderBoard from "./components/LeaderBoard/LeaderBoard";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/quiz" element={<QuizPage />} />
         <Route path="/course-overview" element={<CourseOverviewPage/>}/>
         <Route path="/course-content" element={<CourseContentPage/>}/>
+        <Route path="/leaderboard" element={<LeaderBoard />}></Route>
       </Routes>
       <Footer />
     </>
