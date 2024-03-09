@@ -221,7 +221,6 @@ const CourseOverviewPage = () => {
                 <ListGroup.Item key={lesson._id} className="p-3 mt-3">
                   <h4>{lesson.title}</h4>
                   <h6 className="text-black-50">Lesson {lesson.lesson_num}</h6>
-                  <p>{lesson.content}</p>
                 </ListGroup.Item>
               ))}
             </ListGroup>
