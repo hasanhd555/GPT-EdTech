@@ -54,13 +54,16 @@ const UserDashboard = () => {
 
       <Row xs={1} md={2} lg={3} className="mx-5">
         {courses.map((course: Course) => (
-          <Col key={course._id} className="d-flex justify-content-center">
-            <CourseCard
-              key={course._id}
-              title={course.title}
-              description={course.description}
-              imageUrl={course.image_url}
-            />
+          <Col key={course._id} className={`d-flex justify-content-center my-4 ${styles.coursecardcontainer}`}>
+            <div onClick={() => navigate(`/course-overview?id=${course._id}`)}>
+              <CourseCard
+                key={course._id}
+                title={course.title}
+                description={course.description}
+                imageUrl={course.image_url}
+                
+              />
+            </div>
           </Col>
         ))}
       </Row>
