@@ -3,6 +3,7 @@ import { Container, Row, Col, ListGroup, Button } from "react-bootstrap";
 import { lesson_type, course_type } from "../constant";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const hoverEffectStyle = {
   transition: "background-color 0.3s",
@@ -15,6 +16,7 @@ const CourseContentPage = () => {
   const [course, setCourse] = useState<course_type>();
   const [courseID, setcourseID] = useState("");
   const [activeLesson, setActiveLesson] = useState<lesson_type>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Extracting id from URL
@@ -111,14 +113,19 @@ const CourseContentPage = () => {
                 <h6>Lesson {lesson.lesson_num}</h6>
               </ListGroup.Item>
             ))}
-            <Button className="p-3 mt-4 mb-5">Start Quiz</Button>
+            <Button
+              className="p-3 mt-4 mb-5"
+              onClick={() => {
+                navigate(`/quiz?id=${courseID}`);
+              }}
+            >
+              Start Quiz
+            </Button>
           </ListGroup>
         </Col>
         <Col className="col-md-8 col-sm-12 p-4 col-lg-8 d-flex flex-column justify-content-center align-items-center">
           <h1 className="text-center mt-5">{course?.title}</h1>
-          <h4 className="text-center mt-5">
-            {activeLesson?.title}
-          </h4>
+          <h4 className="text-center mt-5">{activeLesson?.title}</h4>
           <p className="text-center w-75 mt-5 mb-5">{activeLesson?.content}</p>
         </Col>
       </Container>

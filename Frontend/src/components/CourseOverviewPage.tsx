@@ -244,6 +244,9 @@ const CourseOverviewPage = () => {
                 <Button
                   className="mt-5"
                   style={{ paddingLeft: "28%", paddingRight: "28%" }}
+                  onClick={() => {
+                    navigate(`/course-content?id=${courseID}`);
+                  }}
                 >
                   Go to Course
                 </Button>
