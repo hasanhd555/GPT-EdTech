@@ -5,9 +5,11 @@ import { question_type } from "../../constant";
 import { Rating } from "react-simple-star-rating";
 import { useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 function QuizPage() {
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
+  const [courseID, setCourseID] = useState("");
   const navigate = useNavigate();
   const [questions, setQuestions] = useState<question_type[]>([]);
   const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
@@ -19,12 +21,43 @@ function QuizPage() {
   const [incorrectIndices, setIncorrectIndices] = useState<number[]>([]);
   const [incorrectConcepts, setIncorrectConcepts] = useState<string[]>([]);
   const [rating, setRating] = useState(2);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleRating = (rate: number) => {
     setRating(rate);
+  };
 
-    console.log(rate);
-    // other logic
+  const handleQuizResult = () => {
+    axios
+      .post("http://localhost:5001/api/course/ratings/give-rating", {
+        course_id: courseID,
+        user_id: _id,
+        rating: rating,
+      })
+      .then((response) => {
+        if (response) {
+          axios
+            .post("http://localhost:5001/api/enrollment/set-points", {
+              course_id: courseID,
+              user_id: _id,
+              points: correctCount * 10,
+            })
+            .then((response) => {
+              if (response) {
+                setShowModal(false);
+                navigate("/dash");
+              }
+            })
+            .catch((error) => {
+              // Handle error
+              console.error("Error:", error);
+            });
+        }
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error:", error);
+      });
   };
 
   useEffect(() => {
@@ -36,6 +69,7 @@ function QuizPage() {
     const id: string | null = params.get("id");
     if (id !== null) {
       // Error Handling For Unathorzied quiz access
+      setCourseID(id);
       axios
         .post("http://localhost:5001/api/enrollment/get-enrollment", {
           user_id: _id,
@@ -117,6 +151,7 @@ function QuizPage() {
     }
     // Show modal
     setShowModal(true);
+    setSubmitted(true);
   };
 
   return (
@@ -126,6 +161,28 @@ function QuizPage() {
       </h1>
       <h4 className="text-center">Your Time has Begun</h4>
       <h4 className="text-center">Good Luck</h4>
+
+      <div className="d-flex justify-content-center my-5">
+        <CountdownCircleTimer
+          isPlaying={!submitted}
+          duration={questions?.length * 300}
+          colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+          colorsTime={[7, 5, 2, 0]}
+          onComplete={handleSubmit}
+        >
+          {({ remainingTime }) => {
+            const hours = Math.floor(remainingTime / 3600);
+            const minutes = Math.floor((remainingTime % 3600) / 60);
+            const seconds = remainingTime % 60;
+
+            return (
+              <h1>
+                {hours}:{minutes}:{seconds}
+              </h1>
+            );
+          }}
+        </CountdownCircleTimer>
+      </div>
 
       {questions.map((question: question_type, questionIndex) => (
         <Card className="text-left my-4 border-primary" key={questionIndex}>
@@ -144,6 +201,7 @@ function QuizPage() {
                   size="lg"
                   key={optionIndex}
                   onClick={() => handleOptionSelect(questionIndex, optionIndex)}
+                  disabled={submitted}
                 >
                   {String.fromCharCode(65 + optionIndex)}) {option}
                 </Button>
@@ -166,8 +224,9 @@ function QuizPage() {
         </Modal.Header>
         <Modal.Body>
           {/* Display quiz results */}
-          <p>Total Points: {totalPoints}</p>
-          <p>Your Points: {correctCount * 10}</p>
+          <h4 className="text-center">
+            Score: {correctCount * 10}/{totalPoints}
+          </h4>
           <p>Total Correct Answers: {correctCount}</p>
           <p>Total Incorrect Answers: {incorrectCount}</p>
           <p>Incorrect Questions: {incorrectIndices.join(", ") || "None"}</p>
@@ -176,11 +235,23 @@ function QuizPage() {
           <Rating
             onClick={handleRating}
             allowFraction={true}
-            /* Available Props */
+            showTooltip={true}
+            tooltipArray={[
+              "Terrible",
+              "Terrible+",
+              "Bad",
+              "Bad+",
+              "Average",
+              "Average+",
+              "Great",
+              "Great+",
+              "Awesome",
+              "Awesome+",
+            ]}
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={() => setShowModal(false)}>
+          <Button variant="primary" onClick={handleQuizResult}>
             Back to the Dashboard
           </Button>
         </Modal.Footer>

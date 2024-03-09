@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { clearUserData } from "../../redux/slices/User_Slice";
 import { useDispatch } from "react-redux";
+import Leaderboard from "../LeaderBoard/LeaderBoard";
 
 function NavbarComp() {
   const dispatch = useDispatch();
@@ -87,7 +88,13 @@ function NavbarComp() {
             >
               Summarizer
             </Nav.Link>
-
+            <Nav.Link
+              onClick={() => {
+                navigate("/leaderboard");
+              }}
+            >
+              Leaderboard
+            </Nav.Link>
             <Form
               className="d-flex px-2 border-secondary"
               onSubmit={handleSubmit}
