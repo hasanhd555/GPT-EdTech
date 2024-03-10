@@ -53,3 +53,12 @@ export interface student_type {
   gender: string;
   profile_picture: string;
 }
+
+export interface SignUpData {
+  email: string;
+  password: string;
+  fullName?: string;
+  username?: string;
+  age?: number;
+  gender?: string;
+}

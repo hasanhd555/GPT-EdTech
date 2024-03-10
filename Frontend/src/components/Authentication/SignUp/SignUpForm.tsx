@@ -14,6 +14,11 @@ import {
 } from "react-bootstrap"; // Import React Bootstrap components
 // import validationSchema from "../Schemas/validationSchema";
 import * as yup from "yup";
+import { SignUpData } from "../../../constant";
+import { handleLogin, handleSignup } from "../Auth_APIs";
+import { useAppDispatch,useAppSelector } from "../../../redux/hooks";
+import { setUserData,clearUserData } from "../../../redux/slices/User_Slice";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 
 interface SignUpFormProps {
   // Define any props you might need here
@@ -47,6 +52,8 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
   const [selectedRole, setSelectedRole] = useState<RoleName>(defaultRole);
   const [ErrorMsg,SetErrorMsg]=useState("Initial error");
   const [SignUpErr,SetSignUpErr]=useState(false)
+  const dispatch = useAppDispatch();
+  const navigate: NavigateFunction = useNavigate();
 
   const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedRole(e.target.value as RoleName);
@@ -61,97 +68,73 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
     setPasswordShown((passwordShown: boolean) => !passwordShown);
   };
 
-  const handleSubmit = (values: any, actions: any) => {
-    // Select the validation schema based on the selected role
-    SetSignUpErr(false)
-    const schema = validationSchemas[selectedRole];
-    // Validate the form values against the selected schema
-    schema
-      .validate(values, { abortEarly: false }) // abortEarly: false ensures all errors are shown
-      .then(() => {
-        // Handle successful validation
-        console.log(values);
-
-        // Construct the data to be sent in the API call
-        const requestData = {
-          email: values.email,
-          password: values.password,
-          // Add other fields based on the selected role
-          ...(selectedRole === "student"
-            ? {
-                fullName: values.fullName,
-                username: values.username,
-                age: values.age,
-                gender: values.gender,
-              }
-            : {}),
-        };
-
-        // Make API call based on the selected role
-        if (selectedRole === "admin") {
-          // API call for admin registration
-          // Example using fetch:
-          fetch("http://localhost:5001/api/admin/signup", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.error) {
-                // Handle error response
-                console.error('Error response:', data.error);
-                // Optionally, set error message state
-                SetErrorMsg(data.error);
-                SetSignUpErr(true);
-              } else {
-                // Process successful response
-                console.log('Successful response:', data);
-              }
-            })
-            .catch((error) => console.error("Error:", error));
-        } else if (selectedRole === "student") {
-          // API call for student registration
-          // Example using fetch:
-          fetch("http://localhost:5001/api/student/signup", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.error) {
-                // Handle error response
-                console.error('Error response:', data.error);
-                // Optionally, set error message state
-                SetErrorMsg(data.error);
-                SetSignUpErr(true);
-              } else {
-                // Process successful response
-                console.log('Successful response:', data);
-              }
-       
-            })
-            .catch((error) => console.error("Error:", error));
+  const handleSubmit = async (values: any, actions: any) => {
+    try {
+      SetSignUpErr(false);
+      const schema = validationSchemas[selectedRole];
+  
+      await schema.validate(values, { abortEarly: false });
+  
+      console.log(values);
+  
+      const requestData: SignUpData = {
+        email: values.email,
+        password: values.password,
+        ...(selectedRole === "student"
+          ? {
+              fullName: values.fullName,
+              username: values.username,
+              age: values.age,
+              gender: values.gender,
+            }
+          : {}),
+      };
+  
+      const response = await handleSignup(requestData, selectedRole);
+  
+      if (response.error) {
+        SetErrorMsg(response.error);
+        SetSignUpErr(true);
+      } else {
+        console.log("success: ", response);
+        const { email, password } = values;
+        console.log("email,password after signup",email,password)
+        // Handle the promise returned by handleLogin
+        const Login_response = await handleLogin(email, password, selectedRole);
+  
+        // Ensure the response body is resolved to handle the pending promise
+        const responseBody = await Promise.resolve(Login_response.json());
+  
+        if (Login_response.ok) {
+          const userData = responseBody;
+          const _id = userData["_id"];
+          const userEmail = userData["email"];
+          dispatch(setUserData({ isAdmin: selectedRole === "admin", email: userEmail, _id: _id }));
+          actions.setSubmitting(false);
+          navigate("/");
+          console.log("navigated");
+        } else {
+          // Handle non-ok status (e.g., 401 error)
+          SetErrorMsg("Login failed. Please check your credentials.");
+          SetSignUpErr(true);
         }
-
-        actions.setSubmitting(false); // Uncomment this line if you want to stop the loading spinner
-      })
-      .catch((errors: yup.ValidationError) => {
-        // Handle validation errors
-        actions.setErrors(errors);
-        actions.setSubmitting(false);
-      });
+      }
+    } catch (error:any) {
+      // Handle errors from the fetch or the error thrown in the success block
+      SetErrorMsg(error.message);
+      SetSignUpErr(true);
+    } finally {
+      actions.setSubmitting(false);
+    }
   };
+  
+  
+  
 
   return (
     <Container fluid className="mt-5 mb-5">
       {SignUpErr && <div className="alert alert-danger text-center" role="alert">
-      {ErrorMsg}
+      {ErrorMsg}!
       </div>}
       <Row>
         <Col md={{ span: 8, offset: 2 }}>
