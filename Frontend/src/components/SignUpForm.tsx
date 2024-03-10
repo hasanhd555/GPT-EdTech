@@ -45,6 +45,8 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
   const [passwordShown, setPasswordShown] = useState(false);
   const [studentCredentialsShown, setStudentCredentialsShown] = useState(true);
   const [selectedRole, setSelectedRole] = useState<RoleName>(defaultRole);
+  const [ErrorMsg,SetErrorMsg]=useState("Initial error");
+  const [SignUpErr,SetSignUpErr]=useState(false)
 
   const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedRole(e.target.value as RoleName);
@@ -61,6 +63,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
 
   const handleSubmit = (values: any, actions: any) => {
     // Select the validation schema based on the selected role
+    SetSignUpErr(false)
     const schema = validationSchemas[selectedRole];
     // Validate the form values against the selected schema
     schema
@@ -97,8 +100,16 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
           })
             .then((response) => response.json())
             .then((data) => {
-              console.log(data);
-              window.alert("Signup successful!");
+              if (data.error) {
+                // Handle error response
+                console.error('Error response:', data.error);
+                // Optionally, set error message state
+                SetErrorMsg(data.error);
+                SetSignUpErr(true);
+              } else {
+                // Process successful response
+                console.log('Successful response:', data);
+              }
             })
             .catch((error) => console.error("Error:", error));
         } else if (selectedRole === "student") {
@@ -113,8 +124,17 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
           })
             .then((response) => response.json())
             .then((data) => {
-              console.log(data);
-              window.alert("Signup successful!");
+              if (data.error) {
+                // Handle error response
+                console.error('Error response:', data.error);
+                // Optionally, set error message state
+                SetErrorMsg(data.error);
+                SetSignUpErr(true);
+              } else {
+                // Process successful response
+                console.log('Successful response:', data);
+              }
+       
             })
             .catch((error) => console.error("Error:", error));
         }
@@ -130,6 +150,9 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
 
   return (
     <Container fluid className="mt-5 mb-5">
+      {SignUpErr && <div className="alert alert-danger text-center" role="alert">
+      {ErrorMsg}
+      </div>}
       <Row>
         <Col md={{ span: 8, offset: 2 }}>
           <Card>
