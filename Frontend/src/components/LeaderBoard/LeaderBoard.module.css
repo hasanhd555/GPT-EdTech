@@ -1,0 +1,40 @@
+.customBoxShadow {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.customText {
+  font-weight: 500;
+  font-size: larger;
+}
+.subHeading {
+  font-size: larger;
+}
+
+@media (max-width: 1024px) {
+  .customText {
+    font-size: smaller;
+  }
+}
+
+.rankingItem {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 0px solid transparent;
+  border-radius: 10px;
+}
+
+.rankingItem:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6);
+  background-color: #f0f0f0;
+  border: 0px solid transparent;
+}
+
+.rankingItem img {
+  max-width: 100%;
+  height: auto;
+}
+
+.topThreeRanking {
+  display: flex;
+  flex-wrap: wrap;
+}

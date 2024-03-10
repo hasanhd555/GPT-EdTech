@@ -24,13 +24,13 @@ type RoleName = "admin" | "student";
 const validationSchemas = {
   admin: yup.object().shape({
     email: yup.string().email().required(),
-    password: yup.string().required(),
+    password: yup.string().required().min(6, "Password must be at least 6 characters long"),
     role: yup.string().required(),
     terms: yup.boolean().oneOf([true], "Terms must be accepted"),
   }),
   student: yup.object().shape({
     email: yup.string().email().required(),
-    password: yup.string().required(),
+    password: yup.string().required().min(6, "Password must be at least 6 characters long"),
     fullName: yup.string().required(),
     username: yup.string().required(),
     age: yup.number().positive().integer().required(),

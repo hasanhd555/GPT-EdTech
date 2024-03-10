@@ -26,6 +26,7 @@ const courseRouter = require("./routes/courseRoute");
 const lessonRouter = require("./routes/lessonRoute");
 const ratingRouter = require("./routes/ratingRoute");
 const commentRouter = require("./routes/commentRoute");
+const questionRouter = require("./routes/questionRoute");
 app.use(cors());
 app.use(express_1.default.json());
 // For Student Routes
@@ -33,10 +34,11 @@ app.use("/api/student", studentRouter);
 // Use the enrollment route
 app.use("/api/enrollment", enrollmentRouter);
 app.use("/api/admin", adminRouter);
-app.use('/api/course', courseRouter);
-app.use('/api/course/lessons', lessonRouter);
-app.use('/api/course/ratings', ratingRouter);
-app.use('/api/course/comments', commentRouter);
+app.use("/api/course", courseRouter);
+app.use("/api/course/lessons", lessonRouter);
+app.use("/api/course/ratings", ratingRouter);
+app.use("/api/course/comments", commentRouter);
+app.use("/api/course/quiz", questionRouter);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield connectDB(process.env.MONGO_URI);

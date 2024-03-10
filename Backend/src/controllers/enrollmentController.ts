@@ -17,6 +17,14 @@ interface createEnrollmentRequest extends Request {
   };
 }
 
+interface SetPointsRequest extends Request {
+  body: {
+    user_id: Schema.Types.ObjectId;
+    course_id: Schema.Types.ObjectId;
+    points: Schema.Types.Number;
+  };
+}
+
 // This function will retrieve all courses for a given user
 export const getCoursesForUser = async (
   req: CustomRequest,
@@ -74,6 +82,33 @@ export const getCourseEnrollement = async (
   }
 };
 
+export const setPoints = async (
+  req: SetPointsRequest,
+  res: Response
+): Promise<void> => {
+  const { user_id, course_id, points } = req.body;
+
+  // Find all enrollments for the user and populate the course details
+  try {
+    // Find the existing rating or create a new one if none exists
+    let updatedEnrollement = await Enrollment.findOneAndUpdate(
+      { user_id: user_id, course_id: course_id },
+      { points: points, completion_status: true },
+      { new: true, upsert: true } // Return the updated document and create it if it doesn't exist
+    );
+
+    res.status(200).json({
+      message: "Enrollment Points and Status updated or created successfully",
+    });
+  } catch (error) {
+    console.error(
+      "Error updating or creating Enrollment Points or Status:",
+      error
+    );
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const enrollStudent = async (
   req: createEnrollmentRequest,
   res: Response
@@ -96,6 +131,51 @@ export const enrollStudent = async (
   } catch (error) {
     // If an error occurs, send an error message
     console.error("Error saving enrollment:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getTotalPoints = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const totalPointsPerStudent = await Enrollment.aggregate([
+      {
+        $group: {
+          _id: "$user_id", // Group by user_id
+          totalPoints: { $sum: "$points" }, // Sum up all points for each group
+        },
+      },
+      {
+        $lookup: {
+          from: "students", // Assuming your Student collection is named 'students'
+          localField: "_id",
+          foreignField: "_id",
+          as: "studentDetails",
+        },
+      },
+      {
+        $unwind: "$studentDetails", // Unwind to flatten the studentDetails array
+      },
+      {
+        $project: {
+          _id: 0, // Exclude this from the final projection
+          studentUsername: "$studentDetails.username",
+          totalPoints: 1,
+          // studentId: "$_id",
+          // studentName: "$studentDetails.name",
+          // studentEmail: "$studentDetails.email",
+        },
+      },
+      {
+        $sort: { totalPoints: -1 }, // Add this line to sort by totalPoints in descending order
+      },
+    ]);
+
+    res.status(200).json(totalPointsPerStudent);
+  } catch (error) {
+    console.error("Error getting total points per student:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

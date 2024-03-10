@@ -248,7 +248,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                           <Button
                             variant="danger"
                             onClick={handleEdit}
-                            className="mr-2"
+                            className="me-2"
                           >
                             Cancel
                           </Button>

@@ -35,3 +35,12 @@
   letter-spacing: -0.03rem;
   margin-top: 10vh;
 }
+
+
+.coursecardcontainer {
+  transition: transform 0.2s;
+}
+
+.coursecardcontainer:hover {
+  transform: scale(1.05);
+}
