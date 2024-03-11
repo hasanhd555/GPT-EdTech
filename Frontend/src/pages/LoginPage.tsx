@@ -1,24 +1,25 @@
 import React from "react";
-import LoginForm from "../components/LoginForm";
-import TestimonialCarousel from "../components/TestimonialCarousel";
+import LoginForm from "../components/Authentication/Login/LoginForm";
+import TestimonialCarousel from "../components/Authentication/SignUp/TestimonialCarousel";
+import { Container, Row, Col } from "react-bootstrap";
 
 const LoginPage = () => {
   return (
-    <div>
+    <>
       {/* <div>Navbar</div> Will insert later */}
-      <div className="container mt-4">
-        <div className="row d-flex align-items-center">
+      <Container fluid>
+        <Row className="d-flex align-items-center">
           {" "}
-          <div className="col-md-6">
+          <Col>
             <TestimonialCarousel />
-          </div>
-          <div className="col-md-6">
+          </Col>
+          <Col className="d-flex align-items-center justify-content-center">
             <LoginForm />
-          </div>
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Container>
       {/* <div>Footer</div> Will insert later */}
-    </div>
+    </>
   );
 };
 

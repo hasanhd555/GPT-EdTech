@@ -31,28 +31,3 @@
   font-size: 12px !important;
   font-weight: 400 !important;
 }
-/* 
-.cardWidth {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  padding: 3%;
-} */
-
-/* .cardImage {
-  max-width: 100%;
-  height: auto;
-} */
-
-/* .courseCard { */
-/* width: 100%; Make width 100% for responsiveness */
-/* border-radius: 3% !important; */
-/* } */
-
-/* .courseHeading { */
-/* font-size: clamp(1rem, 2.5vw, 24px); Responsive font size */
-/* } */
-
-/* .courseSubHeading { */
-/* font-size: clamp(0.8rem, 1.5vw, 12px); Responsive font size */
-/* } */

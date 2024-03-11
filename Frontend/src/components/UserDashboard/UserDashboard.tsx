@@ -5,13 +5,24 @@ import StudentCard from "../StudentCard/StudentCard";
 import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import { useAppSelector } from "../../redux/hooks";
-import { course_type } from "../../constant";
+import { useNavigate } from "react-router-dom";
+
+interface Course {
+  _id: string;
+  title: string;
+  description: string;
+  image_url: string;
+}
 
 const UserDashboard = () => {
-  const [courses, setCourses] = useState<course_type[]>([]);
+  const navigate = useNavigate();
+  const [courses, setCourses] = useState<Course[]>([]);
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
   useEffect(() => {
+    if (_id === null || isAdmin === true) {
+      navigate("/");
+    }
     const fetchCourses = async () => {
       try {
         const response = await axios.post(
@@ -42,14 +53,17 @@ const UserDashboard = () => {
       </div>
 
       <Row xs={1} md={2} lg={3} className="mx-5">
-        {courses.map((course: course_type) => (
-          <Col key={course._id} className="d-flex justify-content-center">
-            <CourseCard
-              key={course._id}
-              title={course.title}
-              description={course.description}
-              imageUrl={course.image_url}
-            />
+        {courses.map((course: Course) => (
+          <Col key={course._id} className={`d-flex justify-content-center my-4 ${styles.coursecardcontainer}`}>
+            <div onClick={() => navigate(`/course-content?id=${course._id}`)}>
+              <CourseCard
+                key={course._id}
+                title={course.title}
+                description={course.description}
+                imageUrl={course.image_url}
+                
+              />
+            </div>
           </Col>
         ))}
       </Row>

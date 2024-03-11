@@ -221,7 +221,6 @@ const CourseOverviewPage = () => {
                 <ListGroup.Item key={lesson._id} className="p-3 mt-3">
                   <h4>{lesson.title}</h4>
                   <h6 className="text-black-50">Lesson {lesson.lesson_num}</h6>
-                  <p>{lesson.content}</p>
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -232,7 +231,7 @@ const CourseOverviewPage = () => {
           >
             {/* Rating will be fetched and passed to StarRating component */}
             <StarRating rating={averageRating.averageRating} />
-            {_id !== null ? (
+            {_id !== null && isAdmin === false ? (
               isEnrolled === false ? (
                 <Button
                   className="mt-5"
@@ -245,6 +244,9 @@ const CourseOverviewPage = () => {
                 <Button
                   className="mt-5"
                   style={{ paddingLeft: "28%", paddingRight: "28%" }}
+                  onClick={() => {
+                    navigate(`/course-content?id=${courseID}`);
+                  }}
                 >
                   Go to Course
                 </Button>
@@ -263,7 +265,7 @@ const CourseOverviewPage = () => {
                 </ListGroup.Item>
               ))}
 
-              {isEnrolled === false ? null : (
+              {isEnrolled === false || isAdmin === true ? null : (
                 <>
                   <Form onSubmit={handleSubmit}>
                     <FormControl
