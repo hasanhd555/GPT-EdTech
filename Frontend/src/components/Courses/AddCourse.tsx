@@ -31,6 +31,10 @@ const AddCourse: React.FC = () => {
     console.log("Course and lessons submitted: ", lessons);
   };
 
+  const removeLesson = (index: number) => {
+    setLessons((lessons) => lessons.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="mt-2 mb-3">
       <div>
@@ -81,9 +85,15 @@ const AddCourse: React.FC = () => {
               key={index}
               className="mt-2 mb-2 border border-primary border-1 rounded p-2"
             >
+                 {/* Omitted for brevity */}
+          
+
               <Card.Title className="display-6 text-center fw-bold">
                 Lesson {index + 1} Details
               </Card.Title>
+
+                
+
               <div className="mb-3">
                 <label
                   htmlFor={`lessonTitle-${index}`}
@@ -116,6 +126,14 @@ const AddCourse: React.FC = () => {
                   onChange={(e) => handleLessonChange(e, index)}
                 ></textarea>
               </div>
+              <button
+            type="button"
+            className="btn btn-danger"
+            onClick={() => removeLesson(index)}
+            style={{ marginTop: '10px' }}
+          >
+            Remove Lesson
+          </button>
             </div>
           ))}
           <div>
