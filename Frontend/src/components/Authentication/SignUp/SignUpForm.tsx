@@ -19,6 +19,7 @@ import { handleLogin, handleSignup } from "../Auth_APIs";
 import { useAppDispatch,useAppSelector } from "../../../redux/hooks";
 import { setUserData,clearUserData } from "../../../redux/slices/User_Slice";
 import { NavigateFunction, useNavigate } from "react-router-dom";
+import Modal from "react-bootstrap/Modal"
 
 interface SignUpFormProps {
   // Define any props you might need here
@@ -160,6 +161,17 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
                 {({ isSubmitting }) => (
                   <Form>
                     <div className="mb-3">
+                    <Modal show={SignUpErr} onHide={() => SetSignUpErr(false)} centered>
+                        <Modal.Header closeButton>
+                          <Modal.Title>Error</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>{ErrorMsg}</Modal.Body>
+                        <Modal.Footer>
+                          <Button variant="primary" onClick={() => SetSignUpErr(false)}>
+                            Close
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
                       <BootstrapForm.Label>Email</BootstrapForm.Label>
                       <Field
                         name="email"
