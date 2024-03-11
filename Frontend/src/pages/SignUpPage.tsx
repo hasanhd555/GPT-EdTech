@@ -1,6 +1,6 @@
 import React from "react";
-import SignUpForm from "../components/SignUpForm";
-import TestimonialCarousel from "../components/TestimonialCarousel";
+import SignUpForm from "../components/Authentication/SignUp/SignUpForm";
+import TestimonialCarousel from "../components/Authentication/SignUp/TestimonialCarousel";
 import { Row, Col, Container } from "react-bootstrap";
 
 const SignUpPage = () => {

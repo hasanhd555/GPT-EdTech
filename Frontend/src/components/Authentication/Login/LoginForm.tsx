@@ -12,9 +12,10 @@ import {
   Form as BootstrapForm,
   InputGroup,
 } from "react-bootstrap"; // Import React Bootstrap components
-import { useAppDispatch, useAppSelector } from "../redux/hooks/index";
-import { setUserData, clearUserData } from "../redux/slices/User_Slice";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/index";
+import { setUserData, clearUserData } from "../../../redux/slices/User_Slice";
 import { NavigateFunction, useNavigate } from "react-router-dom";
+import {handleLogin } from '../Auth_APIs';
 // Define validation schema using yup
 const validationSchema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
@@ -46,49 +47,20 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
     
   };
 
-  const handleAdminLogin = async (email: any, password: any) => {
-    // Make a POST request to the admin login endpoint
-    const response = await fetch("http://localhost:5001/api/admin/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
 
-    return response;
-  };
-
-  const handleStudentLogin = async (email: any, password: any) => {
-    // Make a POST request to the student login endpoint
-    const response = await fetch("http://localhost:5001/api/student/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    console.log("response.bosy student:", response.body);
-
-    return response;
-  };
-
+ 
   const handleServerError = async (response: any, actions: any) => {
-    // Handle the case where the server returns an error
+
     console.log("response",response)
     const errorData = await response.json();
     console.error("Login failed:", errorData);
-    //alert(`login failed: ${errorData}`);
 
     // You can also handle specific error cases here
     if (response.status === 401) {
       // Unauthorized - Invalid credentials
-      // Display an error message to the user
       console.log("401 error");
       setInval_cred(true)
     } else {
-      // Other server errors
-      // Display a generic error message to the user
       console.log("Error");
     }
 
@@ -100,16 +72,8 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
     try {
       const { email, password } = values;
       const role = Role;
-  
-      let loginResponse;
-  
-      if (role === "admin") {
-        console.log("submitted for admin")
-        loginResponse = await handleAdminLogin(email, password);
-      } else if (role === "student") {
-        console.log("submitted for student")
-        loginResponse = await handleStudentLogin(email, password);
-      }
+
+      let loginResponse= await handleLogin(email,password,role)
   
       if (loginResponse && loginResponse.ok) {
         const userData = await loginResponse.json();
