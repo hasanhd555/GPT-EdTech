@@ -15,6 +15,8 @@ import CourseOverviewPage from "./components/CourseOverviewPage";
 import QuizPage from "./components/Quiz/QuizPage";
 import CourseContentPage from "./pages/CourseContentPage";
 import LeaderBoard from "./components/LeaderBoard/LeaderBoard";
+import AddCourse from "./components/Courses/AddCourse";
+import EditCourse from "./components/Courses/EditCourse";
 
 function App() {
   return (
@@ -35,6 +37,8 @@ function App() {
         <Route path="/course-overview" element={<CourseOverviewPage/>}/>
         <Route path="/course-content" element={<CourseContentPage/>}/>
         <Route path="/leaderboard" element={<LeaderBoard />}></Route>
+        <Route path="/add-course" element={<AddCourse />}></Route>
+        <Route path="/edit-course" element={<EditCourse />}></Route>
       </Routes>
       <Footer />
     </>
