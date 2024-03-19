@@ -37,3 +37,8 @@
   font-size: 12px !important;
   font-weight: 400 !important;
 }
+.squareImage {
+  height: 400px;
+  object-fit: cover;
+   width: 100%; 
+}
