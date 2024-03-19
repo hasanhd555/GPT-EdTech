@@ -1,9 +1,9 @@
 import React from "react";
-import SignUpForm from "../components/Authentication/SignUp/SignUpForm";
-import TestimonialCarousel from "../components/Authentication/SignUp/TestimonialCarousel";
-import { Row, Col, Container } from "react-bootstrap";
+import LoginForm from "./LoginForm";
+import TestimonialCarousel from "../SignUp/TestimonialCarousel";
+import { Container, Row, Col } from "react-bootstrap";
 
-const SignUpPage = () => {
+const LoginPage = () => {
   return (
     <>
       {/* <div>Navbar</div> Will insert later */}
@@ -14,7 +14,7 @@ const SignUpPage = () => {
             <TestimonialCarousel />
           </Col>
           <Col className="d-flex align-items-center justify-content-center">
-            <SignUpForm />
+            <LoginForm />
           </Col>
         </Row>
       </Container>
@@ -23,4 +23,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default LoginPage;
