@@ -55,7 +55,7 @@ const UserDashboard = () => {
       <Row xs={1} md={2} lg={3} className="mx-5">
         {courses.map((course: Course) => (
           <Col key={course._id} className={`d-flex justify-content-center my-4 ${styles.coursecardcontainer}`}>
-            <div onClick={() => navigate(`/course-content?id=${course._id}`)}>
+            <div onClick={() => navigate(`/course-content?id=${course._id}`)} style={{ width:'80%' }}>
               <CourseCard
                 key={course._id}
                 title={course.title}
