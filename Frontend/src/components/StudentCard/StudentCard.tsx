@@ -10,7 +10,7 @@ import {
   Image,
 } from "react-bootstrap";
 import { student_type } from "../../constant";
-import styles from './StudentCard.module.css'; // Make sure this path is correct
+import styles from "./StudentCard.module.css"; // Make sure this path is correct
 
 type StudentCardProps = {
   studentId: string | null;
@@ -160,8 +160,10 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
   return (
     <Container>
       <Row className="justify-content-center">
-      <Col lg={10}> {/* Changed from md={8} to lg={10} to increase card width */}
-      <Card className={styles.cardLarge}>
+        <Col lg={10}>
+          {" "}
+          {/* Changed from md={8} to lg={10} to increase card width */}
+          <Card className={styles.cardLarge}>
             <Card.Body>
               <Row>
                 <Col md={4} className="d-flex align-items-center flex-column">
@@ -190,7 +192,16 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                   />
                 </Col>
                 <Col style={{ borderLeft: "2px dotted #96BDF7" }} md={8}>
-                <Card.Title className={styles.cardTitleLarge}>{`Mr. ${student.name}`}</Card.Title> {/* Added custom class for larger title */}
+                  {/* <Card.Title className={styles.cardTitleLarge}>{`Mr. ${student.name}`}</Card.Title> */}
+                  <Card.Title className={styles.cardTitleLarge}>
+                    {student.gender === "Male"
+                      ? "Mr. "
+                      : student.gender === "Female"
+                      ? "Mrs. "
+                      : ""}
+                    {student.name}
+                  </Card.Title>
+
                   <Card.Subtitle className="mb-2 text-muted">
                     Student
                   </Card.Subtitle>
@@ -264,12 +275,11 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                       <div>Age: {student.age}</div>
                       <div>Gender: {student.gender}</div>
                       <div style={{ textAlign: "right" }}>
-                    
                         <Button
                           className=""
                           variant="primary"
                           onClick={handleEdit}
-                          style={{"width":'25%'}}
+                          style={{ width: "25%" }}
                         >
                           Edit
                         </Button>

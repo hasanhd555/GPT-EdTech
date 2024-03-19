@@ -46,10 +46,12 @@ function ExploreCourses() {
             {courses.map((course: Course) => (
               <Col
                 key={course._id}
-                className={`my-4 ${Styles.coursecardcontainer}`}
+                className={`my-4 ${Styles.coursecardcontainer} d-flex justify-content-center`}
+                
               >
                 <div
-                  onClick={() => navigate(`/course-overview?id=${course?._id}`)}
+                  onClick={() => navigate(`/course-overview?id=${course?._id}` )}
+                  style={{ width:'80%' }}
                 >
                   <CourseCard
                     key={course._id}
