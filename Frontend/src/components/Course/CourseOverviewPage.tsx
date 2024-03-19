@@ -12,7 +12,7 @@ import StarRating from "./StarRating";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useAppSelector } from "../redux/hooks";
+import { useAppSelector } from "../../redux/hooks";
 
 interface Lesson {
   _id: string;

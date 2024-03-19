@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col, ListGroup, Button } from "react-bootstrap";
-import { lesson_type, course_type } from "../constant";
+import { lesson_type, course_type } from "../../constant";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
