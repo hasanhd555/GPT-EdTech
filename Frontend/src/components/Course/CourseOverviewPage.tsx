@@ -13,6 +13,7 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAppSelector } from "../../redux/hooks";
+import ChatBot from "../ChatBot/ChatBot";
 
 interface Lesson {
   _id: string;
@@ -27,6 +28,8 @@ interface Comment {
 }
 
 const CourseOverviewPage = () => {
+  const [chatbotActive, setChatbotActive] = useState(false);
+  const apiKey = process.env.REACT_APP_OPEN_AI_KEY;
   const navigate = useNavigate();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -43,6 +46,10 @@ const CourseOverviewPage = () => {
     averageRating: 0,
   });
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
+
+  const toggleChatbot = () => {
+    setChatbotActive((prevChatbotActive) => !prevChatbotActive);
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCommentText(event.target.value);
@@ -189,7 +196,14 @@ const CourseOverviewPage = () => {
           >
             {/* will render course title and description in this column */}
             <h1 className="text-center">{courseData.title}</h1>
+
             <p className=" mt-3 w-75 text-center">{courseData.description}</p>
+            {_id !== null ? (
+              <ChatBot
+                toggleChatbot={toggleChatbot}
+                chatbotActive={chatbotActive}
+              />
+            ) : null}
           </Col>
           <Col
             className="d-flex flex-column p-5"

@@ -5,6 +5,8 @@ import Spinner from "react-bootstrap/Spinner";
 import CourseCard from "../CourseCard/CourseCard";
 import { NavigateFunction, useNavigate } from "react-router";
 import Styles from "./ExploreCourses.module.css";
+import ChatBot from "../ChatBot/ChatBot";
+import { useAppSelector } from "../../redux/hooks";
 
 interface Course {
   _id: string;
@@ -16,6 +18,12 @@ interface Course {
 function ExploreCourses() {
   const [courses, setCourses] = useState<Course[]>([]);
   const navigate: NavigateFunction = useNavigate();
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
+
+  const [chatbotActive, setChatbotActive] = useState(false);
+  const toggleChatbot = () => {
+    setChatbotActive((prevChatbotActive) => !prevChatbotActive);
+  };
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -62,6 +70,12 @@ function ExploreCourses() {
               </Col>
             ))}
           </Row>
+          {_id !== null ? (
+            <ChatBot
+              toggleChatbot={toggleChatbot}
+              chatbotActive={chatbotActive}
+            />
+          ) : null}
         </>
       )}
     </Container>

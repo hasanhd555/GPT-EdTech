@@ -6,6 +6,7 @@ import { Rating } from "react-simple-star-rating";
 import { useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import ChatBot from "../ChatBot/ChatBot";
 
 function QuizPage() {
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
@@ -153,9 +154,16 @@ function QuizPage() {
     setShowModal(true);
     setSubmitted(true);
   };
+  const [chatbotActive, setChatbotActive] = useState(false);
+  const toggleChatbot = () => {
+    setChatbotActive((prevChatbotActive) => !prevChatbotActive);
+  };
 
   return (
     <Container className="my-5 text-left px-5">
+      {submitted ? (
+        <ChatBot toggleChatbot={toggleChatbot} chatbotActive={chatbotActive} />
+      ) : null}
       <h1 className="text-center" style={{ textDecoration: "underline" }}>
         UI/UX Quiz
       </h1>
