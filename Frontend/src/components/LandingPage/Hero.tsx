@@ -1,6 +1,6 @@
 import { Card, Container, Row, Col, Button } from "react-bootstrap";
 //import module.css file in the same folder
-import styles from './'
+import styles from './hero.module.css'
 const Hero: React.FC = () => {
   return (
     <Container fluid className={`${styles["custom-purple-blue-gradient"]} h-100`}> {/* Set background color inline */}
