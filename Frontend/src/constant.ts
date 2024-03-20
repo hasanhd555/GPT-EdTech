@@ -72,3 +72,13 @@ export const SilverMedalImgUrl: string =
   "http://res.cloudinary.com/do2hqf8du/image/upload/v1709652859/ynmptmehr25iptbkqzbo.svg";
 export const BronzeMedalImgUrl: string =
   "http://res.cloudinary.com/do2hqf8du/image/upload/v1709652918/eo1gkjmn5ymoyerfmkov.svg";
+export const GiveRatingAPI: string =
+  "http://localhost:5001/api/course/ratings/give-rating";
+export const SetPointsAPI: string =
+  "http://localhost:5001/api/enrollment/set-points";
+export const getEnrollmentAPI: string =
+  "http://localhost:5001/api/enrollment/get-enrollment";
+export const getQuizbyCourseIdAPI: string =
+  "http://localhost:5001/api/course/quiz/get-by-id";
+export const SearchCourseAPI: string =
+  "http://localhost:5001/api/course/search";

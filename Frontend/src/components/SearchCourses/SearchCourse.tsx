@@ -5,6 +5,7 @@ import { NavigateFunction, useNavigate } from "react-router";
 import axios from "axios";
 import CourseCard from "../CourseCard/CourseCard";
 import Styles from "./SearchCourse.module.css";
+import { SearchCourseAPI } from "../../constant";
 
 interface Course {
   _id: string;
@@ -32,10 +33,7 @@ function SearchCourse() {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const response = await axios.post(
-          "http://localhost:5001/api/course/search",
-          { name: query }
-        );
+        const response = await axios.post(SearchCourseAPI, { name: query });
         setCourses(response?.data);
         setLoading(false);
         // console.log("response obj =", response?.data);

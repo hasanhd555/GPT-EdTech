@@ -1,7 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Card, Container, Modal } from "react-bootstrap";
-import { question_type } from "../../constant";
+import {
+  GiveRatingAPI,
+  SetPointsAPI,
+  getEnrollmentAPI,
+  getQuizbyCourseIdAPI,
+  question_type,
+} from "../../constant";
 import { Rating } from "react-simple-star-rating";
 import { useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +36,7 @@ function QuizPage() {
 
   const handleQuizResult = () => {
     axios
-      .post("http://localhost:5001/api/course/ratings/give-rating", {
+      .post(GiveRatingAPI, {
         course_id: courseID,
         user_id: _id,
         rating: rating,
@@ -38,7 +44,7 @@ function QuizPage() {
       .then((response) => {
         if (response) {
           axios
-            .post("http://localhost:5001/api/enrollment/set-points", {
+            .post(SetPointsAPI, {
               course_id: courseID,
               user_id: _id,
               points: correctCount * 10,
@@ -72,7 +78,7 @@ function QuizPage() {
       // Error Handling For Unathorzied quiz access
       setCourseID(id);
       axios
-        .post("http://localhost:5001/api/enrollment/get-enrollment", {
+        .post(getEnrollmentAPI, {
           user_id: _id,
           course_id: id,
         })
@@ -87,7 +93,7 @@ function QuizPage() {
           console.error("Error:", error);
         });
       axios
-        .post("http://localhost:5001/api/course/quiz/get-by-id", {
+        .post(getQuizbyCourseIdAPI, {
           course_id: id,
         })
         .then((response) => {
