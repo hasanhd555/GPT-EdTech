@@ -62,3 +62,13 @@ export interface SignUpData {
   age?: number;
   gender?: string;
 }
+
+export const getAllCoursesAPI: string = "http://localhost:5001/api/course";
+export const getTotalPointsAPI: string =
+  "http://localhost:5001/api/enrollment/get-total-points";
+export const GoldMedalImgUrl: string =
+  "http://res.cloudinary.com/do2hqf8du/image/upload/v1709652796/vuyzjib3oka1lpbh2ne5.svg";
+export const SilverMedalImgUrl: string =
+  "http://res.cloudinary.com/do2hqf8du/image/upload/v1709652859/ynmptmehr25iptbkqzbo.svg";
+export const BronzeMedalImgUrl: string =
+  "http://res.cloudinary.com/do2hqf8du/image/upload/v1709652918/eo1gkjmn5ymoyerfmkov.svg";

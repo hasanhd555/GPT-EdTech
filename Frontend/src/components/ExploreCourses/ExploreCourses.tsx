@@ -7,6 +7,7 @@ import { NavigateFunction, useNavigate } from "react-router";
 import Styles from "./ExploreCourses.module.css";
 import ChatBot from "../ChatBot/ChatBot";
 import { useAppSelector } from "../../redux/hooks";
+import { getAllCoursesAPI } from "../../constant";
 
 interface Course {
   _id: string;
@@ -28,7 +29,7 @@ function ExploreCourses() {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const response = await axios.post("http://localhost:5001/api/course");
+        const response = await axios.post(getAllCoursesAPI);
         setCourses(response?.data);
         console.log(response?.data);
       } catch (error) {
