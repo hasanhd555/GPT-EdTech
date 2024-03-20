@@ -13,8 +13,7 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAppSelector } from "../../redux/hooks";
-import { DeepChat } from "deep-chat-react";
-import Draggable from "react-draggable";
+import ChatBot from "../ChatBot/ChatBot";
 
 interface Lesson {
   _id: string;
@@ -30,6 +29,7 @@ interface Comment {
 
 const CourseOverviewPage = () => {
   const [chatbotActive, setChatbotActive] = useState(false);
+  const apiKey = process.env.REACT_APP_OPEN_AI_KEY;
   const navigate = useNavigate();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -196,32 +196,14 @@ const CourseOverviewPage = () => {
           >
             {/* will render course title and description in this column */}
             <h1 className="text-center">{courseData.title}</h1>
+
             <p className=" mt-3 w-75 text-center">{courseData.description}</p>
-            <div
-              style={{
-                position: "fixed",
-                bottom: "1rem",
-                right: "1rem",
-                zIndex: "2",
-              }}
-            >
-              <Draggable>
-                <div className="chatbot-icon">
-                  {chatbotActive && (
-                    <DeepChat
-                      directConnection={{
-                        openAI: { key: "enter api key here" },
-                      }}
-                    ></DeepChat>
-                  )}
-                  <i
-                    className="bi bi-messenger"
-                    style={{ fontSize: "3.5rem", color: "#0D6EFD" }}
-                    onClick={toggleChatbot}
-                  ></i>
-                </div>
-              </Draggable>
-            </div>
+            {_id !== null ? (
+              <ChatBot
+                toggleChatbot={toggleChatbot}
+                chatbotActive={chatbotActive}
+              />
+            ) : null}
           </Col>
           <Col
             className="d-flex flex-column p-5"

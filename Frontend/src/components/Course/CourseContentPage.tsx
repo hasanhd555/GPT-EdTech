@@ -4,6 +4,7 @@ import { lesson_type, course_type } from "../../constant";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import ChatBot from "../ChatBot/ChatBot";
 
 const hoverEffectStyle = {
   transition: "background-color 0.3s",
@@ -17,6 +18,10 @@ const CourseContentPage = () => {
   const [courseID, setcourseID] = useState("");
   const [activeLesson, setActiveLesson] = useState<lesson_type>();
   const navigate = useNavigate();
+  const [chatbotActive, setChatbotActive] = useState(false);
+  const toggleChatbot = () => {
+    setChatbotActive((prevChatbotActive) => !prevChatbotActive);
+  };
 
   useEffect(() => {
     // Extracting id from URL
@@ -95,6 +100,11 @@ const CourseContentPage = () => {
           className="col-md-4 col-sm-12 col-lg-4 p-4 d-flex flex-column align-items-center"
           style={{ backgroundColor: "#F7F7F8" }}
         >
+          <ChatBot
+            toggleChatbot={toggleChatbot}
+            chatbotActive={chatbotActive}
+          />
+
           <h1 className="text-decoration-underline mt-5 text-center">
             Chapters
           </h1>
