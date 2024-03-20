@@ -13,6 +13,8 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAppSelector } from "../../redux/hooks";
+import { DeepChat } from "deep-chat-react";
+import Draggable from "react-draggable";
 
 interface Lesson {
   _id: string;
@@ -27,6 +29,7 @@ interface Comment {
 }
 
 const CourseOverviewPage = () => {
+  const [chatbotActive, setChatbotActive] = useState(false);
   const navigate = useNavigate();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -43,6 +46,10 @@ const CourseOverviewPage = () => {
     averageRating: 0,
   });
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
+
+  const toggleChatbot = () => {
+    setChatbotActive((prevChatbotActive) => !prevChatbotActive);
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCommentText(event.target.value);
@@ -190,6 +197,31 @@ const CourseOverviewPage = () => {
             {/* will render course title and description in this column */}
             <h1 className="text-center">{courseData.title}</h1>
             <p className=" mt-3 w-75 text-center">{courseData.description}</p>
+            <div
+              style={{
+                position: "fixed",
+                bottom: "1rem",
+                right: "1rem",
+                zIndex: "2",
+              }}
+            >
+              <Draggable>
+                <div className="chatbot-icon">
+                  {chatbotActive && (
+                    <DeepChat
+                      directConnection={{
+                        openAI: { key: "enter api key here" },
+                      }}
+                    ></DeepChat>
+                  )}
+                  <i
+                    className="bi bi-messenger"
+                    style={{ fontSize: "3.5rem", color: "#0D6EFD" }}
+                    onClick={toggleChatbot}
+                  ></i>
+                </div>
+              </Draggable>
+            </div>
           </Col>
           <Col
             className="d-flex flex-column p-5"
