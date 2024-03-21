@@ -1,4 +1,14 @@
 import express from "express";
+import {
+  AdminRoute,
+  CourseCommentRoute,
+  CourseLessonRoute,
+  CourseQuizRoute,
+  CourseRatingRoute,
+  CourseRoute,
+  EnrollmentRoute,
+  StudentRoute,
+} from "./Constant";
 const app = express();
 const port = process.env.PORT || 5001;
 const connectDB = require("./DB/Connect");
@@ -20,22 +30,22 @@ app.use(cors());
 app.use(express.json());
 
 // For Student Routes
-app.use("/api/student", studentRouter);
+app.use(StudentRoute, studentRouter);
 
 // Use the enrollment route
-app.use("/api/enrollment", enrollmentRouter);
+app.use(EnrollmentRoute, enrollmentRouter);
 
-app.use("/api/admin", adminRouter);
+app.use(AdminRoute, adminRouter);
 
-app.use("/api/course", courseRouter);
+app.use(CourseRoute, courseRouter);
 
-app.use("/api/course/lessons", lessonRouter);
+app.use(CourseLessonRoute, lessonRouter);
 
-app.use("/api/course/ratings", ratingRouter);
+app.use(CourseRatingRoute, ratingRouter);
 
-app.use("/api/course/comments", commentRouter);
+app.use(CourseCommentRoute, commentRouter);
 
-app.use("/api/course/quiz", questionRouter);
+app.use(CourseQuizRoute, questionRouter);
 
 const start = async () => {
   try {
