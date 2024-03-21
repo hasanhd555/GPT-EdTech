@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import Student from "../models/student";
-import { student_type } from "../Constant";
+import { CloudinarBaseImageUrl, student_type } from "../Constant";
 import { v2 as cloudinary } from "cloudinary";
 
 // Get one specific student
@@ -55,8 +55,7 @@ export const signup = async (req: Request, res: Response) => {
       name: fullName,
       age: age,
       gender: gender,
-      profile_picture:
-        "http://res.cloudinary.com/do2hqf8du/image/upload/v1709494602/jhprjpcx0k75zfyqmnry.svg",
+      profile_picture: CloudinarBaseImageUrl,
     };
     const student = new Student(objStudent);
     await student.save();

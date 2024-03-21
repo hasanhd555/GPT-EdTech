@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./LeaderBoard.module.css"; // Assumed you have some CSS for styling
-import { student_type } from "../../constant"; // Assuming this file is in the same directory
+import {
+  BronzeMedalImgUrl,
+  GoldMedalImgUrl,
+  SilverMedalImgUrl,
+  getTotalPointsAPI,
+  student_type,
+} from "../../constant"; // Assuming this file is in the same directory
 import RankingItem from "../RankingItem/RankingItem";
 
 import { Container, Row, Col } from "react-bootstrap";
@@ -18,7 +24,7 @@ const Leaderboard: React.FC = () => {
     const fetchLeaderboard = async () => {
       try {
         const response = await axios.get<LeaderboardStudent[]>(
-          "http://localhost:5001/api/enrollment/get-total-points"
+          getTotalPointsAPI
         );
         // Assuming the API returns the list sorted by points
         setStudents(response.data);
@@ -31,11 +37,9 @@ const Leaderboard: React.FC = () => {
   }, []);
 
   const medals = {
-    gold: "http://res.cloudinary.com/do2hqf8du/image/upload/v1709652796/vuyzjib3oka1lpbh2ne5.svg",
-    silver:
-      "http://res.cloudinary.com/do2hqf8du/image/upload/v1709652859/ynmptmehr25iptbkqzbo.svg",
-    bronze:
-      "http://res.cloudinary.com/do2hqf8du/image/upload/v1709652918/eo1gkjmn5ymoyerfmkov.svg",
+    gold: GoldMedalImgUrl,
+    silver: SilverMedalImgUrl,
+    bronze: BronzeMedalImgUrl,
   };
 
   return (

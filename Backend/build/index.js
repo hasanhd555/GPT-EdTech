@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const Constant_1 = require("./Constant");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 5001;
 const connectDB = require("./DB/Connect");
@@ -30,15 +31,15 @@ const questionRouter = require("./routes/questionRoute");
 app.use(cors());
 app.use(express_1.default.json());
 // For Student Routes
-app.use("/api/student", studentRouter);
+app.use(Constant_1.StudentRoute, studentRouter);
 // Use the enrollment route
-app.use("/api/enrollment", enrollmentRouter);
-app.use("/api/admin", adminRouter);
-app.use("/api/course", courseRouter);
-app.use("/api/course/lessons", lessonRouter);
-app.use("/api/course/ratings", ratingRouter);
-app.use("/api/course/comments", commentRouter);
-app.use("/api/course/quiz", questionRouter);
+app.use(Constant_1.EnrollmentRoute, enrollmentRouter);
+app.use(Constant_1.AdminRoute, adminRouter);
+app.use(Constant_1.CourseRoute, courseRouter);
+app.use(Constant_1.CourseLessonRoute, lessonRouter);
+app.use(Constant_1.CourseRatingRoute, ratingRouter);
+app.use(Constant_1.CourseCommentRoute, commentRouter);
+app.use(Constant_1.CourseQuizRoute, questionRouter);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield connectDB(process.env.MONGO_URI);

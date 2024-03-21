@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Spinner } from "react-bootstrap";
 import { NavigateFunction, useNavigate } from "react-router";
 import axios from "axios";
 import CourseCard from "../CourseCard/CourseCard";
 import Styles from "./SearchCourse.module.css";
+import { SearchCourseAPI } from "../../constant";
 
 interface Course {
   _id: string;
@@ -18,6 +19,7 @@ function SearchCourse() {
   const [query, setQuery] = useState("");
   const [courses, setCourses] = useState<Course[]>([]);
   const navigate: NavigateFunction = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -31,27 +33,38 @@ function SearchCourse() {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const response = await axios.post(
-          "http://localhost:5001/api/course/search",
-          { name: query }
-        );
+        const response = await axios.post(SearchCourseAPI, { name: query });
         setCourses(response?.data);
-        console.log(response?.data);
+        setLoading(false);
+        // console.log("response obj =", response?.data);
       } catch (error) {
         console.error("Error fetching courses", error);
       }
     };
 
-    fetchResults();
+    // console.log("fetching Results for ", query);
+    if (query !== "") {
+      fetchResults();
+    }
   }, [query]);
 
   return (
     <Container className="text-center mt-5" style={{ minHeight: "50vh" }}>
       {courses.length === 0 ? (
-        <h2>
-          It looks like there aren't many great matches for your search.
-          <br /> Try Again
-        </h2>
+        <>
+          {loading ? (
+            <div className="d-flex justify-content-center align-items-center pt-5">
+              <Spinner animation="grow" variant="primary" />
+              <Spinner animation="grow" variant="primary" />
+              <Spinner animation="grow" variant="primary" />
+            </div>
+          ) : (
+            <h2>
+              It looks like there aren't many great matches for your search.
+              <br /> Try Again
+            </h2>
+          )}
+        </>
       ) : (
         <>
           <h2>

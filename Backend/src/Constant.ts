@@ -53,3 +53,23 @@ export interface student_type {
   gender: string;
   profile_picture: string;
 }
+
+export const CloudinarBaseImageUrl: string =
+  "http://res.cloudinary.com/do2hqf8du/image/upload/v1709494602/jhprjpcx0k75zfyqmnry.svg";
+
+export const StudentRoute: string = "/api/student";
+
+// Use the enrollment route
+export const EnrollmentRoute: string = "/api/enrollment";
+
+export const AdminRoute: string = "/api/admin";
+
+export const CourseRoute: string = "/api/course";
+
+export const CourseLessonRoute: string = "/api/course/lessons";
+
+export const CourseRatingRoute: string = "/api/course/ratings";
+
+export const CourseCommentRoute: string = "/api/course/comments";
+
+export const CourseQuizRoute: string = "/api/course/quiz";
