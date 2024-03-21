@@ -116,3 +116,5 @@ export const GetAvgCourseRatingAPI: string =
   "http://localhost:5001/api/course/ratings/get-by-id";
 
 export const BaseAPI: string = "http://localhost:5001/api/";
+
+export const CreateNewCourse: string = "http://localhost:5001/api/course/create";

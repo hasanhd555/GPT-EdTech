@@ -57,8 +57,14 @@ export const serchCourseByName = async (req: Request, res: Response) => {
       .json({ error: "Server error" });
   }
 };
+
+// create a new course 
+export const createCourse = async (req: Request, res: Response) => {
+}
+
 module.exports = {
   getAllCourses,
   getCourseById,
   serchCourseByName,
+  createCourse
 };

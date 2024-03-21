@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
+exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const course_1 = __importDefault(require("../models/course"));
 // Get all courses
@@ -72,8 +72,13 @@ const serchCourseByName = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.serchCourseByName = serchCourseByName;
+// create a new course 
+const createCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+exports.createCourse = createCourse;
 module.exports = {
     getAllCourses: exports.getAllCourses,
     getCourseById: exports.getCourseById,
     serchCourseByName: exports.serchCourseByName,
+    createCourse: exports.createCourse
 };
