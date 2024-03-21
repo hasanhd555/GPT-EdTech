@@ -1,3 +1,8 @@
 .custom-purple-blue-gradient {
     background-image: linear-gradient(to right, #16016C, #4A16BD); /* Adjust colors as needed */
   }
+
+  .search-button {
+    margin-left: auto; /* Push button to the right */
+  }
+  
