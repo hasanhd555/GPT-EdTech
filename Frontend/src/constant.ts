@@ -95,3 +95,21 @@ export const CloudinaryUploadAPI: string =
 
 export const FetchCourseAPI: string =
   "http://localhost:5001/api/enrollment/courses";
+
+export const GetCourseInfo: string =
+  "http://localhost:5001/api/course/get-info";
+
+export const GetLessonsById: string =
+  "http://localhost:5001/api/course/lessons/get-by-id";
+
+export const AddCommentAPI: string =
+  "http://localhost:5001/api/course/comments/add-comment";
+
+export const GetCommentById: string =
+  "http://localhost:5001/api/course/comments/get-by-id";
+
+export const EnrollStudentAPI: string =
+  "http://localhost:5001/api/enrollment/enroll";
+
+export const GetAvgCourseRatingAPI: string =
+  "http://localhost:5001/api/course/ratings/get-by-id";

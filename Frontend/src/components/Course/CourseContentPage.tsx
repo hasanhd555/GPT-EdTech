@@ -1,6 +1,11 @@
 import React from "react";
 import { Container, Row, Col, ListGroup, Button } from "react-bootstrap";
-import { lesson_type, course_type } from "../../constant";
+import {
+  lesson_type,
+  course_type,
+  GetCourseInfo,
+  GetLessonsById,
+} from "../../constant";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +36,7 @@ const CourseContentPage = () => {
     if (id) {
       setcourseID(id);
       axios
-        .post("http://localhost:5001/api/course/get-info", { id })
+        .post(GetCourseInfo, { id })
         .then((response) => {
           // Handle response
           setCourse(response.data);
@@ -41,7 +46,7 @@ const CourseContentPage = () => {
           console.error("Error:", error);
         });
       axios
-        .post("http://localhost:5001/api/course/lessons/get-by-id", { id })
+        .post(GetLessonsById, { id })
         .then((response) => {
           // Handle response
           setLessons(response.data);
