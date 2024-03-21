@@ -152,7 +152,9 @@ function NavbarComp() {
                   type="submit"
                   variant="outline-primary"
                   onClick={() => {
-                    navigate("/dash");
+                    isAdmin? navigate("/dash-admin"):
+
+                    navigate("/dash-student");
                   }}
                 >
                   <span className="bi bi-person-circle"></span>
