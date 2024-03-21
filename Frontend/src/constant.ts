@@ -113,3 +113,5 @@ export const EnrollStudentAPI: string =
 
 export const GetAvgCourseRatingAPI: string =
   "http://localhost:5001/api/course/ratings/get-by-id";
+
+export const BaseAPI: string = "http://localhost:5001/api/";
