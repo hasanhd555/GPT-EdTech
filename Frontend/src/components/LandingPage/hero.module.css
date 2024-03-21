@@ -5,4 +5,9 @@
   .search-button {
     margin-left: auto; /* Push button to the right */
   }
+
+  .custom-image {
+    width: 400px;
+    height: 400px;
+  }
   
