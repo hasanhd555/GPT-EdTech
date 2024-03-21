@@ -6,8 +6,19 @@ interface Lesson {
   content: string;
 }
 
+interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctOption: number; // Index of the correct option
+}
+
 const AddCourse: React.FC = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([{
+    question: "",
+    options: ["", "", "", ""],
+    correctOption: -1,
+  }]);
 
   const addLesson = () => {
     setLessons((lessons) => [...lessons, { title: "", content: "" }]);
@@ -33,6 +44,38 @@ const AddCourse: React.FC = () => {
 
   const removeLesson = (index: number) => {
     setLessons((lessons) => lessons.filter((_, i) => i !== index));
+  };
+
+  const handleQuizQuestionChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    questionIndex: number,
+    optionIndex?: number // This is only used for options, not for the question itself
+  ) => {
+    const { value } = event.target;
+  
+    // Update a quiz question
+    if (typeof optionIndex === "undefined") {
+      // If optionIndex is undefined, it means we're updating the question text
+      const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
+        idx === questionIndex ? { ...quizQuestion, question: value } : quizQuestion
+      );
+      setQuizQuestions(updatedQuizQuestions);
+    } else {
+      // Update an option value
+      const updatedOptions = quizQuestions[questionIndex].options.map((option, idx) =>
+        idx === optionIndex ? value : option
+      );
+      const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
+        idx === questionIndex ? { ...quizQuestion, options: updatedOptions } : quizQuestion
+      );
+      setQuizQuestions(updatedQuizQuestions);
+    }
+  };
+  
+
+  const handleCorrectOptionChange = (index: number, optionIndex: number) => {
+    const updatedQuizQuestions = quizQuestions.map((qq, i) => i === index ? { ...qq, correctOption: optionIndex } : qq);
+    setQuizQuestions(updatedQuizQuestions);
   };
 
   return (
@@ -146,6 +189,45 @@ const AddCourse: React.FC = () => {
               Add New Lesson
             </button>
           </div>
+
+            {/* Quiz form */}
+      <div>
+        {quizQuestions.map((quizQuestion, index) => (
+          <div key={index} className="mb-4">
+            <div className="mb-3">
+              <label className="form-label fw-bold">Quiz Question</label>
+              <textarea
+                className="form-control"
+                rows={2}
+                placeholder="Enter quiz question"
+                value={quizQuestion.question}
+                onChange={(e) => handleQuizQuestionChange(e, index)}
+              ></textarea>
+            </div>
+            {quizQuestion.options.map((option, optionIndex) => (
+              <div key={optionIndex} className="mb-2">
+                <input
+                  type="radio"
+                  name={`correctOption-${index}`}
+                  checked={quizQuestion.correctOption === optionIndex}
+                  onChange={() => handleCorrectOptionChange(index, optionIndex)}
+                  style={{ marginLeft: "10px" }}
+                  className="me-2"
+                />
+                <input
+                  type="text"
+                  className="form-control d-inline-block"
+                  style={{ width: "calc(100% - 50px)" }}
+                  placeholder={`Option ${optionIndex + 1}`}
+                  value={option}
+                  onChange={(e) => handleQuizQuestionChange(e, index, optionIndex)}
+                />
+                
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
 
           <div>
             <button type="submit" className="btn btn-primary mx-auto mt-2">
