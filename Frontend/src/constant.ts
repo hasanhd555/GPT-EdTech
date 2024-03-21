@@ -80,5 +80,18 @@ export const getEnrollmentAPI: string =
   "http://localhost:5001/api/enrollment/get-enrollment";
 export const getQuizbyCourseIdAPI: string =
   "http://localhost:5001/api/course/quiz/get-by-id";
+
 export const SearchCourseAPI: string =
   "http://localhost:5001/api/course/search";
+
+export const FetchStudentDataAPI: string =
+  "http://localhost:5001/api/student/?id=";
+
+export const UpdateStudentAPI: string =
+  "http://localhost:5001/api/student/update";
+
+export const CloudinaryUploadAPI: string =
+  "https://api.cloudinary.com/v1_1/do2hqf8du/image/upload";
+
+export const FetchCourseAPI: string =
+  "http://localhost:5001/api/enrollment/courses";

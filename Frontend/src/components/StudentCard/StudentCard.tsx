@@ -9,7 +9,12 @@ import {
   Card,
   Image,
 } from "react-bootstrap";
-import { student_type } from "../../constant";
+import {
+  CloudinaryUploadAPI,
+  FetchStudentDataAPI,
+  student_type,
+  UpdateStudentAPI,
+} from "../../constant";
 import styles from "./StudentCard.module.css"; // Make sure this path is correct
 
 type StudentCardProps = {
@@ -30,9 +35,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
     const fetchStudentData = async () => {
       if (studentId) {
         try {
-          const response = await fetch(
-            `http://localhost:5001/api/student/?id=${studentId}`
-          );
+          const response = await fetch(`${FetchStudentDataAPI + studentId}`);
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -85,7 +88,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
     };
 
     try {
-      const response = await fetch(`http://localhost:5001/api/student/update`, {
+      const response = await fetch(UpdateStudentAPI, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -112,29 +115,23 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
       formData.append("upload_preset", "gpt_edtech360");
 
       try {
-        const response = await fetch(
-          `https://api.cloudinary.com/v1_1/do2hqf8du/image/upload`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+        const response = await fetch(CloudinaryUploadAPI, {
+          method: "POST",
+          body: formData,
+        });
         const data = await response.json();
 
         // Update profile picture URL in the database
-        const updateResponse = await fetch(
-          `http://localhost:5001/api/student/update`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              id: studentId,
-              profile_picture: data.url,
-            }),
-          }
-        );
+        const updateResponse = await fetch(UpdateStudentAPI, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: studentId,
+            profile_picture: data.url,
+          }),
+        });
         const updatedStudent: student_type = await updateResponse.json();
         setStudent(updatedStudent);
       } catch (error) {
@@ -154,8 +151,6 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
       </Container>
     );
   }
-
-  console.log(`http://localhost:6000/api/student/?id=${studentId}`);
 
   return (
     <Container>
