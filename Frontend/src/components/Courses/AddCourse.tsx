@@ -14,11 +14,13 @@ interface QuizQuestion {
 
 const AddCourse: React.FC = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([{
-    question: "",
-    options: ["", "", "", ""],
-    correctOption: -1,
-  }]);
+  const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([
+    {
+      question: "",
+      options: ["", "", "", ""],
+      correctOption: -1,
+    },
+  ]);
 
   const addLesson = () => {
     setLessons((lessons) => [...lessons, { title: "", content: "" }]);
@@ -52,30 +54,48 @@ const AddCourse: React.FC = () => {
     optionIndex?: number // This is only used for options, not for the question itself
   ) => {
     const { value } = event.target;
-  
+
     // Update a quiz question
     if (typeof optionIndex === "undefined") {
       // If optionIndex is undefined, it means we're updating the question text
       const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
-        idx === questionIndex ? { ...quizQuestion, question: value } : quizQuestion
+        idx === questionIndex
+          ? { ...quizQuestion, question: value }
+          : quizQuestion
       );
       setQuizQuestions(updatedQuizQuestions);
     } else {
       // Update an option value
-      const updatedOptions = quizQuestions[questionIndex].options.map((option, idx) =>
-        idx === optionIndex ? value : option
+      const updatedOptions = quizQuestions[questionIndex].options.map(
+        (option, idx) => (idx === optionIndex ? value : option)
       );
       const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
-        idx === questionIndex ? { ...quizQuestion, options: updatedOptions } : quizQuestion
+        idx === questionIndex
+          ? { ...quizQuestion, options: updatedOptions }
+          : quizQuestion
       );
       setQuizQuestions(updatedQuizQuestions);
     }
   };
-  
 
   const handleCorrectOptionChange = (index: number, optionIndex: number) => {
-    const updatedQuizQuestions = quizQuestions.map((qq, i) => i === index ? { ...qq, correctOption: optionIndex } : qq);
+    const updatedQuizQuestions = quizQuestions.map((qq, i) =>
+      i === index ? { ...qq, correctOption: optionIndex } : qq
+    );
     setQuizQuestions(updatedQuizQuestions);
+  };
+
+  const addQuizQuestion = () => {
+    setQuizQuestions((quizQuestions) => [
+      ...quizQuestions,
+      { question: "", options: ["", "", "", ""], correctOption: -1 },
+    ]);
+  };
+
+  const removeQuizQuestion = (index: number) => {
+    setQuizQuestions((quizQuestions) =>
+      quizQuestions.filter((_, i) => i !== index)
+    );
   };
 
   return (
@@ -128,14 +148,11 @@ const AddCourse: React.FC = () => {
               key={index}
               className="mt-2 mb-2 border border-primary border-1 rounded p-2"
             >
-                 {/* Omitted for brevity */}
-          
+              {/* Omitted for brevity */}
 
               <Card.Title className="display-6 text-center fw-bold">
                 Lesson {index + 1} Details
               </Card.Title>
-
-                
 
               <div className="mb-3">
                 <label
@@ -170,13 +187,13 @@ const AddCourse: React.FC = () => {
                 ></textarea>
               </div>
               <button
-            type="button"
-            className="btn btn-danger"
-            onClick={() => removeLesson(index)}
-            style={{ marginTop: '10px' }}
-          >
-            Remove Lesson
-          </button>
+                type="button"
+                className="btn btn-danger"
+                onClick={() => removeLesson(index)}
+                style={{ marginTop: "10px" }}
+              >
+                Remove Lesson
+              </button>
             </div>
           ))}
           <div>
@@ -190,44 +207,70 @@ const AddCourse: React.FC = () => {
             </button>
           </div>
 
-            {/* Quiz form */}
-      <div>
-        {quizQuestions.map((quizQuestion, index) => (
-          <div key={index} className="mb-4">
-            <div className="mb-3">
-              <label className="form-label fw-bold">Quiz Question</label>
-              <textarea
-                className="form-control"
-                rows={2}
-                placeholder="Enter quiz question"
-                value={quizQuestion.question}
-                onChange={(e) => handleQuizQuestionChange(e, index)}
-              ></textarea>
-            </div>
-            {quizQuestion.options.map((option, optionIndex) => (
-              <div key={optionIndex} className="mb-2">
-                <input
-                  type="radio"
-                  name={`correctOption-${index}`}
-                  checked={quizQuestion.correctOption === optionIndex}
-                  onChange={() => handleCorrectOptionChange(index, optionIndex)}
-                  style={{ marginLeft: "10px" }}
-                  className="me-2"
-                />
-                <input
-                  type="text"
-                  className="form-control d-inline-block"
-                  style={{ width: "calc(100% - 50px)" }}
-                  placeholder={`Option ${optionIndex + 1}`}
-                  value={option}
-                  onChange={(e) => handleQuizQuestionChange(e, index, optionIndex)}
-                />
-                
-              </div>
-            ))}
+          {/* Quiz form */}
+          <div>
+            <h3 className="display-6 text-center fw-bold mt-4">
+              Quiz Questions
+            </h3>
+            {quizQuestions.map((quizQuestion, index) => (
+              <div
+                key={index}
+                className="mb-4 border border-secondary rounded p-3"
+              >
+                <div className="mb-3">
+                  <label className="form-label fw-bold">
+                    Quiz Question {index + 1}
+                  </label>
+                  <textarea
+                    className="form-control"
+                    rows={2}
+                    placeholder="Enter quiz question"
+                    value={quizQuestion.question}
+                    onChange={(e) => handleQuizQuestionChange(e, index)}
+                  ></textarea>
+                </div>
+                {quizQuestion.options.map((option, optionIndex) => (
+                  <div
+                    key={optionIndex}
+                    className="mb-2 d-flex align-items-center"
+                  >
+                    <input
+                      type="radio"
+                      name={`correctOption-${index}`}
+                      checked={quizQuestion.correctOption === optionIndex}
+                      onChange={() =>
+                        handleCorrectOptionChange(index, optionIndex)
+                      }
+                      className="me-2"
+                    />
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder={`Option ${optionIndex + 1}`}
+                      value={option}
+                      onChange={(e) =>
+                        handleQuizQuestionChange(e, index, optionIndex)
+                      }
+                    />
+                  </div>
+                ))}
+              <button
+              type="button"
+              className="btn btn-danger mb-3"
+              onClick={() => removeQuizQuestion(index)}
+            >
+              Remove Quiz Question
+            </button>
           </div>
         ))}
-      </div>
+            <button
+              type="button"
+              className="btn btn-primary mb-3"
+              onClick={addQuizQuestion}
+            >
+              Add Quiz Question
+            </button>
+          </div>
 
           <div>
             <button type="submit" className="btn btn-primary mx-auto mt-2">
