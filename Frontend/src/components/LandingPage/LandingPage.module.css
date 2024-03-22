@@ -1,0 +1,6 @@
+.landing-page {
+    display: flex; /* Make the container a flexbox */
+    flex-direction: column; /* Arrange components vertically */
+    /* Optional: Add other styles like margin: 0; to remove margins */
+  }
+  

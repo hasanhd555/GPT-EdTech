@@ -14,14 +14,14 @@ import CourseOverviewPage from "./components/CourseOverviewPage";
 import QuizPage from "./components/Quiz/QuizPage";
 import CourseContentPage from "./pages/CourseContentPage";
 import LeaderBoard from "./components/LeaderBoard/LeaderBoard";
-import Hero from "./components/LandingPage/Hero";
+import LandingPage from "./components/LandingPage/LandingPage";
 
 function App() {
   return (
     <>
       <NavbarComp></NavbarComp>
       <Routes>
-        <Route path="/Landing" element={<Hero/>} />
+        <Route path="/Landing" element={<LandingPage/>} />
         <Route path="/" element={<ExploreCourses />} />
         <Route path="/ctr_test" element={<Counter />} />
         <Route path="/unpersisted_ctr_test" element={<Unpersisted_Counter />} />
