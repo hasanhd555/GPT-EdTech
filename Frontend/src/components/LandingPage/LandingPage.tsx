@@ -1,5 +1,6 @@
 import Hero from './HeroSection/Hero';
 import Features_Courses from './FeaturedCourses/Features_Courses';
+import LearningPitch from './LearningPitch/LearningPitch';
 import styles from './LandingPage.module.css'
 
 const LandingPage:React.FC = () => {
@@ -7,6 +8,7 @@ const LandingPage:React.FC = () => {
         <div className={styles['landing-page']}>
             <Hero />
             <Features_Courses />
+            <LearningPitch />
         </div>
     );
 }

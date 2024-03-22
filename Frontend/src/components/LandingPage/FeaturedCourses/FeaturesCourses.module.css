@@ -5,3 +5,31 @@
 .coursecardcontainer:hover {
   transform: scale(1.05);
 }
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+.cardWidth {
+  width: 100%;
+  height: auto;
+  padding: 3%;
+}
+
+/* CourseCard.module.css */
+.cardImage {
+  height: 20rem;
+}
+
+.courseCard {
+  width: 100%;
+  border-radius: 3% !important;
+}
+.courseHeading {
+  font-family: "Inter", sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+}
+
+.courseSubHeading {
+  font-family: "Inter", sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+}
