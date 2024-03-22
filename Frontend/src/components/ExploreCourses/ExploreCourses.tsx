@@ -5,6 +5,9 @@ import Spinner from "react-bootstrap/Spinner";
 import CourseCard from "../CourseCard/CourseCard";
 import { NavigateFunction, useNavigate } from "react-router";
 import Styles from "./ExploreCourses.module.css";
+import ChatBot from "../ChatBot/ChatBot";
+import { useAppSelector } from "../../redux/hooks";
+import { getAllCoursesAPI } from "../../constant";
 
 interface Course {
   _id: string;
@@ -16,11 +19,17 @@ interface Course {
 function ExploreCourses() {
   const [courses, setCourses] = useState<Course[]>([]);
   const navigate: NavigateFunction = useNavigate();
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
+
+  const [chatbotActive, setChatbotActive] = useState(false);
+  const toggleChatbot = () => {
+    setChatbotActive((prevChatbotActive) => !prevChatbotActive);
+  };
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const response = await axios.post("http://localhost:5001/api/course");
+        const response = await axios.post(getAllCoursesAPI);
         setCourses(response?.data);
         console.log(response?.data);
       } catch (error) {
@@ -46,10 +55,11 @@ function ExploreCourses() {
             {courses.map((course: Course) => (
               <Col
                 key={course._id}
-                className={`my-4 ${Styles.coursecardcontainer}`}
+                className={`my-4 ${Styles.coursecardcontainer} d-flex justify-content-center`}
               >
                 <div
                   onClick={() => navigate(`/course-overview?id=${course?._id}`)}
+                  style={{ width: "90%" }}
                 >
                   <CourseCard
                     key={course._id}
@@ -61,6 +71,12 @@ function ExploreCourses() {
               </Col>
             ))}
           </Row>
+          {_id !== null ? (
+            <ChatBot
+              toggleChatbot={toggleChatbot}
+              chatbotActive={chatbotActive}
+            />
+          ) : null}
         </>
       )}
     </Container>

@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.uploadImage = exports.updateStudent = exports.login = exports.signup = exports.getAllStudents = exports.getOneStudent = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const student_1 = __importDefault(require("../models/student"));
+const Constant_1 = require("../Constant");
 const cloudinary_1 = require("cloudinary");
 // Get one specific student
 const getOneStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -79,7 +80,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             name: fullName,
             age: age,
             gender: gender,
-            profile_picture: "http://res.cloudinary.com/do2hqf8du/image/upload/v1709494602/jhprjpcx0k75zfyqmnry.svg",
+            profile_picture: Constant_1.CloudinarBaseImageUrl,
         };
         const student = new student_1.default(objStudent);
         yield student.save();

@@ -6,6 +6,7 @@ import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import { useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
+import { FetchCourseAPI } from "../../constant";
 
 interface Course {
   _id: string;
@@ -25,12 +26,9 @@ const UserDashboard = () => {
     }
     const fetchCourses = async () => {
       try {
-        const response = await axios.post(
-          "http://localhost:5001/api/enrollment/courses",
-          {
-            user_id: _id,
-          }
-        );
+        const response = await axios.post(FetchCourseAPI, {
+          user_id: _id,
+        });
         setCourses(response.data);
       } catch (error) {
         console.error("Error fetching courses", error);
@@ -54,14 +52,19 @@ const UserDashboard = () => {
 
       <Row xs={1} md={2} lg={3} className="mx-5">
         {courses.map((course: Course) => (
-          <Col key={course._id} className={`d-flex justify-content-center my-4 ${styles.coursecardcontainer}`}>
-            <div onClick={() => navigate(`/course-content?id=${course._id}`)}>
+          <Col
+            key={course._id}
+            className={`d-flex justify-content-center my-4 ${styles.coursecardcontainer}`}
+          >
+            <div
+              onClick={() => navigate(`/course-content?id=${course._id}`)}
+              style={{ width: "80%" }}
+            >
               <CourseCard
                 key={course._id}
                 title={course.title}
                 description={course.description}
                 imageUrl={course.image_url}
-                
               />
             </div>
           </Col>

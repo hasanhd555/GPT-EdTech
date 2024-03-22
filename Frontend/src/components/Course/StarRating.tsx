@@ -9,7 +9,7 @@ interface StarRatingProps {
 const StarRating: React.FC<StarRatingProps> = ({ rating, outOf = 5 }) => {
   // Define styles
   const iconStyle = {
-    color: "yellow",
+    color: "#fbbf24",
     fontSize: "3.5rem", // Default size
     marginRight: "0.2rem", // Adjust as needed for spacing
   };

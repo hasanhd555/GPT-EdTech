@@ -62,3 +62,56 @@ export interface SignUpData {
   age?: number;
   gender?: string;
 }
+
+export const getAllCoursesAPI: string = "http://localhost:5001/api/course";
+export const getTotalPointsAPI: string =
+  "http://localhost:5001/api/enrollment/get-total-points";
+export const GoldMedalImgUrl: string =
+  "http://res.cloudinary.com/do2hqf8du/image/upload/v1709652796/vuyzjib3oka1lpbh2ne5.svg";
+export const SilverMedalImgUrl: string =
+  "http://res.cloudinary.com/do2hqf8du/image/upload/v1709652859/ynmptmehr25iptbkqzbo.svg";
+export const BronzeMedalImgUrl: string =
+  "http://res.cloudinary.com/do2hqf8du/image/upload/v1709652918/eo1gkjmn5ymoyerfmkov.svg";
+export const GiveRatingAPI: string =
+  "http://localhost:5001/api/course/ratings/give-rating";
+export const SetPointsAPI: string =
+  "http://localhost:5001/api/enrollment/set-points";
+export const getEnrollmentAPI: string =
+  "http://localhost:5001/api/enrollment/get-enrollment";
+export const getQuizbyCourseIdAPI: string =
+  "http://localhost:5001/api/course/quiz/get-by-id";
+
+export const SearchCourseAPI: string =
+  "http://localhost:5001/api/course/search";
+
+export const FetchStudentDataAPI: string =
+  "http://localhost:5001/api/student/?id=";
+
+export const UpdateStudentAPI: string =
+  "http://localhost:5001/api/student/update";
+
+export const CloudinaryUploadAPI: string =
+  "https://api.cloudinary.com/v1_1/do2hqf8du/image/upload";
+
+export const FetchCourseAPI: string =
+  "http://localhost:5001/api/enrollment/courses";
+
+export const GetCourseInfo: string =
+  "http://localhost:5001/api/course/get-info";
+
+export const GetLessonsById: string =
+  "http://localhost:5001/api/course/lessons/get-by-id";
+
+export const AddCommentAPI: string =
+  "http://localhost:5001/api/course/comments/add-comment";
+
+export const GetCommentById: string =
+  "http://localhost:5001/api/course/comments/get-by-id";
+
+export const EnrollStudentAPI: string =
+  "http://localhost:5001/api/enrollment/enroll";
+
+export const GetAvgCourseRatingAPI: string =
+  "http://localhost:5001/api/course/ratings/get-by-id";
+
+export const BaseAPI: string = "http://localhost:5001/api/";

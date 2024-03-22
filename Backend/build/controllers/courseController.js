@@ -50,17 +50,20 @@ const getCourseById = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.getCourseById = getCourseById;
 const serchCourseByName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name } = req.body;
+        const { name } = req === null || req === void 0 ? void 0 : req.body;
+        console.log("name = ", name);
         // Query the database to find similar courses based on the course name
-        const similarCourses = yield course_1.default.find({
-            title: { $regex: new RegExp(name, "i") }, // Case-insensitive search for courses with similar title
-        });
-        if (!similarCourses) {
-            return res
-                .status(http_status_codes_1.StatusCodes.NOT_FOUND)
-                .json({ error: "No Course Found" });
+        if (name) {
+            const similarCourses = yield course_1.default.find({
+                title: { $regex: new RegExp(name, "i") }, // Case-insensitive search for courses with similar title
+            });
+            if (!similarCourses) {
+                return res
+                    .status(http_status_codes_1.StatusCodes.NOT_FOUND)
+                    .json({ error: "No Course Found" });
+            }
+            res.status(http_status_codes_1.StatusCodes.OK).json(similarCourses);
         }
-        res.status(http_status_codes_1.StatusCodes.OK).json(similarCourses);
     }
     catch (error) {
         res

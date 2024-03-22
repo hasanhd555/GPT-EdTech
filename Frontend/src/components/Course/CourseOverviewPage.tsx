@@ -12,7 +12,17 @@ import StarRating from "./StarRating";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useAppSelector } from "../redux/hooks";
+import { useAppSelector } from "../../redux/hooks";
+import ChatBot from "../ChatBot/ChatBot";
+import { GetAvgCourseRatingAPI } from "../../constant";
+import {
+  AddCommentAPI,
+  EnrollStudentAPI,
+  GetCommentById,
+  GetCourseInfo,
+  GetLessonsById,
+  getEnrollmentAPI,
+} from "../../constant";
 
 interface Lesson {
   _id: string;
@@ -27,6 +37,8 @@ interface Comment {
 }
 
 const CourseOverviewPage = () => {
+  const [chatbotActive, setChatbotActive] = useState(false);
+  const apiKey = process.env.REACT_APP_OPEN_AI_KEY;
   const navigate = useNavigate();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -44,13 +56,17 @@ const CourseOverviewPage = () => {
   });
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
+  const toggleChatbot = () => {
+    setChatbotActive((prevChatbotActive) => !prevChatbotActive);
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCommentText(event.target.value);
   };
 
   const enrollCourse = () => {
     axios
-      .post("http://localhost:5001/api/enrollment/enroll", {
+      .post(EnrollStudentAPI, {
         user_id: _id,
         course_id: courseID,
       })
@@ -67,7 +83,7 @@ const CourseOverviewPage = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     axios
-      .post("http://localhost:5001/api/course/comments/add-comment", {
+      .post(AddCommentAPI, {
         course_id: courseID,
         student_id: _id,
         comment_text: commentText,
@@ -76,7 +92,7 @@ const CourseOverviewPage = () => {
         // Handle response
         //   console.log(response.data);
         axios
-          .post("http://localhost:5001/api/course/comments/get-by-id", {
+          .post(GetCommentById, {
             id: courseID,
           })
           .then((response) => {
@@ -108,7 +124,7 @@ const CourseOverviewPage = () => {
       //   console.log("Successfully fetched id from the url: ",id);
       setcourseID(id);
       axios
-        .post("http://localhost:5001/api/enrollment/get-enrollment", {
+        .post(getEnrollmentAPI, {
           user_id: _id,
           course_id: id,
         })
@@ -124,7 +140,7 @@ const CourseOverviewPage = () => {
         });
 
       axios
-        .post("http://localhost:5001/api/course/get-info", { id })
+        .post(GetCourseInfo, { id })
         .then((response) => {
           // Handle response
           //   console.log(response.data);
@@ -136,7 +152,7 @@ const CourseOverviewPage = () => {
           console.error("Error:", error);
         });
       axios
-        .post("http://localhost:5001/api/course/lessons/get-by-id", { id })
+        .post(GetLessonsById, { id })
         .then((response) => {
           // Handle response
           //   console.log(response.data);
@@ -150,7 +166,7 @@ const CourseOverviewPage = () => {
           console.error("Error:", error);
         });
       axios
-        .post("http://localhost:5001/api/course/ratings/get-by-id", { id })
+        .post(GetAvgCourseRatingAPI, { id })
         .then((response) => {
           // Handle response
           const avgRating = response.data;
@@ -161,7 +177,7 @@ const CourseOverviewPage = () => {
           console.error("Error:", error);
         });
       axios
-        .post("http://localhost:5001/api/course/comments/get-by-id", { id })
+        .post(GetCommentById, { id })
         .then((response) => {
           // Handle response
           //   console.log(response.data);
@@ -189,7 +205,14 @@ const CourseOverviewPage = () => {
           >
             {/* will render course title and description in this column */}
             <h1 className="text-center">{courseData.title}</h1>
+
             <p className=" mt-3 w-75 text-center">{courseData.description}</p>
+            {_id !== null ? (
+              <ChatBot
+                toggleChatbot={toggleChatbot}
+                chatbotActive={chatbotActive}
+              />
+            ) : null}
           </Col>
           <Col
             className="d-flex flex-column p-5"

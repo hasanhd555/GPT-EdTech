@@ -1,8 +1,8 @@
 import UserDashboard from "./components/UserDashboard/UserDashboard";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import SignUpPage from "./pages/SignUpPage";
-import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./components/Authentication/SignUp/SignUpPage";
+import LoginPage from "./components/Authentication/Login/LoginPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Counter from "./test_comp/counter";
 import Unpersisted_Counter from "./test_comp/unpersisted_ctr";
@@ -10,9 +10,9 @@ import NavbarComp from "./components/Navbar and Footer/Navbar";
 import Footer from "./components/Navbar and Footer/Footer";
 import SearchCourse from "./components/SearchCourses/SearchCourse";
 import ExploreCourses from "./components/ExploreCourses/ExploreCourses";
-import CourseOverviewPage from "./components/CourseOverviewPage";
+import CourseOverviewPage from "./components/Course/CourseOverviewPage";
 import QuizPage from "./components/Quiz/QuizPage";
-import CourseContentPage from "./pages/CourseContentPage";
+import CourseContentPage from "./components/Course/CourseContentPage";
 import LeaderBoard from "./components/LeaderBoard/LeaderBoard";
 import LandingPage from "./components/LandingPage/LandingPage";
 
@@ -32,8 +32,8 @@ function App() {
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/course-overview" element={<CourseOverviewPage />} />
         <Route path="/quiz" element={<QuizPage />} />
-        <Route path="/course-overview" element={<CourseOverviewPage/>}/>
-        <Route path="/course-content" element={<CourseContentPage/>}/>
+        <Route path="/course-overview" element={<CourseOverviewPage />} />
+        <Route path="/course-content" element={<CourseContentPage />} />
         <Route path="/leaderboard" element={<LeaderBoard />}></Route>
       </Routes>
       <Footer />

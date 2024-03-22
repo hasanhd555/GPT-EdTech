@@ -12,8 +12,8 @@ interface CourseCardProps {
 
 const CourseCard: React.FC<CourseCardProps> = ({ title, description, imageUrl }) => {
   return (
-    <Card className={`${styles.courseCard} shadow ${styles.cardWidth}`}>
-      <Card.Img variant="top" src={imageUrl} className={styles.cardImage} />
+    <Card className={`${styles.courseCard} shadow ${styles.cardWidth}`} style={{height:'100%'}}>
+      <Card.Img variant="top" src={imageUrl} className={`${styles.cardImage} ${styles.squareImage}`} />
       <Card.Body>
         <Card.Title className={styles.courseHeading}>{title}</Card.Title>
         <Card.Text className={styles.courseSubHeading}>{description}</Card.Text>

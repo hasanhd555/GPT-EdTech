@@ -36,18 +36,21 @@ export const getCourseById = async (req: Request, res: Response) => {
 
 export const serchCourseByName = async (req: Request, res: Response) => {
   try {
-    const { name } = req.body;
+    const { name } = req?.body;
+    console.log("name = ", name);
     // Query the database to find similar courses based on the course name
-    const similarCourses = await Course.find({
-      title: { $regex: new RegExp(name, "i") }, // Case-insensitive search for courses with similar title
-    });
+    if (name) {
+      const similarCourses = await Course.find({
+        title: { $regex: new RegExp(name, "i") }, // Case-insensitive search for courses with similar title
+      });
 
-    if (!similarCourses) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ error: "No Course Found" });
+      if (!similarCourses) {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .json({ error: "No Course Found" });
+      }
+      res.status(StatusCodes.OK).json(similarCourses);
     }
-    res.status(StatusCodes.OK).json(similarCourses);
   } catch (error) {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

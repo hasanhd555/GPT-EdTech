@@ -11,8 +11,9 @@
   /* max-height: 20em;
   width: 50px;
   margin: 10px; */
-  max-width: 100%;
-  height: auto;
+  /* max-width: 80%; */
+  height: 20rem;
+  /*  */
 }
 
 .courseCard {
@@ -30,4 +31,10 @@
   font-family: "Inter", sans-serif !important;
   font-size: 12px !important;
   font-weight: 400 !important;
+}
+.squareImage {
+  /* height: 400px; */
+  object-fit: cover;
+  width: 100%;
+  border-radius: 10px;
 }
