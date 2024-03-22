@@ -33,3 +33,8 @@
   font-size: 12px !important;
   font-weight: 400 !important;
 }
+
+
+.button {
+  background-image: linear-gradient(to right, #16016C, #4A16BD); /* Adjust colors as needed */
+}

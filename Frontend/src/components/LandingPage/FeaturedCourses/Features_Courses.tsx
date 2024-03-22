@@ -9,6 +9,7 @@ import ChatBot from "../../ChatBot/ChatBot";
 import { useAppSelector } from "../../../redux/hooks";
 import { getAllCoursesAPI } from "../../../constant";
 
+
 interface Course {
   _id: string;
   title: string;
@@ -41,7 +42,8 @@ function FeaturedCourses() {
   }, []);
 
   return (
-    <Container fluid className="text-center" style={{  backgroundColor: "#D9ECFF" }}>
+    <Container fluid className="text-center" 
+    style={{  backgroundColor: "#D9ECFF",paddingBottom: "50px",paddingTop: "50px" }}>
       {courses.length === 0 ? (
         <div className="d-flex justify-content-center align-items-center pt-5">
           <Spinner animation="grow" variant="primary" />
@@ -78,7 +80,9 @@ function FeaturedCourses() {
               chatbotActive={chatbotActive}
             />
           ) : null}
-          <Button variant="primary" className="mt-4 text-center mb-2">Explore Courses</Button>
+          <Button className={`${Styles["button"]} mt-4 text-center mb-2`}
+          onClick={()=>{navigate("/explore-courses")}}>
+            Explore Courses</Button>
         </>
       )}
     </Container>
