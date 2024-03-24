@@ -1,8 +1,9 @@
 import React, { useState, FormEvent } from "react";
 import Card from "react-bootstrap/Card";
-// import from constant 
+// import from constant
 import { CreateNewCourse } from "../../constant";
-import axios from 'axios';
+import axios from "axios";
+import { useAppSelector } from "../../redux/hooks";
 
 interface Lesson {
   title: string;
@@ -25,9 +26,10 @@ const AddCourse: React.FC = () => {
     },
   ]);
 
-  const [courseName, setCourseName] = useState('');
-const [courseDescription, setCourseDescription] = useState('');
+  const [courseName, setCourseName] = useState("");
+  const [courseDescription, setCourseDescription] = useState("");
 
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
   const addLesson = () => {
     setLessons((lessons) => [...lessons, { title: "", content: "" }]);
@@ -99,43 +101,48 @@ const [courseDescription, setCourseDescription] = useState('');
     );
   };
 
-  const handleCourseNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCourseNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setCourseName(event.target.value);
   };
-  
-  const handleCourseDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+
+  const handleCourseDescriptionChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setCourseDescription(event.target.value);
   };
-  
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     // Log course details, lessons, and quiz questions
     console.log("Course Name:", courseName);
     console.log("Course Description:", courseDescription);
     console.log("Lessons:", lessons);
     console.log("Quiz Questions:", quizQuestions);
+    console.log("here")
+    
+    console.log("Admin ID:", _id);
+    // Prepare the data object to be sent
+    const courseData = {
+      adminId: _id,
+      name: courseName,
+      description: courseDescription,
+      lessons: lessons,
+      quizQuestions: quizQuestions,
+    };
 
-     // Prepare the data object to be sent
-  const courseData = {
-    name: courseName,
-    description: courseDescription,
-    lessons: lessons,
-    quizQuestions: quizQuestions,
+    try {
+      // Adjust URL to your actual endpoint
+      const response = await axios.post(CreateNewCourse, courseData);
+      console.log("Course creation successful", response.data);
+      // Handle success, e.g., show a success message, clear form, navigate to another page, etc.
+    } catch (error) {
+      console.error("There was an error creating the course", error);
+      // Handle error, e.g., show an error message
+    }
   };
-  
-  try {
-    // Adjust URL to your actual endpoint
-    const response = await axios.post(CreateNewCourse, courseData);
-    console.log('Course creation successful', response.data);
-    // Handle success, e.g., show a success message, clear form, navigate to another page, etc.
-  } catch (error) {
-    console.error('There was an error creating the course', error);
-    // Handle error, e.g., show an error message
-  }
-     
-  };
-  
 
   return (
     <div className="mt-2 mb-3">
@@ -158,14 +165,14 @@ const [courseDescription, setCourseDescription] = useState('');
                   Course Name
                 </label>
                 <input
-  type="text"
-  className="form-control"
-  id="courseName"
-  placeholder="Enter course name"
-  required
-  value={courseName}
-  onChange={handleCourseNameChange}
-/>
+                  type="text"
+                  className="form-control"
+                  id="courseName"
+                  placeholder="Enter course name"
+                  required
+                  value={courseName}
+                  onChange={handleCourseNameChange}
+                />
               </div>
               <div className="mb-3">
                 <label
@@ -175,14 +182,14 @@ const [courseDescription, setCourseDescription] = useState('');
                   Course Description
                 </label>
                 <textarea
-  className="form-control"
-  id="courseDescription"
-  rows={3}
-  placeholder="Enter course description"
-  required
-  value={courseDescription}
-  onChange={handleCourseDescriptionChange}
-></textarea>
+                  className="form-control"
+                  id="courseDescription"
+                  rows={3}
+                  placeholder="Enter course description"
+                  required
+                  value={courseDescription}
+                  onChange={handleCourseDescriptionChange}
+                ></textarea>
               </div>
             </Card.Body>
           </Card>
@@ -304,15 +311,15 @@ const [courseDescription, setCourseDescription] = useState('');
                     />
                   </div>
                 ))}
-              <button
-              type="button"
-              className="btn btn-danger mb-3"
-              onClick={() => removeQuizQuestion(index)}
-            >
-              Remove Quiz Question
-            </button>
-          </div>
-        ))}
+                <button
+                  type="button"
+                  className="btn btn-danger mb-3"
+                  onClick={() => removeQuizQuestion(index)}
+                >
+                  Remove Quiz Question
+                </button>
+              </div>
+            ))}
             <button
               type="button"
               className="btn btn-primary mb-3"
