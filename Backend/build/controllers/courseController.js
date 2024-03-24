@@ -89,8 +89,8 @@ const createCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const savedCourse = yield course.save();
         // Step 1: Create and store lessons with the course_id
         if (lessons && lessons.length) {
-            const createdLessons = yield Promise.all(lessons.map((lesson) => new lesson_1.default(Object.assign(Object.assign({}, lesson), { course_id: savedCourse._id })).save()));
-            // Optionally, link lessons to the course here if your schema supports it
+            const createdLessons = yield Promise.all(lessons.map((lesson, index) => new lesson_1.default(Object.assign(Object.assign({}, lesson), { lesson_num: index + 1, course_id: savedCourse._id // Now we have the saved course ID to associate
+             })).save()));
         }
         // Step 2: Create and store questions with the course_id
         if (quizQuestions && quizQuestions.length) {
@@ -107,8 +107,10 @@ const createCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(http_status_codes_1.StatusCodes.CREATED).json(savedCourse);
     }
     catch (error) {
-        console.error('Error creating course:', error);
-        res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error" });
+        console.error("Error creating course:", error);
+        res
+            .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: "Server error" });
     }
 });
 exports.createCourse = createCourse;
@@ -116,5 +118,5 @@ module.exports = {
     getAllCourses: exports.getAllCourses,
     getCourseById: exports.getCourseById,
     serchCourseByName: exports.serchCourseByName,
-    createCourse: exports.createCourse
+    createCourse: exports.createCourse,
 };

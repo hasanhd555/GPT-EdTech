@@ -72,7 +72,7 @@ export const createCourse = async (req: Request, res: Response) => {
       description,
       admin_id: adminId,
       // Assuming an image_url field is required; use a placeholder or actual URL as needed
-      image_url: "https://via.placeholder.com/150", 
+      image_url: "https://via.placeholder.com/150",
     });
 
     const savedCourse = await course.save();
@@ -80,24 +80,27 @@ export const createCourse = async (req: Request, res: Response) => {
     // Step 1: Create and store lessons with the course_id
     if (lessons && lessons.length) {
       const createdLessons = await Promise.all(
-        lessons.map((lesson: any) => 
-          new Lesson({ ...lesson, course_id: savedCourse._id }).save())
+        lessons.map((lesson: any, index: number) => 
+          new Lesson({
+            ...lesson,
+            lesson_num: index + 1, // Assign lesson_num starting from 1
+            course_id: savedCourse._id // Now we have the saved course ID to associate
+          }).save())
       );
-
-      // Optionally, link lessons to the course here if your schema supports it
     }
 
     // Step 2: Create and store questions with the course_id
     if (quizQuestions && quizQuestions.length) {
       const createdQuestions = await Promise.all(
-        quizQuestions.map((question: any) => 
+        quizQuestions.map((question: any) =>
           new Question({
             question_text: question.question,
             correct_answer: question.correctOption + 1,
             options: question.options,
             course_id: savedCourse._id,
             concept: "Placeholder Concept", // Assuming 'concept' is required; adjust as necessary
-          }).save())
+          }).save()
+        )
       );
 
       // Optionally, link questions to the course here if your schema supports it
@@ -107,8 +110,10 @@ export const createCourse = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.CREATED).json(savedCourse);
   } catch (error) {
-    console.error('Error creating course:', error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server error" });
+    console.error("Error creating course:", error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Server error" });
   }
 };
 
@@ -116,5 +121,5 @@ module.exports = {
   getAllCourses,
   getCourseById,
   serchCourseByName,
-  createCourse
+  createCourse,
 };
