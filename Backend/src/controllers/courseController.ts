@@ -117,9 +117,36 @@ export const createCourse = async (req: Request, res: Response) => {
   }
 };
 
+export const getEditableCourses = async (req: Request, res: Response) => {
+  try {
+    console.log("In getEditableCourses", req.query)
+    const adminId = req.query.adminId; // Assuming adminId is sent as a query parameter
+    if (!adminId) {
+      return res.status(400).json({ error: 'Admin ID is required' });
+    }
+
+    // Query the database for courses with the matching admin_id
+    const courses = await Course.find({ admin_id: adminId });
+
+    // If no courses are found, return an appropriate message
+    if (courses.length === 0) {
+      return res.status(404).json({ message: 'No courses found for this admin' });
+    }
+
+    // Return the found courses
+    res.status(200).json(courses);
+  } catch (error) {
+    // Log the error and return a generic server error response
+    console.error('Error fetching editable courses:', error);
+    res.status(500).json({ error: 'Server error while fetching courses' });
+  }
+};
+
+
 module.exports = {
   getAllCourses,
   getCourseById,
   serchCourseByName,
   createCourse,
+  getEditableCourses,
 };

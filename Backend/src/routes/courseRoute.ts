@@ -7,6 +7,7 @@ const {
   getCourseById,
   serchCourseByName,
   createCourse,
+  getEditableCourses,
 } = require("../controllers/courseController");
 
 // Get All Courses
@@ -20,5 +21,8 @@ router.post("/create", createCourse);
 
 // Search Similar Course by Name
 router.post("/search", serchCourseByName);
+
+// Search Similar Course by Name
+router.get("/editable", getEditableCourses);
 
 module.exports = router;

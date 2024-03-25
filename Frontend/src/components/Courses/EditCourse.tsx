@@ -1,18 +1,18 @@
-import React, { useState, FormEvent } from 'react';
+import { useEffect } from "react";
 
+function EditCourse()   {
 
-const EditCourse: React.FC = () => {
- 
+    useEffect(() => {
+        // Extracting id from URL
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    }, []);
 
-  return (
-    <>
+    return (
         <div>
-        <h2 className="display-5 text-center fw-bold">
-          You can make changes to XYZ Course here
-        </h2>
-      </div>
-    </>
-  );
-};
+        <h1>Edit Course</h1>
+        </div>
+    );
+}
 
 export default EditCourse;

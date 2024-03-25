@@ -16,6 +16,7 @@ import QuizPage from "./components/Quiz/QuizPage";
 import CourseContentPage from "./components/Course/CourseContentPage";
 import LeaderBoard from "./components/LeaderBoard/LeaderBoard";
 import AddCourse from "./components/Courses/AddCourse";
+import EditableCourse from "./components/Courses/EditableCourse";
 import EditCourse from "./components/Courses/EditCourse";
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
         <Route path="/course-content" element={<CourseContentPage />} />
         <Route path="/leaderboard" element={<LeaderBoard />}></Route>
         <Route path="/add-course" element={<AddCourse />}></Route>
+        <Route path="/editable-course" element={<EditableCourse />}></Route>
         <Route path="/edit-course" element={<EditCourse />}></Route>
       </Routes>
       <Footer />

@@ -12,7 +12,7 @@ const AdminDashboard = () => {
   };
 
   const handleEditCourseClick = () => {
-    navigate('/edit-course');
+    navigate('/editable-course');
   };
   return (
     <div>

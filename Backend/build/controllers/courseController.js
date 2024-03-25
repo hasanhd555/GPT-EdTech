@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
+exports.getEditableCourses = exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const course_1 = __importDefault(require("../models/course"));
 const lesson_1 = __importDefault(require("../models/lesson")); // Assuming you have this model
@@ -114,9 +114,33 @@ const createCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.createCourse = createCourse;
+const getEditableCourses = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("In getEditableCourses", req.query);
+        const adminId = req.query.adminId; // Assuming adminId is sent as a query parameter
+        if (!adminId) {
+            return res.status(400).json({ error: 'Admin ID is required' });
+        }
+        // Query the database for courses with the matching admin_id
+        const courses = yield course_1.default.find({ admin_id: adminId });
+        // If no courses are found, return an appropriate message
+        if (courses.length === 0) {
+            return res.status(404).json({ message: 'No courses found for this admin' });
+        }
+        // Return the found courses
+        res.status(200).json(courses);
+    }
+    catch (error) {
+        // Log the error and return a generic server error response
+        console.error('Error fetching editable courses:', error);
+        res.status(500).json({ error: 'Server error while fetching courses' });
+    }
+});
+exports.getEditableCourses = getEditableCourses;
 module.exports = {
     getAllCourses: exports.getAllCourses,
     getCourseById: exports.getCourseById,
     serchCourseByName: exports.serchCourseByName,
     createCourse: exports.createCourse,
+    getEditableCourses: exports.getEditableCourses,
 };
