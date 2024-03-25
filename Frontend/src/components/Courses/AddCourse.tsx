@@ -147,15 +147,15 @@ const AddCourse: React.FC = () => {
   return (
     <div className="mt-2 mb-3">
       <div>
-        <h2 className="display-5 text-center fw-bold">
-          Welcome to Add a new course page
+        <h2 className="display-3 text-center fw-bold">
+          Create new course
         </h2>
       </div>
       <div style={{ width: "70%" }} className="mx-auto">
         <form onSubmit={handleSubmit}>
           <Card border="primary" className="mt-2 mb-2">
             <Card.Body>
-              <Card.Title className="display-6 text-center fw-bold">
+              <Card.Title className="display-6 text-center fw-bold text-primary">
                 Course Details
               </Card.Title>
 
@@ -195,10 +195,13 @@ const AddCourse: React.FC = () => {
           </Card>
 
           {/* Lesson forms */}
+          <h3 className="display-4 text-center fw-bold mt-4 text-primary">
+              Lessons Section 
+            </h3>
           {lessons.map((lesson, index) => (
             <div
               key={index}
-              className="mt-2 mb-2 border border-primary border-1 rounded p-2"
+              className="mt-2 mb-2 border border-primary border-1 rounded p-2" 
             >
               {/* Omitted for brevity */}
 
@@ -263,13 +266,13 @@ const AddCourse: React.FC = () => {
 
           {/* Quiz form */}
           <div>
-            <h3 className="display-6 text-center fw-bold mt-4">
-              Quiz Questions
+            <h3 className="display-4 text-center fw-bold mt-4 text-primary">
+              Quiz Section
             </h3>
             {quizQuestions.map((quizQuestion, index) => (
               <div
                 key={index}
-                className="mb-4 border border-secondary rounded p-3"
+                className="mb-4 border border-primary rounded p-3 y"
               >
                 <div className="mb-3">
                   <label className="form-label fw-bold">
@@ -316,7 +319,7 @@ const AddCourse: React.FC = () => {
                   className="btn btn-danger mb-3"
                   onClick={() => removeQuizQuestion(index)}
                 >
-                  Remove Quiz Question
+                  Remove Question
                 </button>
               </div>
             ))}
@@ -325,11 +328,11 @@ const AddCourse: React.FC = () => {
               className="btn btn-primary mb-3"
               onClick={addQuizQuestion}
             >
-              Add Quiz Question
+              Add New Question
             </button>
           </div>
-
-          <div>
+          <hr className="mb-4"/>
+          <div className="d-flex justify-content-center">
             <button type="submit" className="btn btn-primary mx-auto mt-2">
               Submit
             </button>
