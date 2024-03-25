@@ -27,6 +27,7 @@ export interface enrollment_type {
 export interface lesson_type {
   lesson_num: number;
   title: string;
+  _id: string;
   content: string;
   course_id: string;
 }
@@ -66,6 +67,8 @@ export interface SignUpData {
 
 export const getAllCoursesAPI: string = "http://localhost:5001/api/course";
 export const getEditableCoursesAPI: string = "http://localhost:5001/api/course/editable";
+export const getCourseAllInfoAPI: string = "http://localhost:5001/api/course/get-all-info";
+
 export const getTotalPointsAPI: string =
   "http://localhost:5001/api/enrollment/get-total-points";
 export const GoldMedalImgUrl: string =

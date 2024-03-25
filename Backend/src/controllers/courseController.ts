@@ -145,7 +145,7 @@ export const getEditableCourses = async (req: Request, res: Response) => {
 export const getCourseAllInfo = async (req: Request, res: Response) => {
   try {
     console.log("In getEditableCourses", req.query)
-    const  id  = req.query.adminId
+    const  id  = req.query.courseId
     const course = await Course.findById(id);
     if (!course) {
       return res

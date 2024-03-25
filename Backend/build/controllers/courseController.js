@@ -140,7 +140,7 @@ exports.getEditableCourses = getEditableCourses;
 const getCourseAllInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("In getEditableCourses", req.query);
-        const id = req.query.adminId;
+        const id = req.query.courseId;
         const course = yield course_1.default.findById(id);
         if (!course) {
             return res
