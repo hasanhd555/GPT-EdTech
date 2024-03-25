@@ -1,0 +1,9 @@
+.bg_grad{
+    /* Linear gradient from top to bottom */
+    background: linear-gradient(to bottom, #4A16BD, #D9ECFF); /* Replace #ffffff with your starting color and #000000 with your ending color */
+}
+
+.img {
+    width: 50px; /* Set the width to 200 pixels */
+    height: auto; /* Let the height adjust proportionally based on the width */
+}
