@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEditableCourses = exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
+exports.getCourseAllInfo = exports.getEditableCourses = exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const course_1 = __importDefault(require("../models/course"));
 const lesson_1 = __importDefault(require("../models/lesson")); // Assuming you have this model
@@ -137,10 +137,34 @@ const getEditableCourses = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.getEditableCourses = getEditableCourses;
+const getCourseAllInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("In getEditableCourses", req.query);
+        const id = req.query.adminId;
+        const course = yield course_1.default.findById(id);
+        if (!course) {
+            return res
+                .status(http_status_codes_1.StatusCodes.NOT_FOUND)
+                .json({ error: "Course not found" });
+        }
+        // Fetch lessons and questions associated with the course
+        const lessons = yield lesson_1.default.find({ course_id: course._id });
+        const questions = yield question_1.default.find({ course_id: course._id });
+        // Return the course along with lessons and questions
+        res.status(http_status_codes_1.StatusCodes.OK).json({ course, lessons, questions });
+    }
+    catch (error) {
+        res
+            .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: "Server error" });
+    }
+});
+exports.getCourseAllInfo = getCourseAllInfo;
 module.exports = {
     getAllCourses: exports.getAllCourses,
     getCourseById: exports.getCourseById,
     serchCourseByName: exports.serchCourseByName,
     createCourse: exports.createCourse,
     getEditableCourses: exports.getEditableCourses,
+    getCourseAllInfo: exports.getCourseAllInfo,
 };

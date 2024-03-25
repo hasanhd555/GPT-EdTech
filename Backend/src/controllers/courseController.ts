@@ -142,6 +142,34 @@ export const getEditableCourses = async (req: Request, res: Response) => {
   }
 };
 
+export const getCourseAllInfo = async (req: Request, res: Response) => {
+  try {
+    console.log("In getEditableCourses", req.query)
+    const  id  = req.query.adminId
+    const course = await Course.findById(id);
+    if (!course) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: "Course not found" });
+    }
+
+    // Fetch lessons and questions associated with the course
+    const lessons = await Lesson.find
+      ({ course_id: course._id });
+    const questions = await Question.find
+      ({ course_id: course._id });
+
+    // Return the course along with lessons and questions
+    res.status(StatusCodes.OK).json({ course, lessons, questions });
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Server error" });
+  }
+}
+
+
+
 
 module.exports = {
   getAllCourses,
@@ -149,4 +177,5 @@ module.exports = {
   serchCourseByName,
   createCourse,
   getEditableCourses,
+  getCourseAllInfo,
 };
