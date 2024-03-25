@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCourseAllInfo = exports.getEditableCourses = exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
+exports.updateDetails = exports.getCourseAllInfo = exports.getEditableCourses = exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const course_1 = __importDefault(require("../models/course"));
 const lesson_1 = __importDefault(require("../models/lesson")); // Assuming you have this model
@@ -160,6 +160,23 @@ const getCourseAllInfo = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.getCourseAllInfo = getCourseAllInfo;
+const updateDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { courseId } = req.params; // Assuming you're passing the course ID as a URL parameter
+    const { title, description, image_url } = req.body;
+    console.log("In updateDetails", req.body, courseId);
+    try {
+        const updatedCourse = yield course_1.default.findByIdAndUpdate(courseId, { title, description, image_url }, { new: true } // Return the updated document
+        );
+        if (!updatedCourse) {
+            return res.status(404).json({ message: "Course not found" });
+        }
+        res.status(200).json(updatedCourse);
+    }
+    catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+});
+exports.updateDetails = updateDetails;
 module.exports = {
     getAllCourses: exports.getAllCourses,
     getCourseById: exports.getCourseById,
@@ -167,4 +184,5 @@ module.exports = {
     createCourse: exports.createCourse,
     getEditableCourses: exports.getEditableCourses,
     getCourseAllInfo: exports.getCourseAllInfo,
+    updateDetails: exports.updateDetails,
 };

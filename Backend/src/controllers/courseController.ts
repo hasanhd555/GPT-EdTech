@@ -168,7 +168,26 @@ export const getCourseAllInfo = async (req: Request, res: Response) => {
   }
 }
 
+export const updateDetails = async (req: Request, res: Response) => {
+  const { courseId } = req.params; // Assuming you're passing the course ID as a URL parameter
+  const { title, description, image_url } = req.body;
+  console.log("In updateDetails", req.body, courseId)
+  try {
+      const updatedCourse = await Course.findByIdAndUpdate(
+          courseId,
+          { title, description, image_url },
+          { new: true } // Return the updated document
+      );
 
+      if (!updatedCourse) {
+          return res.status(404).json({ message: "Course not found" });
+      }
+
+      res.status(200).json(updatedCourse);
+  } catch (error) {
+      res.status(500).json({ message: "Server error", error });
+  }
+};
 
 
 module.exports = {
@@ -178,4 +197,5 @@ module.exports = {
   createCourse,
   getEditableCourses,
   getCourseAllInfo,
+  updateDetails,
 };
