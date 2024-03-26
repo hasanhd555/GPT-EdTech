@@ -34,3 +34,21 @@ export const getCourseQuestions = async (
     res.status(500).json({ message: errorMessage });
   }
 };
+
+export const updateQuestionById = async (req:any, res:any) => {
+  try {
+    const { questionId } = req.params;
+    const { question_text, correct_answer, options,concept } = req.body;
+    const updatedQuestion = await question.findByIdAndUpdate(
+      questionId,
+      { question_text, correct_answer, options,concept },
+      { new: true }
+    );
+    if (!updatedQuestion) {
+      return res.status(404).send({ message: "Question not found" });
+    }
+    res.status(200).json(updatedQuestion);
+  } catch (error) {
+    res.status(500).send({ message: "Error updating question", error });
+  }
+};

@@ -38,6 +38,7 @@ export interface question_type {
   options: string[];
   course_id: string;
   concept: string;
+  _id: string;
 }
 
 export interface rating_type {
@@ -70,6 +71,7 @@ export const getEditableCoursesAPI: string = "http://localhost:5001/api/course/e
 export const getCourseAllInfoAPI: string = "http://localhost:5001/api/course/get-all-info";
 export const updateCourseDetailsAPI: string = "http://localhost:5001/api/course/update-details";
 export const updateLessonAPI: string = "http://localhost:5001/api/course/lessons/update";
+export const updateQuestionAPI: string = "http://localhost:5001/api/course/quiz/update";
 
 export const getTotalPointsAPI: string =
   "http://localhost:5001/api/enrollment/get-total-points";

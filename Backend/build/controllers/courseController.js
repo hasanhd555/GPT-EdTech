@@ -142,14 +142,14 @@ const getCourseAllInfo = (req, res) => __awaiter(void 0, void 0, void 0, functio
         console.log("In getEditableCourses", req.query);
         const id = req.query.courseId;
         const course = yield course_1.default.findById(id);
-        if (!course) {
-            return res
-                .status(http_status_codes_1.StatusCodes.NOT_FOUND)
-                .json({ error: "Course not found" });
-        }
+        // if (!course) {
+        //   return res
+        //     .status(StatusCodes.NOT_FOUND)
+        //     .json({ error: "Course not found" });
+        // }
         // Fetch lessons and questions associated with the course
-        const lessons = yield lesson_1.default.find({ course_id: course._id });
-        const questions = yield question_1.default.find({ course_id: course._id });
+        const lessons = yield lesson_1.default.find({ course_id: course === null || course === void 0 ? void 0 : course._id });
+        const questions = yield question_1.default.find({ course_id: course === null || course === void 0 ? void 0 : course._id });
         // Return the course along with lessons and questions
         res.status(http_status_codes_1.StatusCodes.OK).json({ course, lessons, questions });
     }
