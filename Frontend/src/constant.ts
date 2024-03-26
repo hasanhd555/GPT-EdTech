@@ -69,6 +69,7 @@ export const getAllCoursesAPI: string = "http://localhost:5001/api/course";
 export const getEditableCoursesAPI: string = "http://localhost:5001/api/course/editable";
 export const getCourseAllInfoAPI: string = "http://localhost:5001/api/course/get-all-info";
 export const updateCourseDetailsAPI: string = "http://localhost:5001/api/course/update-details";
+export const updateLessonAPI: string = "http://localhost:5001/api/course/lessons/update";
 
 export const getTotalPointsAPI: string =
   "http://localhost:5001/api/enrollment/get-total-points";
