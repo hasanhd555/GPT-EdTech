@@ -1,9 +1,25 @@
 .bg_grad{
     /* Linear gradient from top to bottom */
-    background: linear-gradient(to bottom, #4A16BD, #D9ECFF); /* Replace #ffffff with your starting color and #000000 with your ending color */
+    background: #084FC7
 }
 
-.img {
-    width: 50px; /* Set the width to 200 pixels */
-    height: auto; /* Let the height adjust proportionally based on the width */
+.padding{
+    
+    padding-top: 20px;
+    padding-bottom: 20px;
+    
+    
+}
+
+.slider-wrapper {
+    display: flex; /* Enable Flexbox */
+    align-items: center; /* Align items vertically in the center */
+    justify-content: center; /* Optionally, center the content horizontally within the wrapper */
+    height: 100%; /* Set a height for the wrapper (adjust as needed) */
+  }
+
+.img_normal {
+    width: 100px !important; /* Set the width to 200 pixels */
+    height: auto !important; /* Let the height adjust proportionally based on the width */
+    
 }

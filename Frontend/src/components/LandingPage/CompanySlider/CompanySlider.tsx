@@ -15,22 +15,25 @@ const CompanySlider:React.FC = () => {
         autoplay: true,
         speed: 2000,
         autoplaySpeed: 2000,
-        cssEase: "linear"
-      };
+        cssEase: "linear",
+        useCSS: true,
+        adaptiveHeight: false
+    };
     return(
-        <Container fluid className={`${styles["bg_grad"]} text-center`}>
-            <h2 className="text-center">Companies that trust us</h2>
-            <Slider {...settings}>
-            <img src={intel} alt=""  style={{ width: '50px', height: 'auto' }}/>
-            <img src={cisco} alt="" />
-            <img src={logitech} alt="" />
-            <img src={spotify} alt="" />
-            <img src={dell} alt="" />
-            <img src={nike} alt="" />
-            <img src={lenovo} alt="" />
-            <img src={nvidia} alt="" />
-            <img src={microsoft} alt="" />
+        <Container fluid className={`${styles["bg_grad"]} `}>
+            <div className={`${styles["padding"]} `}>
+            <Slider {...settings} >
+                <img src={intel} alt=""  className={`${styles["img_normal"]} `}/>
+                <img src={cisco} alt="" className={`${styles["img_normal"]} `}/>
+                <img src={logitech} alt="" className={`${styles["img_normal"]} `}/>
+                <img src={spotify} alt="" className={`${styles["img_normal"]} `}/>
+                <img src={dell} alt="" className={`${styles["img_normal"]} `}/>
+                <img src={nike} alt="" className={`${styles["img_normal"]} `}/>
+                <img src={lenovo} alt="" className={`${styles["img_normal"]} `}/>
+                <img src={nvidia} alt="" className={`${styles["img_normal"]} `}/>
+                <img src={microsoft} alt="" className={`${styles["img_normal"]} `}/>
             </Slider>
+            </div>
         </Container>
     )
 }

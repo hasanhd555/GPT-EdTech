@@ -25,8 +25,8 @@ const Hero: React.FC = () => {
           <p className={`${styles["saira-txt"]} text-white `}>
             SUCCESSFUL COACHES ARE VISIONARIES
           </p>
-          <h1 className={ `${styles["rowdies-light"]} text-white` }>
-            Good <span className={`${styles["coaching-text"]} `}>coaching</span> is good teaching & <br /> nothing else.
+          <h1 className={ `${styles["rowdies-light"]} text-white mb-4` }>
+            Good <span className={`${styles["coaching-text"]} `}>coaching</span> is<br />  good teaching & <br /> nothing else.
           </h1>
           <Button
             size="sm"
