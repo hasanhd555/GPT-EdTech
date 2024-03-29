@@ -18,8 +18,10 @@
     height: 100%; /* Set a height for the wrapper (adjust as needed) */
   }
 
-.img_normal {
-    width: 100px !important; /* Set the width to 200 pixels */
-    height: auto !important; /* Let the height adjust proportionally based on the width */
-    
+  .img_normal {
+    width: auto !important; /* Set the maximum width to 100 pixels */
+    max-width: 100%; /* Ensure the image does not exceed its container's width */
+    height: 50px !important; /* Let the height adjust automatically */
+    display: block; /* Ensure the image is displayed as a block element */
+    margin: 0 auto; /* Center the image horizontally */
 }

@@ -12,12 +12,12 @@ const CompanySlider:React.FC = () => {
         infinite: true,
         slidesToShow: 5,
         slidesToScroll: 1,
-        autoplay: true,
-        speed: 2000,
-        autoplaySpeed: 2000,
+       // autoplay: true,
+        //speed: 2000,
+        //autoplaySpeed: 2000,
         cssEase: "linear",
         useCSS: true,
-        adaptiveHeight: false
+        
     };
     return(
         <Container fluid className={`${styles["bg_grad"]} `}>

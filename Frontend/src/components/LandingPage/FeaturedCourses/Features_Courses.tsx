@@ -31,7 +31,8 @@ function FeaturedCourses() {
     const fetchResults = async () => {
       try {
         const response = await axios.post(getAllCoursesAPI);
-        setCourses(response?.data);
+        setCourses((response?.data).slice(0, 6));
+        
         console.log(response?.data);
       } catch (error) {
         console.error("Error fetching courses", error);
@@ -52,8 +53,15 @@ function FeaturedCourses() {
         </div>
       ) : (
         <>
-          <h2>Featured Courses</h2>
-          <p>lorem ipsum bing bong ting</p>
+          <h2 className={`${Styles["rowdies-light"]} `}>
+            Featured&nbsp;  
+            <span className={`${Styles["blue-text"]} `}>
+              Courses
+              </span>
+            </h2>
+          <p className={`${Styles["saira-txt"]} `}>
+            lorem ipsum bing bong ting
+            </p>
           <Row xs={1} md={2} lg={3} className="my-5">
             {courses.map((course: Course) => (
               <Col
@@ -80,7 +88,7 @@ function FeaturedCourses() {
               chatbotActive={chatbotActive}
             />
           ) : null}
-          <Button className={`${Styles["button"]} mt-4 text-center mb-2`}
+          <Button className={`${Styles["button"]} mt-4 text-center mb-2 ${Styles["saira-txt"]}`}
           onClick={()=>{navigate("/explore-courses")}}>
             Explore Courses</Button>
         </>
