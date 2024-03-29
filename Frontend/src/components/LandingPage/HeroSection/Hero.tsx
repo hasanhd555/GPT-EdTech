@@ -1,8 +1,10 @@
-import { Card, Container, Row, Col, Button, Form, FormControl } from "react-bootstrap";
+import { Card, Container, Row, Col, Button, Form, FormControl,InputGroup } from "react-bootstrap";
 import styles from './hero.module.css';
 import image from './hero_img.png'; // Import the image
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+
+
 
 
 
@@ -20,11 +22,11 @@ const Hero: React.FC = () => {
     <Container fluid className={`${styles["custom-purple-blue-gradient"]} h-100 d-flex flex-column`}>
       <Row className="flex-grow-1">
         <Col xs={6} className="d-flex flex-column justify-content-between px-md-5 py-5">
-          <p className="text-semi-bold fs-6 text-white" style={{ fontFamily: 'Saira' }}>
+          <p className={`${styles["saira-txt"]} text-white `}>
             SUCCESSFUL COACHES ARE VISIONARIES
           </p>
-          <h1 className="display-3 mb-4 text-white" style={{ lineHeight: '1.125' }}>
-            Good coaching is good teaching & <br /> nothing else.
+          <h1 className={ `${styles["rowdies-light"]} text-white` }>
+            Good <span className={`${styles["coaching-text"]} `}>coaching</span> is good teaching & <br /> nothing else.
           </h1>
           <Button
             size="sm"
@@ -35,26 +37,26 @@ const Hero: React.FC = () => {
             View Courses
           </Button>
           <div className="mt-4"> {/* Spacer div */}
-            <Form className="d-flex align-items-center"
-            onSubmit={handleSubmit}>
-              <FormControl
-                type="search"
-                placeholder="Search for courses"
-                className="me-2"
-                aria-label="Search"
-                onChange={(event) => setSearchValue(event.target.value)}
-              />
-              <Button variant="outline-light" type="submit" className={`${styles["search-button"]}`} >
-                <span className="bi bi-search me-2">
-                  Search
-                </span>
-              </Button>
-            </Form>
+          
+          <Form className={`d-flex  border-secondary`} onSubmit={handleSubmit}>
+          <FormControl
+            type="search"
+            placeholder="Search for courses"
+            className="border-secondary me-2 flex-grow-1" // Removed unnecessary backticks and fixed class name
+            aria-label="Search"
+            onChange={(event) => setSearchValue(event.target.value)}
+          />
+          <Button variant="outline-light" type="submit">
+            <span className="bi bi-search me-1"></span>
+            <span>Search</span>
+          </Button>
+        </Form>
+            
           </div>
         </Col>
         <Col xs={6} className="d-flex align-items-end justify-content-end pe-5">
           {/* Image on the right */}
-          <img src={image} alt="Image" className="img-fluid" style={{ maxWidth: '300px'}} />
+          <img src={image} alt="Image"  className={`${styles["custom-image"]} img-fluid`} />
         </Col>
       </Row>
     </Container>
