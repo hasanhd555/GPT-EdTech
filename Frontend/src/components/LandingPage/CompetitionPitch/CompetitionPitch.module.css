@@ -1,0 +1,23 @@
+.saira-txt{
+    font-family: "Saira", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+      font-size:small
+  } 
+  .rowdies-light {
+    font-family: "Rowdies", Arial;
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  .blue-text {
+    color: #525FE1; /* Example color (red) */
+  }
+
+  .hover-effect:hover {
+    /* Define your hover effect styles here */
+    transform: translateY(-5px); /* Example: move the element up by 5px on hover */
+  }
