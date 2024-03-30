@@ -14,8 +14,44 @@ const Summarizer = () => {
   const [mode, setMode] = useState<String>("paragraph");
   const [textWordCount, setTextWordCount] = useState(0);
   const [summaryWordCount, setSummaryWordCount] = useState(0);
+  const [inputText, setInputText] = useState("");
+  const [summary, setSummary] = useState("");
   // Function to update mode state
   const handleModeChange = (val: String) => setMode(val);
+
+  // Function to send request to OpenAI API for summarization
+  const summarizeText = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + process.env.REACT_APP_OPEN_AI_KEY,
+      },
+      data: {
+        prompt: inputText + `\n\nTl;dr`,
+        temperature: 0.1,
+        max_tokens: Math.floor(inputText.length / 2),
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0.5,
+        stop: ['"""'],
+      },
+    };
+
+    axios
+      .post(
+        "https://api.openai.com/v1/engines/text-davinci-003/completions",
+        requestOptions
+      )
+      .then((response) => {
+        const summarizedText = response.data.choices[0].text;
+        setSummary(summarizedText);
+        setSummaryWordCount(summarizedText.split(/\s+/).length);
+      })
+      .catch((error) => {
+        console.error("Error summarizing text:", error);
+      });
+  };
 
   // Array to hold toggle buttons config
   const modes = [
@@ -80,13 +116,17 @@ const Summarizer = () => {
                     className="h-100"
                     as="textarea"
                     rows={5}
+                    value={inputText}
                     placeholder="Enter or paste your text"
+                    onChange={(e) => setInputText(e.target.value)}
                   />
                 </Col>
               </Form.Group>
               <div className="d-flex flex-row w-100 justify-content-between mb-2">
-                <h6 className="align-self-start ms-3 my-2">Word Count: {textWordCount}</h6>
-                <button className="btn btn-primary me-3 ">Summarize</button>
+                <h6 className="align-self-start ms-3 my-2">
+                  Word Count: {textWordCount}
+                </h6>
+                <button className="btn btn-primary me-3 " onClick={summarizeText}>Summarize</button>
               </div>
             </div>
             <div
@@ -95,22 +135,12 @@ const Summarizer = () => {
             >
               <div style={{ minHeight: "40vh" }}>
                 <p className="m-5">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Necessitatibus, est. Culpa sint officiis sequi alias autem
-                  molestiae magnam repudiandae. Dolorem possimus distinctio
-                  corporis a quaerat quia hic. Ducimus, voluptas? Qui at
-                  asperiores consectetur modi alias labore vel nostrum
-                  provident, eos dolore, omnis quia. Veniam cupiditate saepe,
-                  repellendus velit voluptate voluptatem quia aspernatur minus
-                  quos minima? Accusamus a eveniet harum? Temporibus quis animi
-                  vel, est sequi illum laborum totam. Alias, placeat. Maiores
-                  odio libero recusandae quod, perferendis eveniet. Ea, hic
-                  voluptatum illum odio cupiditate doloremque quasi dolorem ad
-                  suscipit placeat ut quas culpa nostrum earum dolores
-                  voluptate? Expedita libero aspernatur fugit!
+                  {summary}
                 </p>
               </div>
-              <h6 className="align-self-start ms-5 mb-3">Word Count: {summaryWordCount}</h6>
+              <h6 className="align-self-start ms-5 mb-3">
+                Word Count: {summaryWordCount}
+              </h6>
             </div>
           </div>
         </div>
