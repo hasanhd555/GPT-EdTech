@@ -18,6 +18,7 @@ import LeaderBoard from "./components/LeaderBoard/LeaderBoard";
 import AddCourse from "./components/Courses/AddCourse";
 import EditableCourse from "./components/Courses/EditableCourse";
 import EditCourse from "./components/Courses/EditCourse";
+import Summarizer from "./components/Summarizer/Summarizer";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Route path="/add-course" element={<AddCourse />}></Route>
         <Route path="/editable-course" element={<EditableCourse />}></Route>
         <Route path="/edit-course" element={<EditCourse />}></Route>
+        <Route path="/summarizer" element={<Summarizer />}></Route>
       </Routes>
       <Footer />
     </>

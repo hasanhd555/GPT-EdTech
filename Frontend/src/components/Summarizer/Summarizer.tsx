@@ -7,10 +7,13 @@ import {
   ToggleButton,
   Form,
 } from "react-bootstrap";
+import axios from "axios";
 
 const Summarizer = () => {
   const [summaryLength, setSummaryLength] = useState(50);
   const [mode, setMode] = useState<String>("paragraph");
+  const [textWordCount, setTextWordCount] = useState(0);
+  const [summaryWordCount, setSummaryWordCount] = useState(0);
   // Function to update mode state
   const handleModeChange = (val: String) => setMode(val);
 
@@ -82,8 +85,8 @@ const Summarizer = () => {
                 </Col>
               </Form.Group>
               <div className="d-flex flex-row w-100 justify-content-between mb-2">
-                <h6 className="align-self-start ms-5 my-2">Word Count: 200</h6>
-                <button className="btn btn-primary me-5 ">Summarize</button>
+                <h6 className="align-self-start ms-3 my-2">Word Count: {textWordCount}</h6>
+                <button className="btn btn-primary me-3 ">Summarize</button>
               </div>
             </div>
             <div
@@ -107,7 +110,7 @@ const Summarizer = () => {
                   voluptate? Expedita libero aspernatur fugit!
                 </p>
               </div>
-              <h6 className="align-self-start ms-5 mb-3">Word Count: 200</h6>
+              <h6 className="align-self-start ms-5 mb-3">Word Count: {summaryWordCount}</h6>
             </div>
           </div>
         </div>
