@@ -19,5 +19,5 @@
 
   .hover-effect:hover {
     /* Define your hover effect styles here */
-    transform: translateY(-5px); /* Example: move the element up by 5px on hover */
+    transform: scale(1.1); /* Example: move the element up by 5px on hover */
   }
