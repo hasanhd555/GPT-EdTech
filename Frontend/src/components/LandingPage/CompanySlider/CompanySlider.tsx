@@ -1,5 +1,5 @@
 import { Card, Container, Row, Col, Button, Form, FormControl } from "react-bootstrap";
-import {intel, cisco, logitech, spotify, dell, nike, lenovo, nvidia, microsoft} from './ImgURL';
+import {cisco, facebook, google, spotify, amazon, microsoft, visa, netflix} from './ImgURL';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styles from './CompanySlider.module.css';
@@ -8,31 +8,44 @@ import Slider from "react-slick";
 
 const CompanySlider:React.FC = () => {
     const settings = {
-        dots: true,
+        dots: false,
         infinite: true,
-        slidesToShow: 5,
+        slidesToShow: 4,
         slidesToScroll: 1,
-       // autoplay: true,
-        //speed: 2000,
-        //autoplaySpeed: 2000,
-        cssEase: "linear",
-        useCSS: true,
-        
-    };
+        autoplay: true,
+        speed: 2000,
+        autoplaySpeed: 2000,
+        cssEase: "linear"
+      };
     return(
-        <Container fluid className={`${styles["bg_grad"]} `}>
-            <div className={`${styles["padding"]} `}>
-            <Slider {...settings} >
-                <img src={intel} alt=""  className={`${styles["img_normal"]} `}/>
-                <img src={cisco} alt="" className={`${styles["img_normal"]} `}/>
-                <img src={logitech} alt="" className={`${styles["img_normal"]} `}/>
-                <img src={spotify} alt="" className={`${styles["img_normal"]} `}/>
-                <img src={dell} alt="" className={`${styles["img_normal"]} `}/>
-                <img src={nike} alt="" className={`${styles["img_normal"]} `}/>
-                <img src={lenovo} alt="" className={`${styles["img_normal"]} `}/>
-                <img src={nvidia} alt="" className={`${styles["img_normal"]} `}/>
-                <img src={microsoft} alt="" className={`${styles["img_normal"]} `}/>
-            </Slider>
+        <Container fluid className={`${styles["bg_grad"]} px-6`}>
+            <div className="slider-container">
+                <Slider {...settings} >
+                    <div className={`${styles["img_container"]} `}>
+                        <img src={amazon} alt="" className={`${styles["img_normal"]} `}/>
+                    </div>
+                    <div className={`${styles["img_container"]} `}>
+                        <img src={cisco} alt="" className={`${styles["img_normal"]} `}/>
+                    </div>
+                    <div className={`${styles["img_container"]} `}>
+                        <img src={facebook} alt="" className={`${styles["img_normal"]} `}/>
+                    </div>
+                    <div className={`${styles["img_container"]} `}>
+                        <img src={spotify} alt="" className={`${styles["img_normal"]} ${styles["white-svg "]}`}/>
+                    </div>
+                    <div className={`${styles["img_container"]} `}>
+                        <img src={visa} alt="" className={`${styles["img_normal"]} `}/>
+                    </div>
+                    <div className={`${styles["img_container"]} `}>
+                        <img src={netflix} alt="" className={`${styles["img_normal"]} `}/>
+                    </div>
+                    <div className={`${styles["img_container"]} `}>
+                        <img src={google} alt="" className={`${styles["img_normal"]} `}/>
+                    </div>
+                    <div className={`${styles["img_container"]} `}>
+                        <img src={microsoft} alt="" className={`${styles["img_normal"]} `}/>
+                    </div>
+                </Slider>
             </div>
         </Container>
     )
