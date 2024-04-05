@@ -54,7 +54,7 @@ let cardData: carddata[] = [
 
 const CompetitionPitch: React.FC = () => {
   return (
-    <Container fluid className="bg-light">
+    <Container fluid className="bg-light pd-5 px-5">
       <h2 className={`${styles["rowdies-light"]} text-center py-5`}>
         <span className={`${styles["blue-text"]} text-center`}>Why we are </span>
         better than others?

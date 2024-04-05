@@ -7,5 +7,6 @@ const amazon= "https://res.cloudinary.com/ddvjtkdge/image/upload/v1712312780/Ama
 const microsoft= "https://res.cloudinary.com/ddvjtkdge/image/upload/v1712312781/Microsoft_ctjxka.svg";
 const visa ="https://res.cloudinary.com/ddvjtkdge/image/upload/v1712312782/Visa_orj2bt.svg";
 const netflix="https://res.cloudinary.com/ddvjtkdge/image/upload/v1712312780/Netflix_mf7puq.svg";
+const mask="https://res.cloudinary.com/ddvjtkdge/image/upload/v1712319007/Mask_group_giy3tn.svg";
 
-export {cisco, facebook, google, spotify, amazon, microsoft, visa, netflix};
+export {cisco, facebook, google, spotify, amazon, microsoft, visa, netflix,mask};

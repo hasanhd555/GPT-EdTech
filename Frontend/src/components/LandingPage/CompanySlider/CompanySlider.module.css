@@ -1,7 +1,10 @@
 .bg_grad{
     /* Linear gradient from top to bottom */
-    background: #084FC7
+ 
+    mask-image: linear-gradient(#084FC7, #00C3FF);
 }
+
+
 
 
 
