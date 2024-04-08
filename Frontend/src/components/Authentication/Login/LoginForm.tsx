@@ -119,7 +119,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                 {({ isSubmitting }) => (
                   <Form>
                     <div className="mb-3">
-                      <BootstrapForm.Label>Email</BootstrapForm.Label>
+                      <BootstrapForm.Label>Email <span className="text-danger">*</span></BootstrapForm.Label>
                       <Field
                         name="email"
                         type="email"
@@ -134,7 +134,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                       />
                     </div>
                     <div className="mb-3">
-                      <BootstrapForm.Label>Password</BootstrapForm.Label>
+                      <BootstrapForm.Label>Password <span className="text-danger">*</span></BootstrapForm.Label>
                       <InputGroup>
                         <Field
                           name="password"
@@ -162,7 +162,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                       aria-labelledby="role-group"
                     >
                       <BootstrapForm.Label className="mr-3">
-                        Role
+                        Role <span className="text-danger">*</span>
                       </BootstrapForm.Label>
                       <div className="d-flex">
                         {" "}
