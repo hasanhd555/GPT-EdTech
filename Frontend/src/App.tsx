@@ -19,6 +19,8 @@ import LandingPage from "./components/LandingPage/LandingPage";
 import AddCourse from "./components/Courses/AddCourse";
 import EditableCourse from "./components/Courses/EditableCourse";
 import EditCourse from "./components/Courses/EditCourse";
+import AllCourseAnalytics from "./components/Courses/AllCourseAnalytics";
+import CourseAnalytics from "./components/Courses/CourseAnalytics";
 import Summarizer from "./components/Summarizer/Summarizer";
 
 
@@ -44,6 +46,8 @@ function App() {
         <Route path="/add-course" element={<AddCourse />}></Route>
         <Route path="/editable-course" element={<EditableCourse />}></Route>
         <Route path="/edit-course" element={<EditCourse />}></Route>
+        <Route path="/all-course-analytics" element={<AllCourseAnalytics />}></Route>
+        <Route path="/course-analytics" element={<CourseAnalytics />}></Route>
         <Route path="/summarizer" element={<Summarizer />}></Route>
       </Routes>
       <Footer />

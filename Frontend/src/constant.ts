@@ -69,6 +69,7 @@ export interface SignUpData {
 export const getAllCoursesAPI: string = "http://localhost:5001/api/course";
 export const getEditableCoursesAPI: string = "http://localhost:5001/api/course/editable";
 export const getCourseAllInfoAPI: string = "http://localhost:5001/api/course/get-all-info";
+export const getCourseAnalyticsAPI: string = "http://localhost:5001/api/course/get-course-analytics";
 export const updateCourseDetailsAPI: string = "http://localhost:5001/api/course/update-details";
 export const updateLessonAPI: string = "http://localhost:5001/api/course/lessons/update";
 export const updateQuestionAPI: string = "http://localhost:5001/api/course/quiz/update";
