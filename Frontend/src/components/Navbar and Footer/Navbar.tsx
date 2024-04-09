@@ -83,7 +83,7 @@ function NavbarComp() {
             </Nav.Link>
             <Nav.Link
               onClick={() => {
-                navigate("/summarize");
+                navigate("/summarizer");
               }}
             >
               Summarizer
