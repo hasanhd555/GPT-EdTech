@@ -8,49 +8,47 @@ import {
   Form,
 } from "react-bootstrap";
 import axios from "axios";
+import OpenAI from "openai";
+import Spinner from "react-bootstrap/Spinner";
 
 const Summarizer = () => {
+  const openai = new OpenAI({apiKey: process.env.REACT_APP_OPEN_AI_KEY,dangerouslyAllowBrowser: true });
   const [summaryLength, setSummaryLength] = useState(50);
   const [mode, setMode] = useState<String>("paragraph");
   const [textWordCount, setTextWordCount] = useState(0);
   const [summaryWordCount, setSummaryWordCount] = useState(0);
   const [inputText, setInputText] = useState("");
   const [summary, setSummary] = useState("");
+  const [loading,setLoading] = useState(false);
   // Function to update mode state
   const handleModeChange = (val: String) => setMode(val);
 
   // Function to send request to OpenAI API for summarization
-  const summarizeText = () => {
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + process.env.REACT_APP_OPEN_AI_KEY,
-      },
-      data: {
-        prompt: inputText + `\n\nTl;dr`,
-        temperature: 0.1,
+  const summarizeText = async () => {
+    setLoading(true);
+    try{
+      const completion = await openai.chat.completions.create({
+        messages: [{ role: "system", content: "You are a text summarizer." },{role:"user",content:inputText + `\n\nTl;dr`}],
+        model: "gpt-3.5-turbo",
+        temperature:0.1,
         max_tokens: Math.floor(inputText.length / 2),
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0.5,
         stop: ['"""'],
-      },
-    };
-
-    axios
-      .post(
-        "https://api.openai.com/v1/engines/text-davinci-003/completions",
-        requestOptions
-      )
-      .then((response) => {
-        const summarizedText = response.data.choices[0].text;
-        setSummary(summarizedText);
-        setSummaryWordCount(summarizedText.split(/\s+/).length);
-      })
-      .catch((error) => {
-        console.error("Error summarizing text:", error);
       });
+  
+      if(completion.choices[0]?.message?.content)
+      {
+        setLoading(false);
+        const summarizedText:string = completion.choices[0]?.message?.content;
+        setSummary(summarizedText);
+        setSummaryWordCount(summarizedText.split(/\s+/).length); 
+      }
+
+    }catch(err){
+      console.log(err);
+    };
   };
 
   // Array to hold toggle buttons config
@@ -126,7 +124,16 @@ const Summarizer = () => {
                 <h6 className="align-self-start ms-3 my-2">
                   Word Count: {textWordCount}
                 </h6>
-                <button className="btn btn-primary me-3 " onClick={summarizeText}>Summarize</button>
+                <button
+                  className={
+                    loading
+                      ? "btn btn-primary me-3 disabled"
+                      : "btn btn-primary me-3"
+                  }
+                  onClick={summarizeText}
+                >
+                  Summarize
+                </button>
               </div>
             </div>
             <div
@@ -134,9 +141,15 @@ const Summarizer = () => {
               style={{ minHeight: "60vh" }}
             >
               <div style={{ minHeight: "40vh" }}>
-                <p className="m-5">
-                  {summary}
-                </p>
+                {loading ? (
+                  <div className="d-flex justify-content-center align-items-center pt-5">
+                    <Spinner animation="grow" variant="primary" />
+                    <Spinner animation="grow" variant="primary" />
+                    <Spinner animation="grow" variant="primary" />
+                  </div>
+                ) : (
+                  <p className="m-5">{summary}</p>
+                )}
               </div>
               <h6 className="align-self-start ms-5 mb-3">
                 Word Count: {summaryWordCount}
