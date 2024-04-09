@@ -99,7 +99,7 @@ const createCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 correct_answer: question.correctOption + 1,
                 options: question.options,
                 course_id: savedCourse._id,
-                concept: "Placeholder Concept", // Assuming 'concept' is required; adjust as necessary
+                concept: question.concept, // Assuming 'concept' is required; adjust as necessary
             }).save()));
             // Optionally, link questions to the course here if your schema supports it
         }

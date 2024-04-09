@@ -4,6 +4,8 @@ import Card from "react-bootstrap/Card";
 import { CreateNewCourse } from "../../constant";
 import axios from "axios";
 import { useAppSelector } from "../../redux/hooks";
+import { useNavigate } from "react-router-dom";
+
 
 interface Lesson {
   title: string;
@@ -14,15 +16,19 @@ interface QuizQuestion {
   question: string;
   options: string[];
   correctOption: number; // Index of the correct option
+  concept: string;
 }
 
 const AddCourse: React.FC = () => {
+  const navigate = useNavigate();
+
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([
     {
       question: "",
       options: ["", "", "", ""],
       correctOption: -1,
+      concept: "",
     },
   ]);
 
@@ -54,32 +60,65 @@ const AddCourse: React.FC = () => {
   const handleQuizQuestionChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     questionIndex: number,
-    optionIndex?: number // This is only used for options, not for the question itself
+    optionIndex?: number, // This is only used for options, not for the question itself
+    isConcept?: boolean // Identify if the change is for the concept field
   ) => {
     const { value } = event.target;
 
-    // Update a quiz question
-    if (typeof optionIndex === "undefined") {
-      // If optionIndex is undefined, it means we're updating the question text
-      const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
-        idx === questionIndex
-          ? { ...quizQuestion, question: value }
-          : quizQuestion
-      );
-      setQuizQuestions(updatedQuizQuestions);
-    } else {
-      // Update an option value
-      const updatedOptions = quizQuestions[questionIndex].options.map(
-        (option, idx) => (idx === optionIndex ? value : option)
-      );
-      const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
-        idx === questionIndex
-          ? { ...quizQuestion, options: updatedOptions }
-          : quizQuestion
-      );
-      setQuizQuestions(updatedQuizQuestions);
-    }
-  };
+      // If change is for concept, update concept field
+      if (isConcept) {
+        const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
+          idx === questionIndex ? { ...quizQuestion, concept: value } : quizQuestion
+        );
+        setQuizQuestions(updatedQuizQuestions);
+        return;
+      }
+
+      // Update a quiz question
+      if (typeof optionIndex === "undefined") {
+        // If optionIndex is undefined, it means we're updating the question text
+        const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
+          idx === questionIndex
+            ? { ...quizQuestion, question: value }
+            : quizQuestion
+        );
+        setQuizQuestions(updatedQuizQuestions);
+      } else {
+        // Update an option value
+        const updatedOptions = quizQuestions[questionIndex].options.map(
+          (option, idx) => (idx === optionIndex ? value : option)
+        );
+        const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
+          idx === questionIndex
+            ? { ...quizQuestion, options: updatedOptions }
+            : quizQuestion
+        );
+        setQuizQuestions(updatedQuizQuestions);
+      }
+    };
+  //   if (!isConcept && typeof optionIndex !== "undefined") {
+  //     // Update specific option text
+  //     const updatedOptions = [...quizQuestions[questionIndex].options];
+  //     updatedOptions[optionIndex] = event.target.value;
+  //     setQuizQuestions(
+  //       quizQuestions.map((question, idx) =>
+  //         idx === questionIndex
+  //           ? { ...question, options: updatedOptions }
+  //           : question
+  //       )
+  //     );
+  //   } else {
+  //     // Update question text or concept
+  //     const field = isConcept ? "concept" : "question";
+  //     setQuizQuestions(
+  //       quizQuestions.map((question, idx) =>
+  //         idx === questionIndex
+  //           ? { ...question, [field]: event.target.value }
+  //           : question
+  //       )
+  //     );
+  //   }
+  // };
 
   const handleCorrectOptionChange = (index: number, optionIndex: number) => {
     const updatedQuizQuestions = quizQuestions.map((qq, i) =>
@@ -91,7 +130,12 @@ const AddCourse: React.FC = () => {
   const addQuizQuestion = () => {
     setQuizQuestions((quizQuestions) => [
       ...quizQuestions,
-      { question: "", options: ["", "", "", ""], correctOption: -1 },
+      {
+        question: "",
+        options: ["", "", "", ""],
+        correctOption: -1,
+        concept: "",
+      },
     ]);
   };
 
@@ -121,8 +165,8 @@ const AddCourse: React.FC = () => {
     console.log("Course Description:", courseDescription);
     console.log("Lessons:", lessons);
     console.log("Quiz Questions:", quizQuestions);
-    console.log("here")
-    
+    console.log("here");
+
     console.log("Admin ID:", _id);
     // Prepare the data object to be sent
     const courseData = {
@@ -130,14 +174,19 @@ const AddCourse: React.FC = () => {
       name: courseName,
       description: courseDescription,
       lessons: lessons,
-      quizQuestions: quizQuestions,
+      // Ensure each quiz question includes the concept when being sent
+      quizQuestions: quizQuestions.map(question => ({
+        ...question,
+        concept: question.concept
+      }))
     };
 
-    try {
-      // Adjust URL to your actual endpoint
+    try { 
       const response = await axios.post(CreateNewCourse, courseData);
       console.log("Course creation successful", response.data);
-      // Handle success, e.g., show a success message, clear form, navigate to another page, etc.
+      // Alert the user and navigate to the admin dashboard
+    alert("Course created successfully!");
+    navigate("/dash-admin");
     } catch (error) {
       console.error("There was an error creating the course", error);
       // Handle error, e.g., show an error message
@@ -147,9 +196,7 @@ const AddCourse: React.FC = () => {
   return (
     <div className="mt-2 mb-3">
       <div>
-        <h2 className="display-3 text-center fw-bold">
-          Create new course
-        </h2>
+        <h2 className="display-3 text-center fw-bold">Create new course</h2>
       </div>
       <div style={{ width: "70%" }} className="mx-auto">
         <form onSubmit={handleSubmit}>
@@ -196,12 +243,12 @@ const AddCourse: React.FC = () => {
 
           {/* Lesson forms */}
           <h3 className="display-4 text-center fw-bold mt-4 text-primary">
-              Lessons Section 
-            </h3>
+            Lessons Section
+          </h3>
           {lessons.map((lesson, index) => (
             <div
               key={index}
-              className="mt-2 mb-2 border border-primary border-1 rounded p-2" 
+              className="mt-2 mb-2 border border-primary border-1 rounded p-2"
             >
               {/* Omitted for brevity */}
 
@@ -312,8 +359,22 @@ const AddCourse: React.FC = () => {
                       }
                       required
                     />
+                    
                   </div>
                 ))}
+                {/* Concept input field */}
+                <div className="mb-3">
+                      <label className="form-label fw-bold">Concept</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter concept"
+                        value={quizQuestion.concept}
+                        onChange={(e) =>
+                          handleQuizQuestionChange(e, index, undefined, true)
+                        }
+                      />
+                    </div>
                 <button
                   type="button"
                   className="btn btn-danger mb-3"
@@ -331,7 +392,7 @@ const AddCourse: React.FC = () => {
               Add New Question
             </button>
           </div>
-          <hr className="mb-4"/>
+          <hr className="mb-4" />
           <div className="d-flex justify-content-center">
             <button type="submit" className="btn btn-primary mx-auto mt-2">
               Submit

@@ -98,7 +98,7 @@ export const createCourse = async (req: Request, res: Response) => {
             correct_answer: question.correctOption + 1,
             options: question.options,
             course_id: savedCourse._id,
-            concept: "Placeholder Concept", // Assuming 'concept' is required; adjust as necessary
+            concept: question.concept, // Assuming 'concept' is required; adjust as necessary
           }).save()
         )
       );
