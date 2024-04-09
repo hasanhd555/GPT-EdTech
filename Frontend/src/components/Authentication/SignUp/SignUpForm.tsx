@@ -172,7 +172,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
                           </Button>
                         </Modal.Footer>
                       </Modal>
-                      <BootstrapForm.Label>Email</BootstrapForm.Label>
+                      <BootstrapForm.Label>Email <span className="text-danger">*</span></BootstrapForm.Label>
                       <Field
                         name="email"
                         type="email"
@@ -187,7 +187,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
                       />
                     </div>
                     <div className="mb-3">
-                      <BootstrapForm.Label>Password</BootstrapForm.Label>
+                      <BootstrapForm.Label>Password <span className="text-danger">*</span></BootstrapForm.Label>
                       <InputGroup>
                         <Field
                           name="password"
@@ -212,7 +212,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
                     {studentCredentialsShown && (
                       <>
                         <div className="mb-3">
-                          <BootstrapForm.Label>Full Name</BootstrapForm.Label>
+                          <BootstrapForm.Label>Full Name <span className="text-danger">*</span></BootstrapForm.Label>
                           <Field
                             name="fullName"
                             type="text"
@@ -227,7 +227,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
                           />
                         </div>
                         <div className="mb-3">
-                          <BootstrapForm.Label>Username</BootstrapForm.Label>
+                          <BootstrapForm.Label>Username <span className="text-danger">*</span></BootstrapForm.Label>
                           <Field
                             name="username"
                             type="text"
@@ -242,7 +242,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
                           />
                         </div>
                         <div className="mb-3">
-                          <BootstrapForm.Label>Age</BootstrapForm.Label>
+                          <BootstrapForm.Label>Age <span className="text-danger">*</span></BootstrapForm.Label>
                           <Field
                             name="age"
                             type="number"
@@ -263,7 +263,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
                           aria-labelledby="gender-group"
                         >
                           <BootstrapForm.Label className="mr-3">
-                            Gender
+                            Gender <span className="text-danger">*</span>
                           </BootstrapForm.Label>
                           <div className="d-flex">
                             {" "}
@@ -302,7 +302,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
                       aria-labelledby="role-group"
                     >
                       <BootstrapForm.Label className="mr-3">
-                        Role
+                        Role <span className="text-danger">*</span>
                       </BootstrapForm.Label>
                       <div className="d-flex">
                         {" "}
@@ -347,7 +347,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
                         className="form-check-label"
                         htmlFor="terms"
                       >
-                        I agree with Terms of Use and Privacy Policy
+                        I agree with Terms of Use and Privacy Policy <span className="text-danger">*</span>
                       </BootstrapForm.Label>
                       <ErrorMessage
                         name="terms"

@@ -14,6 +14,7 @@ export interface course_type {
   description: string;
   image_url: string;
   admin_id: string;
+  _id:string;
 }
 
 export interface enrollment_type {
@@ -26,6 +27,7 @@ export interface enrollment_type {
 export interface lesson_type {
   lesson_num: number;
   title: string;
+  _id: string;
   content: string;
   course_id: string;
 }
@@ -36,6 +38,7 @@ export interface question_type {
   options: string[];
   course_id: string;
   concept: string;
+  _id: string;
 }
 
 export interface rating_type {
@@ -64,6 +67,12 @@ export interface SignUpData {
 }
 
 export const getAllCoursesAPI: string = "http://localhost:5001/api/course";
+export const getEditableCoursesAPI: string = "http://localhost:5001/api/course/editable";
+export const getCourseAllInfoAPI: string = "http://localhost:5001/api/course/get-all-info";
+export const updateCourseDetailsAPI: string = "http://localhost:5001/api/course/update-details";
+export const updateLessonAPI: string = "http://localhost:5001/api/course/lessons/update";
+export const updateQuestionAPI: string = "http://localhost:5001/api/course/quiz/update";
+
 export const getTotalPointsAPI: string =
   "http://localhost:5001/api/enrollment/get-total-points";
 export const GoldMedalImgUrl: string =
@@ -115,3 +124,5 @@ export const GetAvgCourseRatingAPI: string =
   "http://localhost:5001/api/course/ratings/get-by-id";
 
 export const BaseAPI: string = "http://localhost:5001/api/";
+
+export const CreateNewCourse: string = "http://localhost:5001/api/course/create";

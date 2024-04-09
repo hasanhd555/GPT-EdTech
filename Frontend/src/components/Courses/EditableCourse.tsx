@@ -4,17 +4,14 @@ import axios from "axios";
 import Spinner from "react-bootstrap/Spinner";
 import CourseCard from "../CourseCard/CourseCard";
 import { NavigateFunction, useNavigate } from "react-router";
-import Styles from "./ExploreCourses.module.css";
+import Styles from "../ExploreCourses/ExploreCourses.module.css";
 import { course_type } from "../../constant";
 import ChatBot from "../ChatBot/ChatBot";
 import { useAppSelector } from "../../redux/hooks";
-import { getAllCoursesAPI } from "../../constant";
+import { getEditableCoursesAPI } from "../../constant";
 
-interface ExploreCoursesProps {
-  title: string;
-}
-
-function ExploreCourses({ title }: ExploreCoursesProps) {
+// EditCourse
+function EditableCourse() {
   const [courses, setCourses] = useState<course_type[]>([]);
   const navigate: NavigateFunction = useNavigate();
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
@@ -25,18 +22,19 @@ function ExploreCourses({ title }: ExploreCoursesProps) {
   };
 
   useEffect(() => {
-    const fetchResults = async () => {
+    const fetchEditableCourses = async () => {
       try {
-        const response = await axios.post(getAllCoursesAPI);
-        setCourses(response?.data);
-        console.log(response?.data);
+        const response = await axios.get(`${getEditableCoursesAPI}?adminId=${_id}`); // Append adminId as query parameter
+        setCourses(response.data);
       } catch (error) {
-        console.error("Error fetching courses", error);
+        console.error("Error fetching editable courses", error);
       }
     };
 
-    fetchResults();
-  }, []);
+    if (_id) {
+      fetchEditableCourses();
+    }
+  }, [_id]); // Dependency on adminId ensures that courses are fetched when adminId changes or is set
 
   return (
     <Container className="text-center mt-5" style={{ minHeight: "50vh" }}>
@@ -48,8 +46,7 @@ function ExploreCourses({ title }: ExploreCoursesProps) {
         </div>
       ) : (
         <>
-        
-          <h2 className="fw-bold">{title}</h2>
+          <h2 className="display-6 text-center fw-bold text-primary">Edit your Courses</h2>
           <Row xs={1} md={2} lg={3} className="my-5">
             {courses.map((course: course_type) => (
               <Col
@@ -57,7 +54,7 @@ function ExploreCourses({ title }: ExploreCoursesProps) {
                 className={`my-4 ${Styles.coursecardcontainer} d-flex justify-content-center`}
               >
                 <div
-                  onClick={() => navigate(`/course-overview?id=${course?._id}`)}
+                  onClick={() => navigate(`/edit-course?id=${course?._id}`)}
                   style={{ width: "90%" }}
                 >
                   <CourseCard
@@ -82,4 +79,4 @@ function ExploreCourses({ title }: ExploreCoursesProps) {
   );
 }
 
-export default ExploreCourses;
+export default EditableCourse;
