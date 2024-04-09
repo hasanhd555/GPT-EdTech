@@ -1,0 +1,35 @@
+.saira-txt{
+    font-family: "Saira", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+      font-size:small
+  } 
+  .rowdies-light {
+    font-family: "Rowdies", Arial;
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  .blue-text {
+    color: #4BE5CA; /* Example color (red) */
+  }
+
+  .custom-purple-blue-gradient {
+    background-image: linear-gradient(to right, #0850C7, #7F56D9); /* Adjust colors as needed */
+    padding-top: 20px;
+    padding-bottom: 20px;
+    }
+
+    .vl {
+        border-left: 2px dotted white;
+        height: 200px; /* Adjust height as needed */
+      }
+      
+
+      .border-right {
+        border-right: 2px dotted white;
+        
+    }

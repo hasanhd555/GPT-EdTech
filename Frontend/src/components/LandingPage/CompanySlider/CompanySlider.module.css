@@ -1,0 +1,24 @@
+.bg_grad{
+    /* Linear gradient from top to bottom */
+ 
+    mask-image: linear-gradient(#084FC7, #00C3FF);
+}
+
+
+
+
+
+
+
+  .img_normal {
+    width: 150px !important; /* Set the maximum width to 100 pixels */
+    max-width: 100%; /* Ensure the image does not exceed its container's width */
+    height: auto !important; /* Let the height adjust automatically */
+    display: block; /* Ensure the image is displayed as a block element */
+    margin: 0 auto; /* Center the image horizontally */
+}
+.img-container {
+    display: flex;
+    justify-content: center;
+}
+
