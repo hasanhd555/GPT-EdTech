@@ -56,7 +56,7 @@ function CourseAnalytics() {
               }],
             });
           } else {
-            alert("No enrollments for this course yet.");
+            // alert("No enrollments for this course yet.");
           }
         } catch (error) {
           console.error("Error fetching course analytics", error);
@@ -74,17 +74,62 @@ function CourseAnalytics() {
       </div>
       {analytics.length > 0 ? (
         <>
-          <Card className="mb-3">
-            <Card.Body>
-              <Card.Title>Total Students Enrolled: {analytics.length}</Card.Title>
-              <Card.Text>Highest Marks: {Math.max(...analytics.map(a => a.points), 0)}</Card.Text>
-              <Card.Text>Lowest Marks: {Math.min(...analytics.map(a => a.points), 0)}</Card.Text>
-            </Card.Body>
-          </Card>
-          <Bar data={graphData} options={{ responsive: true, scales: { y: { beginAtZero: true } } }} />
+          <Card className="mb-3 shadow-sm"> {/* Added shadow for depth */}
+  <Card.Header className="bg-primary text-white text-center">
+    Total Students Enrolled: {analytics.length}
+  </Card.Header>
+  <Card.Body>
+    <Card.Title className="text-center mb-4">Course Analytics</Card.Title>
+    <Card.Text className="text-success d-flex justify-content-between align-items-center">
+      <span>Highest Marks:</span>
+      <strong>{Math.max(...analytics.map(a => a.points), 0)}</strong>
+    </Card.Text>
+    <Card.Text className="text-danger d-flex justify-content-between align-items-center">
+      <span>Lowest Marks:</span>
+      <strong>{Math.min(...analytics.map(a => a.points), 0)}</strong>
+    </Card.Text>
+  </Card.Body>
+</Card>
+
+          <div style={{ height: '15em' }}> {/* Adjust the height as needed */}
+  <Bar
+    data={{
+      ...graphData,
+      datasets: graphData.datasets.map(dataset => ({
+        ...dataset,
+        barPercentage: 0.5,
+        categoryPercentage: 0.5,
+      })),
+    }}
+    options={{
+      responsive: true,
+      maintainAspectRatio: false, // This is important to respect the container's height
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Student Points Distribution',
+        },
+      },
+    }}
+  />
+</div>
+
+
         </>
       ) : (
-        <p>No data available for this course.</p>
+        <Card className="text-center ">
+          <Card.Body>
+            <Card.Text className="text-muted">No data available for this course. No enrollment.</Card.Text>
+          </Card.Body>
+        </Card>
       )}
     </div>
   );
