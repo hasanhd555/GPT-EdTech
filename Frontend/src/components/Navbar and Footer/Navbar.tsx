@@ -55,7 +55,7 @@ function NavbarComp() {
           <Nav className="me-auto">
             <Nav.Link
               onClick={() => {
-                navigate("/");
+                navigate("/Landing");
               }}
             >
               Home

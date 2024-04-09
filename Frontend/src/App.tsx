@@ -15,17 +15,20 @@ import CourseOverviewPage from "./components/Course/CourseOverviewPage";
 import QuizPage from "./components/Quiz/QuizPage";
 import CourseContentPage from "./components/Course/CourseContentPage";
 import LeaderBoard from "./components/LeaderBoard/LeaderBoard";
+import LandingPage from "./components/LandingPage/LandingPage";
 import AddCourse from "./components/Courses/AddCourse";
 import EditableCourse from "./components/Courses/EditableCourse";
 import EditCourse from "./components/Courses/EditCourse";
 import Summarizer from "./components/Summarizer/Summarizer";
+
 
 function App() {
   return (
     <>
       <NavbarComp></NavbarComp>
       <Routes>
-        <Route path="/" element={<ExploreCourses title="Explore Our Courses"/>} />
+        <Route path="/Landing" element={<LandingPage/>} />
+        <Route path="/" element={<ExploreCourses />} />
         <Route path="/ctr_test" element={<Counter />} />
         <Route path="/unpersisted_ctr_test" element={<Unpersisted_Counter />} />
         <Route path="/explore-courses" element={<ExploreCourses title="Explore Our Courses"/>} />
