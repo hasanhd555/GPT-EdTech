@@ -16,6 +16,7 @@
     "@types/react-dom": "^18.2.19",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
+    "chart.js": "^4.4.2",
     "cloudinary": "^2.0.1",
     "cloudinary-react": "^1.8.1",
     "deep-chat-react": "^1.4.11",
@@ -23,6 +24,7 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",
     "react-bootstrap-icons": "^1.11.3",
+    "react-chartjs-2": "^5.2.0",
     "react-countdown-circle-timer": "^3.2.1",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",
@@ -61,6 +63,8 @@
     ]
   },
   "devDependencies": {
+    "@types/chart.js": "^2.9.41",
+    "@types/react-chartjs-2": "^2.5.7",
     "sass": "^1.71.1"
   }
 }
