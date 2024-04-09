@@ -27,6 +27,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(true); // State to manage image loading
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     age: 0,
     gender: "",
@@ -57,6 +58,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
   useEffect(() => {
     if (student) {
       setFormData({
+        name: student.name, 
         email: student.email,
         age: student.age,
         gender: student.gender,
@@ -199,77 +201,66 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                   </Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">Student</Card.Subtitle>
                   {editMode ? (
-                    <Form onSubmit={handleSubmit}>
-                      <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm={2}>
-                          Email
-                        </Form.Label>
-                        <Col sm={10}>
-                          <Form.Control
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="Enter email"
-                          />
-                        </Col>
-                      </Form.Group>
-                      <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm={2}>
-                          Age
-                        </Form.Label>
-                        <Col sm={10}>
-                          <Form.Control
-                            type="number"
-                            name="age"
-                            value={formData.age}
-                            onChange={handleChange}
-                            placeholder="Enter age"
-                          />
-                        </Col>
-                      </Form.Group>
-                      <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm={2}>
-                          Gender
-                        </Form.Label>
-                        <Col sm={10}>
-                          <Form.Control
-                            as="select"
-                            name="gender"
-                            value={formData.gender}
-                            onChange={handleChange}
-                          >
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                          </Form.Control>
-                        </Col>
-                      </Form.Group>
-                      <Row>
-                        <Col sm={12} className="d-flex justify-content-end">
-                          <Button variant="danger" onClick={handleEdit} className="me-2">
-                            Cancel
-                          </Button>
-                          <Button variant="success" type="submit">
-                            Save Changes
-                          </Button>
-                        </Col>
-                      </Row>
-                    </Form>
-                  ) : (
+                      <Form onSubmit={handleSubmit}>
+                        <Form.Group as={Row} className="mb-3">
+                          <Form.Label column sm={2}>Name</Form.Label>
+                          <Col sm={10}>
+                            <Form.Control
+                              type="text"
+                              name="name"
+                              value={formData.name}
+                              onChange={handleChange}
+                            />
+                          </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3">
+                          <Form.Label column sm={2}>Email</Form.Label>
+                          <Col sm={10}>
+                            <Form.Control
+                              type="email"
+                              readOnly
+                              defaultValue={student.email}
+                            />
+                          </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3">
+                          <Form.Label column sm={2}>Age</Form.Label>
+                          <Col sm={10}>
+                            <Form.Control
+                              type="number"
+                              name="age"
+                              value={formData.age}
+                              onChange={handleChange}
+                            />
+                          </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3">
+                          <Form.Label column sm={2}>Gender</Form.Label>
+                          <Col sm={10}>
+                            <Form.Control
+                              as="select"
+                              name="gender"
+                              value={formData.gender}
+                              onChange={handleChange}
+                            >
+                              <option value="">Select Gender</option>
+                              <option value="Male">Male</option>
+                              <option value="Female">Female</option>
+                              <option value="Other">Other</option>
+                            </Form.Control>
+                          </Col>
+                        </Form.Group>
+                        <Button variant="danger" onClick={handleEdit} className="me-2">
+                          Cancel
+                        </Button>
+                        <Button variant="success" type="submit">
+                          Save Changes
+                        </Button>
+                      </Form>
+                    ) : (
                     <div>
-                      {/* <div>Name: {student.gender === "Male"
-                      ? "Mr. "
-                      : student.gender === "Female"
-                      ? "Mrs. "
-                      : ""}
-                    {student.name}</div>
-                      <div>Email:{"\t"}{student.email}</div>
-                      <div>Age: {"\t"}{student.age}</div>
-                      <div>Gender: {"\t"}{student.gender}</div>
-                      <div style={{ textAlign: "right" }}> */}
-                      <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', alignItems: 'center', columnGap: '8px' }}>
+                      
+                      <div style={{ display: 'grid', gridTemplateColumns: '100px auto', alignItems: 'center', columnGap: '8px' }}>
                         <div style={{ textAlign: 'left' }}>Name:</div>
                         <div>{student.gender === "Male" ? "Mr. " : student.gender === "Female" ? "Mrs. " : ""}{student.name}</div>
 
