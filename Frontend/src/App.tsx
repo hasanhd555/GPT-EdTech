@@ -27,8 +27,7 @@ function App() {
     <>
       <NavbarComp></NavbarComp>
       <Routes>
-        <Route path="/Landing" element={<LandingPage/>} />
-        <Route path="/" element={<ExploreCourses />} />
+        <Route path="/" element={<LandingPage/>} />
         <Route path="/ctr_test" element={<Counter />} />
         <Route path="/unpersisted_ctr_test" element={<Unpersisted_Counter />} />
         <Route path="/explore-courses" element={<ExploreCourses title="Explore Our Courses"/>} />
