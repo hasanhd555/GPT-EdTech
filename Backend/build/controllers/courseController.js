@@ -13,11 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateDetails = exports.getCourseAllInfo = exports.getEditableCourses = exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
+exports.getCourseAnalytics = exports.updateDetails = exports.getCourseAllInfo = exports.getEditableCourses = exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const course_1 = __importDefault(require("../models/course"));
 const lesson_1 = __importDefault(require("../models/lesson")); // Assuming you have this model
 const question_1 = __importDefault(require("../models/question")); // Assuming you have this model
+const enrollment_1 = __importDefault(require("../models/enrollment"));
+const student_1 = __importDefault(require("../models/student"));
 // Get all courses
 const getAllCourses = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -177,6 +179,41 @@ const updateDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.updateDetails = updateDetails;
+const getCourseAnalytics = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("In getCourseAnalytics", req.query);
+        const courseId = req.query.courseId;
+        if (!courseId) {
+            return res.status(400).json({ error: "Course ID is required" });
+        }
+        // Find all enrollments for the course
+        const enrollments = yield enrollment_1.default.find({ course_id: courseId }).lean();
+        // Map each enrollment to include student name and ID
+        const analytics = yield Promise.all(enrollments.map((enrollment) => __awaiter(void 0, void 0, void 0, function* () {
+            // Find the corresponding student
+            const student = yield student_1.default.findById(enrollment.user_id).lean();
+            if (!student) {
+                return {
+                    studentId: 'Unknown ID', // Consider handling unknown IDs differently or omitting these records
+                    studentName: 'Unknown',
+                    points: enrollment.points,
+                };
+            }
+            // Combine the student's ID, name with the enrollment's points
+            return {
+                studentId: student._id,
+                studentName: student.name,
+                points: enrollment.points,
+            };
+        })));
+        res.json({ analytics });
+    }
+    catch (error) {
+        console.error("Error fetching course analytics:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+exports.getCourseAnalytics = getCourseAnalytics;
 module.exports = {
     getAllCourses: exports.getAllCourses,
     getCourseById: exports.getCourseById,
@@ -185,4 +222,5 @@ module.exports = {
     getEditableCourses: exports.getEditableCourses,
     getCourseAllInfo: exports.getCourseAllInfo,
     updateDetails: exports.updateDetails,
+    getCourseAnalytics: exports.getCourseAnalytics,
 };

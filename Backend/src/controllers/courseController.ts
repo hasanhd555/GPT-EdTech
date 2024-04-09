@@ -6,6 +6,8 @@ import Course from "../models/course";
 import Lesson from "../models/lesson"; // Assuming you have this model
 import Question from "../models/question"; // Assuming you have this model
 import { course_type } from "../Constant";
+import Enrollment from '../models/enrollment';  
+import Student from '../models/student'; 
 
 // Get all courses
 export const getAllCourses = async (req: Request, res: Response) => {
@@ -189,6 +191,45 @@ export const updateDetails = async (req: Request, res: Response) => {
   }
 };
 
+export const getCourseAnalytics = async (req: Request, res: Response) => {
+  try {
+    console.log("In getCourseAnalytics", req.query);
+    const courseId = req.query.courseId;
+    if (!courseId) {
+      return res.status(400).json({ error: "Course ID is required" });
+    }
+
+    // Find all enrollments for the course
+    const enrollments = await Enrollment.find({ course_id: courseId }).lean();
+
+    // Map each enrollment to include student name and ID
+    const analytics = await Promise.all(enrollments.map(async (enrollment) => {
+      // Find the corresponding student
+      const student = await Student.findById(enrollment.user_id).lean();
+      if (!student) {
+        return {
+          studentId: 'Unknown ID', // Consider handling unknown IDs differently or omitting these records
+          studentName: 'Unknown',
+          points: enrollment.points,
+        };
+      }
+
+      // Combine the student's ID, name with the enrollment's points
+      return {
+        studentId: student._id,
+        studentName: student.name,
+        points: enrollment.points,
+      };
+    }));
+
+    res.json({ analytics });
+  } catch (error) {
+    console.error("Error fetching course analytics:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
 
 module.exports = {
   getAllCourses,
@@ -198,4 +239,5 @@ module.exports = {
   getEditableCourses,
   getCourseAllInfo,
   updateDetails,
+  getCourseAnalytics,
 };

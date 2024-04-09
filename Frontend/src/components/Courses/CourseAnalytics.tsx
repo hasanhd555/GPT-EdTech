@@ -2,14 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
 import {
-  getCourseAllInfoAPI, 
+  getCourseAnalyticsAPI, 
 } from "../../constant"; // Assuming you have this constant
 import { course_type, lesson_type, question_type } from "../../constant";
 
-function CourseAnalytics() {
-  const [course, setCourse] = useState<course_type | null>(null);
-  const [lessons, setLessons] = useState<lesson_type[]>([]);
-  const [questions, setQuestions] = useState<question_type[]>([]);
+function CourseAnalytics() { 
   
 
 
@@ -21,12 +18,8 @@ function CourseAnalytics() {
       if (courseId) {
         try {
           const response = await axios.get(
-            `${getCourseAllInfoAPI}?courseId=${courseId}`
+            `${getCourseAnalyticsAPI}?courseId=${courseId}`
           );
-          const { course, lessons, questions } = response.data;
-          setCourse(course);
-          setLessons(lessons);
-          setQuestions(questions);
           
         } catch (error) {
           console.error("Error fetching course info", error);

@@ -6,13 +6,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const { getAllCourses, getCourseById, serchCourseByName, createCourse, getEditableCourses, getCourseAllInfo, updateDetails, } = require("../controllers/courseController");
+const { getAllCourses, getCourseById, serchCourseByName, createCourse, getEditableCourses, getCourseAllInfo, updateDetails, getCourseAnalytics, } = require("../controllers/courseController");
 // Get All Courses
 router.post("/", getAllCourses);
 // Get A Specific Course by ID
 router.post("/get-info", getCourseById);
 // Get A Specific Course Info by ID
 router.get("/get-all-info", getCourseAllInfo);
+// Get A Specific Course Info by ID
+router.get("/get-course-analytics", getCourseAnalytics);
 router.put("/update-details/:courseId", updateDetails);
 // Create a new course 
 router.post("/create", createCourse);
