@@ -14,6 +14,10 @@ const AdminDashboard = () => {
   const handleEditCourseClick = () => {
     navigate('/editable-course');
   };
+
+  const handleAllCourseAnalyticsClick = () => {
+    navigate('/all-course-analytics');
+  };
   return (
     <div>
       <div>
@@ -29,6 +33,12 @@ const AdminDashboard = () => {
       <div className="d-flex justify-content-center mt-3 mb-3">
         <Button onClick={handleEditCourseClick} className="width-5em mb-2 me-2" variant="primary" size="lg">
           Edit a Course
+        </Button>
+      </div>
+
+      <div className="d-flex justify-content-center mt-3 mb-3">
+        <Button onClick={handleAllCourseAnalyticsClick} className="width-5em mb-2 me-2" variant="primary" size="lg">
+          View Course Analytics
         </Button>
       </div>
 
