@@ -200,10 +200,17 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                     @{student.username.toUpperCase()}
                   </Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">Student</Card.Subtitle>
+                  <div style={{ display: 'grid', gridTemplateColumns: '100px auto', alignItems: 'center', columnGap: '8px' }}>
+                  <div className="mb-2" style={{ textAlign: 'left' }}>Email:</div>
+                        <div className="mb-2">{student.email}</div>
+
+                  </div>
                   {editMode ? (
                       <Form onSubmit={handleSubmit}>
-                        <Form.Group as={Row} className="mb-3">
-                          <Form.Label column sm={2}>Name</Form.Label>
+                        
+                        
+                        <Form.Group as={Row} className="">
+                          <Form.Label column sm={2}>Name:</Form.Label>
                           <Col sm={10}>
                             <Form.Control
                               type="text"
@@ -213,18 +220,8 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                             />
                           </Col>
                         </Form.Group>
-                        <Form.Group as={Row} className="mb-3">
-                          <Form.Label column sm={2}>Email</Form.Label>
-                          <Col sm={10}>
-                            <Form.Control
-                              type="email"
-                              readOnly
-                              defaultValue={student.email}
-                            />
-                          </Col>
-                        </Form.Group>
-                        <Form.Group as={Row} className="mb-3">
-                          <Form.Label column sm={2}>Age</Form.Label>
+                        <Form.Group as={Row} className="">
+                          <Form.Label column sm={2}>Age:</Form.Label>
                           <Col sm={10}>
                             <Form.Control
                               type="number"
@@ -234,8 +231,8 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                             />
                           </Col>
                         </Form.Group>
-                        <Form.Group as={Row} className="mb-3">
-                          <Form.Label column sm={2}>Gender</Form.Label>
+                        <Form.Group as={Row} className="">
+                          <Form.Label column sm={2}>Gender:</Form.Label>
                           <Col sm={10}>
                             <Form.Control
                               as="select"
@@ -261,11 +258,10 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                     <div>
                       
                       <div style={{ display: 'grid', gridTemplateColumns: '100px auto', alignItems: 'center', columnGap: '8px' }}>
+                        
                         <div style={{ textAlign: 'left' }}>Name:</div>
                         <div>{student.gender === "Male" ? "Mr. " : student.gender === "Female" ? "Mrs. " : ""}{student.name}</div>
 
-                        <div style={{ textAlign: 'left' }}>Email:</div>
-                        <div>{student.email}</div>
 
                         <div style={{ textAlign: 'left' }}>Age:</div>
                         <div>{student.age}</div>
