@@ -41,6 +41,14 @@ const Summarizer = () => {
 
   // Asynchronous function to send a request to OpenAI for text summarization
   const summarizeText = async () => {
+    const wordCount = inputText.trim().split(/\s+/).length; // Calculate the number of words in the input text
+    if (wordCount > 500) { // Check if the word count exceeds 500
+      setErrorMessage("Input text exceeded the word limit. Please keep it below 500 words."); // Set the appropriate error message
+      setSummary(""); // Clear any existing summary
+      setSummaryWordCount(0); // Reset the summary word count
+      return; // Exit the function to prevent further processing
+    }
+
     if (!inputText.trim()) { // Check if input text is not empty
       setErrorMessage("Please enter some text to summarize."); // Set error message if input is empty
       setSummary(""); // Clear any existing summary
@@ -73,6 +81,7 @@ const Summarizer = () => {
         setSummaryWordCount(summarizedText.split(/\s+/).length); // Update the summary word count
       }
     } catch (err) {
+      // console.log(err)
       setLoading(false); // Update loading status in case of error
       setSummary(""); // Clear any existing summary on error
       setSummaryWordCount(0); // Reset summary word count on error
