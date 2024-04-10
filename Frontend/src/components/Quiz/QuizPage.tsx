@@ -52,7 +52,7 @@ function QuizPage() {
             .then((response) => {
               if (response) {
                 setShowModal(false);
-                navigate("/dash");
+                navigate("/dash-student");
               }
             })
             .catch((error) => {
