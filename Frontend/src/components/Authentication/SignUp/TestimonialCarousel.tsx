@@ -38,16 +38,38 @@ const testimonialsData = [
     author: "Emma G.",
   },
 ];
-
 const TestimonialCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false); // New state to track transition
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveIndex((current) => (current + 1) % testimonialsData.length);
-    }, 4000); // Change slide every 2 seconds
+      if (!isTransitioning) { // Only proceed if not already transitioning
+        setIsTransitioning(true); // Set transitioning state to true
+        setActiveIndex((current) => (current + 1) % testimonialsData.length);
+      }
+    }, 4000);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [isTransitioning]); // Include isTransitioning in the dependency array
+
+  const handlePrevNextClick = (direction: 'prev' | 'next') => {
+    if (isTransitioning) return; // Prevent action if already transitioning
+
+    setIsTransitioning(true); // Set transitioning state to true
+    setActiveIndex((current) => {
+      if (direction === 'prev') {
+        return current === 0 ? testimonialsData.length - 1 : current - 1;
+      } else { // 'next'
+        return (current + 1) % testimonialsData.length;
+      }
+    });
+};
+
+  // Function to call after a transition ends, setting isTransitioning back to false
+  const handleTransitionEnd = () => {
+    setIsTransitioning(false);
+  };
 
   return (
     <div className="testimonial-carousel-container mt-5">
@@ -60,9 +82,8 @@ const TestimonialCarousel = () => {
           {testimonialsData.map((testimonial, index) => (
             <div
               key={testimonial.id}
-              className={`carousel-item ${
-                index === activeIndex ? "active" : ""
-              }`}
+              className={`carousel-item ${index === activeIndex ? "active" : ""}`}
+              onTransitionEnd={handleTransitionEnd} // Add transition end handler
             >
               <blockquote className="blockquote text-center mx-4 px-5">
                 <p className="mb-0">{testimonial.text}</p>
@@ -78,11 +99,10 @@ const TestimonialCarousel = () => {
           type="button"
           data-bs-target="#testimonialCarousel"
           data-bs-slide="prev"
+          onClick={() => handlePrevNextClick('prev')}
+          disabled={isTransitioning} // Disable button during transition
         >
-          <span
-            className="carousel-control-prev-icon"
-            aria-hidden="true"
-          ></span>
+          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
           <span className="visually-hidden">Previous</span>
         </button>
         <button
@@ -90,11 +110,10 @@ const TestimonialCarousel = () => {
           type="button"
           data-bs-target="#testimonialCarousel"
           data-bs-slide="next"
+          onClick={() => handlePrevNextClick('next')}
+          disabled={isTransitioning} // Disable button during transition
         >
-          <span
-            className="carousel-control-next-icon"
-            aria-hidden="true"
-          ></span>
+          <span className="carousel-control-next-icon" aria-hidden="true"></span>
           <span className="visually-hidden">Next</span>
         </button>
       </div>

@@ -27,16 +27,24 @@ interface SignUpFormProps {
 
 type RoleName = "admin" | "student";
 
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
 const validationSchemas = {
   admin: yup.object().shape({
     email: yup.string().email().required(),
-    password: yup.string().required().min(6, "Password must be at least 6 characters long"),
+    password: yup.string()
+                 .required("Password is required")
+                 .min(6, "Password must be at least 6 characters long")
+                 .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/, "Password must contain both letters and numbers"),
     role: yup.string().required(),
     terms: yup.boolean().oneOf([true], "Terms must be accepted"),
   }),
   student: yup.object().shape({
     email: yup.string().email().required(),
-    password: yup.string().required().min(6, "Password must be at least 6 characters long"),
+    password: yup.string()
+                 .required("Password is required")
+                 .min(6, "Password must be at least 6 characters long")
+                 .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/, "Password must contain both letters and numbers"),
     fullName: yup.string().required(),
     username: yup.string().required(),
     age: yup.number().positive().integer().required(),
@@ -45,6 +53,8 @@ const validationSchemas = {
     terms: yup.boolean().oneOf([true], "Terms must be accepted"),
   }),
 };
+
+
 
 const SignUpForm: React.FC<SignUpFormProps> = (props) => {
   const defaultRole: RoleName = "student";
