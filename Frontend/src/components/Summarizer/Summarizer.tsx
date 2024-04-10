@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -12,43 +12,54 @@ import OpenAI from "openai";
 import Spinner from "react-bootstrap/Spinner";
 
 const Summarizer = () => {
-  const openai = new OpenAI({apiKey: process.env.REACT_APP_OPEN_AI_KEY,dangerouslyAllowBrowser: true });
+  const openai = new OpenAI({
+    apiKey: process.env.REACT_APP_OPEN_AI_KEY,
+    dangerouslyAllowBrowser: true,
+  });
   const [summaryLength, setSummaryLength] = useState(50);
   const [mode, setMode] = useState<String>("paragraph");
   const [textWordCount, setTextWordCount] = useState(0);
   const [summaryWordCount, setSummaryWordCount] = useState(0);
   const [inputText, setInputText] = useState("");
   const [summary, setSummary] = useState("");
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   // Function to update mode state
   const handleModeChange = (val: String) => setMode(val);
+
+  // Add useEffect to update textWordCount when inputText changes
+  useEffect(() => {
+    const words = inputText.trim().split(/\s+/); // Split the inputText by whitespace to get words
+    const nonEmptyWords = words.filter((word) => word); // Filter out any empty strings from the array
+    setTextWordCount(nonEmptyWords.length); // Update the textWordCount state with the length of nonEmptyWords array
+  }, [inputText]); // This useEffect depends on inputText, so it runs whenever inputText changes
 
   // Function to send request to OpenAI API for summarization
   const summarizeText = async () => {
     setLoading(true);
-    try{
+    try {
       const completion = await openai.chat.completions.create({
-        messages: [{ role: "system", content: "You are a text summarizer." },{role:"user",content:inputText + `\n\nTl;dr`}],
+        messages: [
+          { role: "system", content: "You are a text summarizer." },
+          { role: "user", content: inputText + `\n\nTl;dr` },
+        ],
         model: "gpt-3.5-turbo",
-        temperature:0.1,
-        max_tokens: Math.floor(inputText.length / 2),
+        temperature: 0.1,
+        max_tokens: summaryLength,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0.5,
         stop: ['"""'],
       });
-  
-      if(completion.choices[0]?.message?.content)
-      {
-        setLoading(false);
-        const summarizedText:string = completion.choices[0]?.message?.content;
-        setSummary(summarizedText);
-        setSummaryWordCount(summarizedText.split(/\s+/).length); 
-      }
 
-    }catch(err){
+      if (completion.choices[0]?.message?.content) {
+        setLoading(false);
+        const summarizedText: string = completion.choices[0]?.message?.content;
+        setSummary(summarizedText);
+        setSummaryWordCount(summarizedText.split(/\s+/).length);
+      }
+    } catch (err) {
       console.log(err);
-    };
+    }
   };
 
   // Array to hold toggle buttons config
@@ -98,6 +109,9 @@ const Summarizer = () => {
               <Form.Control
                 className="w-25 ms-2"
                 type="range"
+                min={50} // Minimum summary length
+                max={200} // Maximum summary length
+                step={10} // Step
                 value={summaryLength}
                 onChange={(e) => setSummaryLength(Number(e.target.value))}
               />
@@ -147,10 +161,23 @@ const Summarizer = () => {
                     <Spinner animation="grow" variant="primary" />
                     <Spinner animation="grow" variant="primary" />
                   </div>
-                ) : (
+                ) : mode === "paragraph" ? (
                   <p className="m-5">{summary}</p>
+                ) : (
+                  summary && (
+                    <ul className="m-5">
+                      {summary
+                        .split(". ")
+                        .map(
+                          (item, index) =>
+                            item.trim() && <li key={index}>{item}</li> // Check if item is not just whitespace
+                        )
+                        .filter(Boolean)}{" "}
+                    </ul>
+                  )
                 )}
               </div>
+
               <h6 className="align-self-start ms-5 mb-3">
                 Word Count: {summaryWordCount}
               </h6>
