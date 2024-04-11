@@ -1,4 +1,4 @@
-import { Card, Container, Row, Col, Button, Form, FormControl,InputGroup } from "react-bootstrap";
+import { Card, Container, Row, Col, Button, Form, FormControl,InputGroup, OverlayTrigger, Tooltip } from "react-bootstrap";
 import styles from './hero.module.css';
 
 import { useNavigate } from "react-router-dom";
@@ -15,10 +15,16 @@ const Hero: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const url = `/search?query=${encodeURIComponent(searchValue)}`;
-
-    navigate(url);
+    if (searchValue.trim() !== '') {
+      const url = `/search?query=${encodeURIComponent(searchValue)}`;
+      navigate(url);
+    } else {
+      setShowTooltip(true); // Show tooltip if search value is empty
+      setTimeout(() => setShowTooltip(false), 2000); // Hide tooltip after 2 seconds
+    }
   };
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
     <Container fluid className={`${styles["custom-purple-blue-gradient"]} h-100 d-flex flex-column`}>
       <Row className="flex-grow-1">
@@ -40,6 +46,15 @@ const Hero: React.FC = () => {
           <div className="mt-4"> {/* Spacer div */}
           
           <Form className={`d-flex  border-secondary`} onSubmit={handleSubmit}>
+          <OverlayTrigger
+                  placement="bottom"
+                  overlay={
+                    <Tooltip id="tooltip-search">
+                      Please enter a search term
+                    </Tooltip>
+                  }
+                  show={showTooltip}
+                >
           <FormControl
             type="search"
             placeholder="Search for courses"
@@ -47,6 +62,7 @@ const Hero: React.FC = () => {
             aria-label="Search"
             onChange={(event) => setSearchValue(event.target.value)}
           />
+          </OverlayTrigger>
           <Button variant="outline-light" type="submit">
             <span className="bi bi-search me-1"/>
             <span className={` ${styles["button-txt"]}  py-md-2 align-self-start`}>Search</span>

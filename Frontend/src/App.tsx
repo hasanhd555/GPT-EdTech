@@ -22,6 +22,7 @@ import EditCourse from "./components/Courses/EditCourse";
 import AllCourseAnalytics from "./components/Courses/AllCourseAnalytics";
 import CourseAnalytics from "./components/Courses/CourseAnalytics";
 import Summarizer from "./components/Summarizer/Summarizer";
+import AboutUs from "./components/About Us/AboutUs";
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
         <Route path="/all-course-analytics" element={<AllCourseAnalytics />}></Route>
         <Route path="/course-analytics" element={<CourseAnalytics />}></Route>
         <Route path="/summarizer" element={<Summarizer />}></Route>
+        <Route path="/about-us" element={<AboutUs />}></Route>
       </Routes>
       <Footer />
     </>
