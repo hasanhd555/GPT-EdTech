@@ -84,13 +84,6 @@ function NavbarComp() {
             </Nav.Link>
             <Nav.Link
               onClick={() => {
-                navigate("/contact-us");
-              }}
-            >
-              Contact Us
-            </Nav.Link>
-            <Nav.Link
-              onClick={() => {
                 navigate("/summarizer");
               }}
             >
