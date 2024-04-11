@@ -1,5 +1,5 @@
 import React, { useState, FormEvent } from "react";
-import { Card, Form, Button,Spinner } from "react-bootstrap";
+import { Card, Form, Button, Spinner, Toast } from "react-bootstrap";
 // import from constant
 import { CreateNewCourse, CloudinaryUploadAPI } from "../../constant";
 import axios from "axios";
@@ -41,7 +41,7 @@ const AddCourse: React.FC = () => {
   const [courseImage, setCourseImage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
@@ -108,7 +108,6 @@ const AddCourse: React.FC = () => {
   };
   //   if (!isConcept && typeof optionIndex !== "undefined") {
 
-
   const handleCorrectOptionChange = (index: number, optionIndex: number) => {
     const updatedQuizQuestions = quizQuestions.map((qq, i) =>
       i === index ? { ...qq, correctOption: optionIndex } : qq
@@ -149,30 +148,30 @@ const AddCourse: React.FC = () => {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-    if (!file) return;
+      if (!file) return;
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "gpt_edtech360"); // Replace with your Cloudinary upload preset
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "gpt_edtech360"); // Replace with your Cloudinary upload preset
 
-    setIsUploading(true);
+      setIsUploading(true);
 
-    try {
-      const response = await fetch(CloudinaryUploadAPI, {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const response = await fetch(CloudinaryUploadAPI, {
+          method: "POST",
+          body: formData,
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      console.log("Image uploaded successfully:", data.url);
-      setCourseImage(data.url);
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    } finally {
-      setIsUploading(false);
+        console.log("Image uploaded successfully:", data.url);
+        setCourseImage(data.url);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      } finally {
+        setIsUploading(false);
+      }
     }
-  }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -205,15 +204,14 @@ const AddCourse: React.FC = () => {
       const response = await axios.post(CreateNewCourse, courseData);
       console.log("Course creation successful", response.data);
       // Alert the user and navigate to the admin dashboard
-      alert("Course created successfully!");
+      setShowSuccessToast(true);
       navigate("/dash-admin");
     } catch (error) {
       console.error("There was an error creating the course", error);
       // Handle error, e.g., show an error message
-    
-  } finally {
-    setIsSubmitting(false); // End submitting
-  }
+    } finally {
+      setIsSubmitting(false); // End submitting
+    }
   };
 
   return (
@@ -276,11 +274,19 @@ const AddCourse: React.FC = () => {
               disabled={isUploading}
             />
             {isUploading ? (
-                      <>
-                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-                        <span className="ms-2">Uploading...</span>
-                      </>
-                    ) : <></>}
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+                <span className="ms-2">Uploading...</span>
+              </>
+            ) : (
+              <></>
+            )}
             {courseImage && (
               <img
                 src={courseImage}
@@ -442,24 +448,35 @@ const AddCourse: React.FC = () => {
           </div>
           <hr className="mb-4" />
           <div className="d-flex justify-content-center">
-          <button
-  type="submit"
-  className="btn btn-primary mx-auto mt-2"
-  disabled={isUploading || isSubmitting} // Disable button during upload or submission
->
-  {isSubmitting ? (
-    <>
-      <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-      <span className="ms-2">Submitting...</span>
-    </>
-  ) : (
-    "Submit"
-  )}
-</button>
-
+            <button
+              type="submit"
+              className="btn btn-primary mx-auto mt-2"
+              disabled={isUploading || isSubmitting} // Disable button during upload or submission
+            >
+              {isSubmitting ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                  <span className="ms-2">Submitting...</span>
+                </>
+              ) : (
+                "Submit"
+              )}
+            </button>
           </div>
         </form>
       </div>
+      <Toast onClose={() => setShowSuccessToast(false)} show={showSuccessToast} delay={3000} autohide>
+  <Toast.Header>
+    <strong className="me-auto">Course Creation</strong>
+  </Toast.Header>
+  <Toast.Body>Course created successfully!</Toast.Body>
+</Toast>
     </div>
   );
 };

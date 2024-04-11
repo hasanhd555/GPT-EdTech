@@ -79,6 +79,14 @@ exports.serchCourseByName = serchCourseByName;
 const createCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("In createCourse", req.body);
+        const requiredFields = ['adminId', 'name', 'description', 'lessons', 'quizQuestions', 'image_url'];
+        // Check for missing required fields
+        const missingFields = requiredFields.filter(field => !req.body[field]);
+        if (missingFields.length) {
+            return res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({
+                error: `Missing required fields: ${missingFields.join(', ')}`,
+            });
+        }
         const { adminId, name, description, lessons, quizQuestions, image_url } = req.body;
         // Step 0: Create the course without lessons and quiz questions initially
         const course = new course_1.default({
