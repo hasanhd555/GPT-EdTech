@@ -6,6 +6,8 @@ import {
   Container,
   Button,
   InputGroup,
+  Tooltip,
+  OverlayTrigger,
 } from "react-bootstrap";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import Styles from "./Navbar.module.css";
@@ -20,6 +22,8 @@ function NavbarComp() {
   const navigate: NavigateFunction = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
+  const [showTooltip, setShowTooltip] = useState(false); // State to control tooltip visibility
+
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value); // Update the searchValue
@@ -28,9 +32,13 @@ function NavbarComp() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const url = `/search?query=${encodeURIComponent(searchValue)}`;
-
-    navigate(url);
+    if (searchValue.trim() !== '') {
+      const url = `/search?query=${encodeURIComponent(searchValue)}`;
+      navigate(url);
+    } else {
+      setShowTooltip(true); // Show tooltip if search value is empty
+      setTimeout(() => setShowTooltip(false), 2000); // Hide tooltip after 2 seconds
+    }
   };
 
   const handleClearUserData = () => {
@@ -103,18 +111,28 @@ function NavbarComp() {
                 <Button
                   type="submit"
                   variant="outline-secondary"
-                  className={` ${Styles.customhighlight}`}
+                  className={`${Styles.customhighlight}`}
                 >
-                  <span className="bi bi-search "></span>
+                  <span className="bi bi-search"></span>
                 </Button>
-                <FormControl
-                  type="search"
-                  placeholder="Search a Course"
-                  className={`border-secondary ${Styles.customhighlight}`}
-                  aria-label="Search"
-                  value={searchValue}
-                  onChange={handleChange}
-                />
+                <OverlayTrigger
+                  placement="bottom"
+                  overlay={
+                    <Tooltip id="tooltip-search">
+                      Please enter a search term
+                    </Tooltip>
+                  }
+                  show={showTooltip}
+                >
+                  <FormControl
+                    type="search"
+                    placeholder="Search a Course"
+                    className={`border-secondary ${Styles.customhighlight}`}
+                    aria-label="Search"
+                    value={searchValue}
+                    onChange={handleChange}
+                  />
+                </OverlayTrigger>
               </InputGroup>
             </Form>
           </Nav>
@@ -152,9 +170,9 @@ function NavbarComp() {
                   type="submit"
                   variant="outline-primary"
                   onClick={() => {
-                    isAdmin? navigate("/dash-admin"):
-
-                    navigate("/dash-student");
+                    isAdmin
+                      ? navigate("/dash-admin")
+                      : navigate("/dash-student");
                   }}
                 >
                   <span className="bi bi-person-circle"></span>
