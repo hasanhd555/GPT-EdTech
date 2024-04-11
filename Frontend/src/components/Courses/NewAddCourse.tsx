@@ -23,6 +23,24 @@ const courseSchema = yup.object().shape({
       })
     )
     .min(1, "At least one lesson is required"),
+  quizQuestions: yup
+    .array()
+    .of(
+      yup.object().shape({
+        id: yup.string().required(),
+        question: yup.string().required("Question is required"),
+        options: yup
+          .array()
+          .of(yup.string().required("Option is required"))
+          .min(1, "At least one option is required"),
+        correctOption: yup
+          .number()
+          .min(0, "A correct option is required")
+          .required(),
+        concept: yup.string().required("Concept is required"),
+      })
+    )
+    .min(1, "At least one quiz question is required"),
 });
 
 interface Lesson {
@@ -31,10 +49,19 @@ interface Lesson {
   content: string;
 }
 
+interface QuizQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctOption: number;
+  concept: string;
+}
+
 interface FormValues {
   courseName: string;
   courseDescription: string;
   lessons: Lesson[];
+  quizQuestions: QuizQuestion[];
 }
 
 const NewAddCourse: React.FC = () => {
@@ -95,15 +122,45 @@ const NewAddCourse: React.FC = () => {
         return;
       }
 
-      const { courseName, courseDescription, lessons } = values;
-      let obj = {
+      // Custom validation for quiz questions
+      if (
+        values.quizQuestions.length === 0 ||
+        values.quizQuestions.every(
+          (q) =>
+            !q.question ||
+            q.options.length < 2 ||
+            q.correctOption < 0 ||
+            q.options.some((option) => option.trim() === "") ||
+            q.concept.trim() === ""
+        )
+      ) {
+        setErrors({
+          quizQuestions: "At least one complete quiz question is required.",
+        });
+        setIsUploading(false);
+        setSubmitting(false);
+        return;
+      }
+
+      const { courseName, courseDescription, lessons, quizQuestions } = values;
+      const courseData = {
+        adminId: _id,
         name: courseName,
         description: courseDescription,
         image_url: courseImage,
         lessons: lessons.map(({ title, content }) => ({ title, content })),
+        quizQuestions: quizQuestions.map(
+          ({ question, options, correctOption, concept }) => ({
+            question,
+            options,
+            correctOption,
+            concept,
+          })
+        ),
       };
-      console.log("obj", obj);
-      const response = await axios.post(CreateNewCourse, obj);
+
+      console.log("courseData", courseData);
+      const response = await axios.post(CreateNewCourse, courseData);
 
       console.log("Course creation successful", response.data);
       setShowSuccessToast(true);
@@ -127,6 +184,15 @@ const NewAddCourse: React.FC = () => {
             courseName: "",
             courseDescription: "",
             lessons: [{ id: uuidv4(), title: "", content: "" }],
+            quizQuestions: [
+              {
+                id: uuidv4(),
+                question: "",
+                options: ["", ""],
+                correctOption: -1,
+                concept: "",
+              },
+            ],
           }}
           validationSchema={courseSchema}
           onSubmit={handleSubmit}
@@ -280,6 +346,51 @@ const NewAddCourse: React.FC = () => {
                   </div>
                 )}
               </FieldArray>
+
+              {/* Quiz Section  */}
+
+              <FieldArray name="quizQuestions">
+  {({ push, remove }) => (
+    <div>
+      <h3>Quiz Questions</h3>
+      {values.quizQuestions.map((question, index) => (
+        <div key={question.id}>
+          <Card className="mb-3">
+            <Card.Body>
+              <h5>Question {index + 1}</h5>
+              <Field name={`quizQuestions[${index}].question`} as="textarea" />
+              <ErrorMessage name={`quizQuestions[${index}].question`} component="div" className="text-danger" />
+              {question.options.map((option, optionIndex) => (
+                <div key={optionIndex}>
+                  <Field name={`quizQuestions[${index}].options[${optionIndex}]`} type="text" />
+                  <ErrorMessage name={`quizQuestions[${index}].options[${optionIndex}]`} component="div" className="text-danger" />
+                </div>
+              ))}
+              <Field name={`quizQuestions[${index}].correctOption`} as="select" className="form-control">
+                <option value="-1" disabled={question.correctOption !== -1}>Select Correct Option</option>
+                {question.options.map((_, optionIndex) => (
+                  <option key={optionIndex} value={optionIndex}>
+                    Option {optionIndex + 1}
+                  </option>
+                ))}
+              </Field>
+              <ErrorMessage name={`quizQuestions[${index}].correctOption`} component="div" className="text-danger" />
+              <Field name={`quizQuestions[${index}].concept`} type="text" />
+              <ErrorMessage name={`quizQuestions[${index}].concept`} component="div" className="text-danger" />
+              <Button variant="danger" onClick={() => remove(index)}>Remove Question</Button>
+            </Card.Body>
+          </Card>
+        </div>
+      ))}
+      <Button onClick={() => push({ id: uuidv4(), question: "", options: ["", ""], correctOption: -1, concept: "" })}>
+        Add Question
+      </Button>
+    </div>
+  )}
+</FieldArray>
+
+
+
 
               {/* Displaying Form-level Custom Error Message for Lessons */}
               {errors.lessons && typeof errors.lessons === "string" && (
