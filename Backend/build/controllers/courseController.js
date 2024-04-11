@@ -79,14 +79,13 @@ exports.serchCourseByName = serchCourseByName;
 const createCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("In createCourse", req.body);
-        const { adminId, name, description, lessons, quizQuestions } = req.body;
+        const { adminId, name, description, lessons, quizQuestions, image_url } = req.body;
         // Step 0: Create the course without lessons and quiz questions initially
         const course = new course_1.default({
             title: name,
             description,
             admin_id: adminId,
-            // Assuming an image_url field is required; use a placeholder or actual URL as needed
-            image_url: "https://via.placeholder.com/150",
+            image_url: image_url || "https://via.placeholder.com/150",
         });
         const savedCourse = yield course.save();
         // Step 1: Create and store lessons with the course_id

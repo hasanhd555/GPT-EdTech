@@ -66,15 +66,14 @@ export const serchCourseByName = async (req: Request, res: Response) => {
 export const createCourse = async (req: Request, res: Response) => {
   try {
     console.log("In createCourse", req.body);
-    const { adminId, name, description, lessons, quizQuestions } = req.body;
+    const { adminId, name, description, lessons, quizQuestions,image_url } = req.body;
 
     // Step 0: Create the course without lessons and quiz questions initially
     const course = new Course({
       title: name,
       description,
-      admin_id: adminId,
-      // Assuming an image_url field is required; use a placeholder or actual URL as needed
-      image_url: "https://via.placeholder.com/150",
+      admin_id: adminId, 
+      image_url: image_url || "https://via.placeholder.com/150",
     });
 
     const savedCourse = await course.save();

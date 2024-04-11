@@ -1,11 +1,10 @@
 import React, { useState, FormEvent } from "react";
-import Card from "react-bootstrap/Card";
+import { Card, Form, Button,Spinner } from "react-bootstrap";
 // import from constant
-import { CreateNewCourse } from "../../constant";
+import { CreateNewCourse, CloudinaryUploadAPI } from "../../constant";
 import axios from "axios";
 import { useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
-
 
 interface Lesson {
   title: string;
@@ -22,7 +21,12 @@ interface QuizQuestion {
 const AddCourse: React.FC = () => {
   const navigate = useNavigate();
 
-  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [lessons, setLessons] = useState<Lesson[]>([
+    {
+      title: "",
+      content: "",
+    },
+  ]);
   const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([
     {
       question: "",
@@ -34,6 +38,10 @@ const AddCourse: React.FC = () => {
 
   const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
+  const [courseImage, setCourseImage] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
@@ -65,60 +73,41 @@ const AddCourse: React.FC = () => {
   ) => {
     const { value } = event.target;
 
-      // If change is for concept, update concept field
-      if (isConcept) {
-        const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
-          idx === questionIndex ? { ...quizQuestion, concept: value } : quizQuestion
-        );
-        setQuizQuestions(updatedQuizQuestions);
-        return;
-      }
+    // If change is for concept, update concept field
+    if (isConcept) {
+      const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
+        idx === questionIndex
+          ? { ...quizQuestion, concept: value }
+          : quizQuestion
+      );
+      setQuizQuestions(updatedQuizQuestions);
+      return;
+    }
 
-      // Update a quiz question
-      if (typeof optionIndex === "undefined") {
-        // If optionIndex is undefined, it means we're updating the question text
-        const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
-          idx === questionIndex
-            ? { ...quizQuestion, question: value }
-            : quizQuestion
-        );
-        setQuizQuestions(updatedQuizQuestions);
-      } else {
-        // Update an option value
-        const updatedOptions = quizQuestions[questionIndex].options.map(
-          (option, idx) => (idx === optionIndex ? value : option)
-        );
-        const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
-          idx === questionIndex
-            ? { ...quizQuestion, options: updatedOptions }
-            : quizQuestion
-        );
-        setQuizQuestions(updatedQuizQuestions);
-      }
-    };
+    // Update a quiz question
+    if (typeof optionIndex === "undefined") {
+      // If optionIndex is undefined, it means we're updating the question text
+      const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
+        idx === questionIndex
+          ? { ...quizQuestion, question: value }
+          : quizQuestion
+      );
+      setQuizQuestions(updatedQuizQuestions);
+    } else {
+      // Update an option value
+      const updatedOptions = quizQuestions[questionIndex].options.map(
+        (option, idx) => (idx === optionIndex ? value : option)
+      );
+      const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
+        idx === questionIndex
+          ? { ...quizQuestion, options: updatedOptions }
+          : quizQuestion
+      );
+      setQuizQuestions(updatedQuizQuestions);
+    }
+  };
   //   if (!isConcept && typeof optionIndex !== "undefined") {
-  //     // Update specific option text
-  //     const updatedOptions = [...quizQuestions[questionIndex].options];
-  //     updatedOptions[optionIndex] = event.target.value;
-  //     setQuizQuestions(
-  //       quizQuestions.map((question, idx) =>
-  //         idx === questionIndex
-  //           ? { ...question, options: updatedOptions }
-  //           : question
-  //       )
-  //     );
-  //   } else {
-  //     // Update question text or concept
-  //     const field = isConcept ? "concept" : "question";
-  //     setQuizQuestions(
-  //       quizQuestions.map((question, idx) =>
-  //         idx === questionIndex
-  //           ? { ...question, [field]: event.target.value }
-  //           : question
-  //       )
-  //     );
-  //   }
-  // };
+
 
   const handleCorrectOptionChange = (index: number, optionIndex: number) => {
     const updatedQuizQuestions = quizQuestions.map((qq, i) =>
@@ -157,8 +146,38 @@ const AddCourse: React.FC = () => {
     setCourseDescription(event.target.value);
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "gpt_edtech360"); // Replace with your Cloudinary upload preset
+
+    setIsUploading(true);
+
+    try {
+      const response = await fetch(CloudinaryUploadAPI, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      console.log("Image uploaded successfully:", data.url);
+      setCourseImage(data.url);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  }
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsSubmitting(true); // Start submitting
 
     // Log course details, lessons, and quiz questions
     console.log("Course Name:", courseName);
@@ -173,24 +192,28 @@ const AddCourse: React.FC = () => {
       adminId: _id,
       name: courseName,
       description: courseDescription,
+      image_url: courseImage,
       lessons: lessons,
       // Ensure each quiz question includes the concept when being sent
-      quizQuestions: quizQuestions.map(question => ({
+      quizQuestions: quizQuestions.map((question) => ({
         ...question,
-        concept: question.concept
-      }))
+        concept: question.concept,
+      })),
     };
 
-    try { 
+    try {
       const response = await axios.post(CreateNewCourse, courseData);
       console.log("Course creation successful", response.data);
       // Alert the user and navigate to the admin dashboard
-    alert("Course created successfully!");
-    navigate("/dash-admin");
+      alert("Course created successfully!");
+      navigate("/dash-admin");
     } catch (error) {
       console.error("There was an error creating the course", error);
       // Handle error, e.g., show an error message
-    }
+    
+  } finally {
+    setIsSubmitting(false); // End submitting
+  }
   };
 
   return (
@@ -240,6 +263,32 @@ const AddCourse: React.FC = () => {
               </div>
             </Card.Body>
           </Card>
+
+          {/* Image Upload */}
+          <h5 className="display-5 text-center fw-bold mt-4 text-primary">
+            Course Image
+          </h5>
+          <Form.Group controlId="formFile" className="mb-3">
+            <Form.Label>Upload Image</Form.Label>
+            <Form.Control
+              type="file"
+              onChange={handleImageUpload}
+              disabled={isUploading}
+            />
+            {isUploading ? (
+                      <>
+                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                        <span className="ms-2">Uploading...</span>
+                      </>
+                    ) : <></>}
+            {courseImage && (
+              <img
+                src={courseImage}
+                alt="Course"
+                style={{ maxWidth: "100%", marginTop: "10px" }}
+              />
+            )}
+          </Form.Group>
 
           {/* Lesson forms */}
           <h3 className="display-4 text-center fw-bold mt-4 text-primary">
@@ -359,22 +408,21 @@ const AddCourse: React.FC = () => {
                       }
                       required
                     />
-                    
                   </div>
                 ))}
                 {/* Concept input field */}
                 <div className="mb-3">
-                      <label className="form-label fw-bold">Concept</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter concept"
-                        value={quizQuestion.concept}
-                        onChange={(e) =>
-                          handleQuizQuestionChange(e, index, undefined, true)
-                        }
-                      />
-                    </div>
+                  <label className="form-label fw-bold">Concept</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter concept"
+                    value={quizQuestion.concept}
+                    onChange={(e) =>
+                      handleQuizQuestionChange(e, index, undefined, true)
+                    }
+                  />
+                </div>
                 <button
                   type="button"
                   className="btn btn-danger mb-3"
@@ -394,9 +442,21 @@ const AddCourse: React.FC = () => {
           </div>
           <hr className="mb-4" />
           <div className="d-flex justify-content-center">
-            <button type="submit" className="btn btn-primary mx-auto mt-2">
-              Submit
-            </button>
+          <button
+  type="submit"
+  className="btn btn-primary mx-auto mt-2"
+  disabled={isUploading || isSubmitting} // Disable button during upload or submission
+>
+  {isSubmitting ? (
+    <>
+      <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+      <span className="ms-2">Submitting...</span>
+    </>
+  ) : (
+    "Submit"
+  )}
+</button>
+
           </div>
         </form>
       </div>
