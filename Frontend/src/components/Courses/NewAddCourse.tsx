@@ -44,7 +44,6 @@ const NewAddCourse: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [lessonError, setLessonError] = useState<string>("");
 
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
@@ -87,7 +86,9 @@ const NewAddCourse: React.FC = () => {
         values.lessons.every((lesson) => !lesson.title || !lesson.content)
       ) {
         // Use Formik's setErrors method to set a form-level error for lessons
-        setErrors({ lessons: "At least one lesson with title and content is required." });
+        setErrors({
+          lessons: "At least one lesson with title and content is required.",
+        });
 
         setSubmitting(false);
         setIsUploading(false);
@@ -136,7 +137,9 @@ const NewAddCourse: React.FC = () => {
             handleBlur,
             handleSubmit,
             isSubmitting,
+            isValid,
             errors,
+            touched,
           }) => (
             <Form onSubmit={handleSubmit}>
               <Card border="primary" className="mt-2 mb-2">
@@ -212,8 +215,8 @@ const NewAddCourse: React.FC = () => {
               </div>
 
               <h3 className="display-4 text-center fw-bold mt-4 text-primary">
-            Lessons Section
-          </h3>
+                Lessons Section
+              </h3>
 
               <FieldArray name="lessons">
                 {({ insert, remove, push }) => (
@@ -258,6 +261,7 @@ const NewAddCourse: React.FC = () => {
                               <Button
                                 variant="danger"
                                 onClick={() => remove(index)}
+                                style={{ width: "15%" }}
                               >
                                 Remove Lesson
                               </Button>
@@ -278,17 +282,21 @@ const NewAddCourse: React.FC = () => {
               </FieldArray>
 
               {/* Displaying Form-level Custom Error Message for Lessons */}
-{errors.lessons && typeof errors.lessons === 'string' && (
-  <div className="alert alert-danger">{errors.lessons}</div>
-)}
-
+              {errors.lessons && typeof errors.lessons === "string" && (
+                <div className="alert alert-danger">{errors.lessons}</div>
+              )}
 
               {/* Submit Button  */}
               <div className="d-flex justify-content-center">
                 <Button
                   type="submit"
                   className="btn btn-primary mx-auto mt-2"
-                  disabled={isSubmitting || isUploading}
+                  disabled={
+                    isSubmitting ||
+                    isUploading ||
+                    !isValid ||
+                    Object.keys(errors).length > 0
+                  }
                 >
                   {isSubmitting || isUploading ? "Submitting..." : "Submit"}
                 </Button>
