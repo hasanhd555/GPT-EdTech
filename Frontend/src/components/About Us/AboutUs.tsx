@@ -73,8 +73,7 @@ function AboutUs() {
                       <h4>Telephone</h4>
                       <p className="mb-0">
                         Toll Free: 888-334-4457 <br />
-                        International & Local: 727-359-0236 <br />
-                        Fax: 727-362-6827
+                        International & Local: 727-359-0236
                       </p>
                     </div>
                   </div>
