@@ -11,6 +11,8 @@ import {
   CloudinaryUploadAPI,
 } from "../../constant"; // Assuming you have this constant
 import { course_type, lesson_type, question_type } from "../../constant";
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 function EditCourse() {
   const [course, setCourse] = useState<course_type | null>(null);
@@ -30,6 +32,11 @@ function EditCourse() {
 
   const [courseImage, setCourseImage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+
+  const courseValidationSchema = Yup.object().shape({
+    title: Yup.string().required('Title is required').min(2, 'Title is too short').max(50, 'Title is too long'),
+    description: Yup.string().required('Description is required').min(5, 'Description is too short'),
+  });
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -59,31 +66,20 @@ function EditCourse() {
     fetchCourseInfo();
   }, []);
 
-  async function handleSaveCourseChanges() {
+  const handleSaveCourseChanges = (values:any, actions:any) => {
     const params = new URLSearchParams(window.location.search);
     const courseId = params.get("id");
-
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const courseId = params.get("id");
-      await axios.put(`${updateCourseDetailsAPI}/${courseId}`, {
-        title: editableCourseName,
-        description: editableCourseDescription,
+    axios.put(`${updateCourseDetailsAPI}/${courseId}`, values)
+      .then(response => {
+        setCourse(response.data);
+        setEditModeCourse(false);
+        actions.setSubmitting(false);
+      })
+      .catch(error => {
+        console.error("Error updating course details", error);
+        actions.setSubmitting(false);
       });
-
-      // Refetch course info to update local state with the new changes
-      const response = await axios.get(
-        `${getCourseAllInfoAPI}?courseId=${courseId}`
-      );
-      const { course, lessons, questions } = response.data;
-      setCourse(course);
-      setEditableCourseName(course.title);
-      setEditableCourseDescription(course.description);
-      setEditModeCourse(false);
-    } catch (error) {
-      console.error("Error updating course details", error);
-    }
-  }
+  };
 
   async function handleSaveLessonsChanges() {
     try {
@@ -236,62 +232,49 @@ const updateCourseImageOnBackend = async (imageUrl: string): Promise<void> => {
         <div style={{ width: "70%" }} className="mx-auto">
           <Card border="primary" className="mt-2 mb-2">
             <Card.Body>
-              <Card.Title className="display-6 text-center fw-bold text-primary">
-                Course Details
-              </Card.Title>
+              <Card.Title className="display-6 text-center fw-bold text-primary">Course Details</Card.Title>
               {editModeCourse ? (
-                <>
-                  <input
-                    type="text"
-                    className="form-control mb-2"
-                    value={editableCourseName}
-                    onChange={(e) => setEditableCourseName(e.target.value)}
-                  />
-                  <textarea
-                    className="form-control"
-                    value={editableCourseDescription}
-                    onChange={(e) =>
-                      setEditableCourseDescription(e.target.value)
-                    }
-                  ></textarea>
-                </>
+                <Formik
+                  initialValues={{
+                    title: course.title,
+                    description: course.description
+                  }}
+                  validationSchema={courseValidationSchema}
+                  onSubmit={handleSaveCourseChanges}
+                >
+                  {({ isSubmitting }) => (
+                    <Form>
+                      <Field name="title" className="form-control mb-2" />
+                      <ErrorMessage name="title" component="div" className="text-danger" />
+                      <Field as="textarea" name="description" className="form-control" />
+                      <ErrorMessage name="description" component="div" className="text-danger" />
+                      <div className="d-flex justify-content-center mt-3">
+                        <button type="submit" className="btn btn-success me-2" disabled={isSubmitting}>
+                          Save Changes
+                        </button>
+                        <button type="button" className="btn btn-secondary" onClick={handleCancelCourseChanges}>
+                          Cancel
+                        </button>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
               ) : (
                 <>
                   <h5>{course.title}</h5>
                   <p>{course.description}</p>
+                  <div className="text-center mt-3 mb-3">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => setEditModeCourse(true)}
+                    >
+                      Edit Course Details
+                    </button>
+                  </div>
                 </>
               )}
             </Card.Body>
           </Card>
-          {editModeCourse ? (
-            <>
-              <div className="d-flex justify-content-center mt-3">
-                <button
-                  className="btn btn-success me-2"
-                  onClick={handleSaveCourseChanges}
-                >
-                  Save Changes
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={handleCancelCourseChanges}
-                >
-                  Cancel
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="text-center mt-3 mb-3">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => setEditModeCourse(true)}
-                >
-                  Edit Course Details
-                </button>
-              </div>
-            </>
-          )}
         </div>
       )}
 
