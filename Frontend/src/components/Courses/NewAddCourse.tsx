@@ -5,34 +5,52 @@ import { CreateNewCourse, CloudinaryUploadAPI } from "../../constant";
 import axios from "axios";
 import { useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, FieldArray, ErrorMessage } from "formik";
 import * as yup from "yup";
-import { FormikHelpers } from 'formik';
+import { FormikHelpers } from "formik";
+import { v4 as uuidv4 } from "uuid";
 
 const courseSchema = yup.object().shape({
   courseName: yup.string().required("Course Name is required"),
   courseDescription: yup.string().required("Course Description is required"),
+  lessons: yup
+    .array()
+    .of(
+      yup.object().shape({
+        id: yup.string().required(),
+        title: yup.string().required("Lesson title is required"),
+        content: yup.string().required("Lesson content is required"),
+      })
+    )
+    .min(1, "At least one lesson is required"),
 });
 
+interface Lesson {
+  id: string;
+  title: string;
+  content: string;
+}
+
 interface FormValues {
-    courseName: string;
-    courseDescription: string;
-  }
-  
+  courseName: string;
+  courseDescription: string;
+  lessons: Lesson[];
+}
 
 const NewAddCourse: React.FC = () => {
   const navigate = useNavigate();
 
-  const [courseName, setCourseName] = useState("");
-  const [courseDescription, setCourseDescription] = useState("");
   const [courseImage, setCourseImage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [lessonError, setLessonError] = useState<string>("");
 
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       const formData = new FormData();
@@ -56,22 +74,36 @@ const NewAddCourse: React.FC = () => {
     }
   };
 
-  const newHandleSubmit = async (
+  const handleSubmit = async (
     values: FormValues,
-    { setSubmitting }: FormikHelpers<FormValues>
+    { setSubmitting, setErrors }: FormikHelpers<FormValues>
   ) => {
     setIsUploading(true);
-  
-    try {
 
-        const obj = {
-            name: values.courseName,
-            description: values.courseDescription,
-            image_url: courseImage,
-          }
-          console.log("obj",obj);
-      const response = await axios.post(CreateNewCourse,obj );
-  
+    try {
+      // Custom validation for lessons
+      if (
+        values.lessons.length === 0 ||
+        values.lessons.every((lesson) => !lesson.title || !lesson.content)
+      ) {
+        // Use Formik's setErrors method to set a form-level error for lessons
+        setErrors({ lessons: "At least one lesson with title and content is required." });
+
+        setSubmitting(false);
+        setIsUploading(false);
+        return;
+      }
+
+      const { courseName, courseDescription, lessons } = values;
+      let obj = {
+        name: courseName,
+        description: courseDescription,
+        image_url: courseImage,
+        lessons: lessons.map(({ title, content }) => ({ title, content })),
+      };
+      console.log("obj", obj);
+      const response = await axios.post(CreateNewCourse, obj);
+
       console.log("Course creation successful", response.data);
       setShowSuccessToast(true);
       navigate("/dash-admin");
@@ -89,16 +121,24 @@ const NewAddCourse: React.FC = () => {
         <h2 className="display-3 text-center fw-bold">New Create new course</h2>
       </div>
       <div style={{ width: "70%" }} className="mx-auto">
-      <Formik
-  initialValues={{
-    courseName: '',
-    courseDescription: '',
-  }}
-  validationSchema={courseSchema}
-  onSubmit={newHandleSubmit}
->
-          {({ isSubmitting }) => (
-            <Form>
+        <Formik
+          initialValues={{
+            courseName: "",
+            courseDescription: "",
+            lessons: [{ id: uuidv4(), title: "", content: "" }],
+          }}
+          validationSchema={courseSchema}
+          onSubmit={handleSubmit}
+        >
+          {({
+            values,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            errors,
+          }) => (
+            <Form onSubmit={handleSubmit}>
               <Card border="primary" className="mt-2 mb-2">
                 <Card.Body>
                   <Card.Title className="display-6 text-center fw-bold text-primary">
@@ -144,25 +184,104 @@ const NewAddCourse: React.FC = () => {
               </Card>
 
               {/* Image Upload Field */}
-            <div className="mb-3">
-              <label htmlFor="courseImage" className="form-label fw-bold">
-                Course Image
-              </label>
-              <input
-                type="file"
-                className="form-control"
-                id="courseImage"
-                onChange={(event) => {
-                  handleImageUpload(event);
-                  // Optionally, update form field if you store the image URL in Formik state
-                }}
-                disabled={isUploading}
-              />
-              {isUploading && <Spinner animation="border" />}
-              {courseImage && (
-                <img src={courseImage} alt="Course" style={{ maxWidth: "100%", marginTop: "10px" }} />
-              )}
-            </div>
+              <div className="mb-3">
+                <h5 className="display-5 text-center fw-bold mt-4 text-primary">
+                  Course Image
+                </h5>
+                <label htmlFor="courseImage" className="form-label fw-bold">
+                  Upload Image
+                </label>
+                <input
+                  type="file"
+                  className="form-control"
+                  id="courseImage"
+                  onChange={(event) => {
+                    handleImageUpload(event);
+                    // Optionally, update form field if you store the image URL in Formik state
+                  }}
+                  disabled={isUploading}
+                />
+                {isUploading && <Spinner animation="border" />}
+                {courseImage && (
+                  <img
+                    src={courseImage}
+                    alt="Course"
+                    style={{ maxWidth: "100%", marginTop: "10px" }}
+                  />
+                )}
+              </div>
+
+              <h3 className="display-4 text-center fw-bold mt-4 text-primary">
+            Lessons Section
+          </h3>
+
+              <FieldArray name="lessons">
+                {({ insert, remove, push }) => (
+                  <div>
+                    {values.lessons.map((lesson, index) => (
+                      <div key={lesson.id}>
+                        <Card className="mb-3">
+                          <Card.Body>
+                            <h5 className="mb-3">Lesson {index + 1}</h5>
+                            <div className="mb-3">
+                              <label className="form-label">Title</label>
+                              <input
+                                className="form-control"
+                                name={`lessons[${index}].title`}
+                                value={lesson.title}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                              <ErrorMessage
+                                name={`lessons[${index}].title`}
+                                component="div"
+                                className="text-danger"
+                              />
+                            </div>
+                            <div className="mb-3">
+                              <label className="form-label">Content</label>
+                              <textarea
+                                className="form-control"
+                                rows={3}
+                                name={`lessons[${index}].content`}
+                                value={lesson.content}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              ></textarea>
+                              <ErrorMessage
+                                name={`lessons[${index}].content`}
+                                component="div"
+                                className="text-danger"
+                              />
+                            </div>
+                            <div className="d-grid gap-2">
+                              <Button
+                                variant="danger"
+                                onClick={() => remove(index)}
+                              >
+                                Remove Lesson
+                              </Button>
+                            </div>
+                          </Card.Body>
+                        </Card>
+                      </div>
+                    ))}
+                    <Button
+                      onClick={() =>
+                        push({ id: uuidv4(), title: "", content: "" })
+                      }
+                    >
+                      Add Lesson
+                    </Button>
+                  </div>
+                )}
+              </FieldArray>
+
+              {/* Displaying Form-level Custom Error Message for Lessons */}
+{errors.lessons && typeof errors.lessons === 'string' && (
+  <div className="alert alert-danger">{errors.lessons}</div>
+)}
+
 
               {/* Submit Button  */}
               <div className="d-flex justify-content-center">
