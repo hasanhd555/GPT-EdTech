@@ -1,43 +1,72 @@
 import React, { useState, FormEvent } from "react";
-import { Card, Form, Button, Spinner, Toast } from "react-bootstrap";
+import { Card, Button, Spinner, Toast } from "react-bootstrap";
 // import from constant
 import { CreateNewCourse, CloudinaryUploadAPI } from "../../constant";
 import axios from "axios";
 import { useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
+import { Formik, Form, Field, FieldArray, ErrorMessage } from "formik";
+import * as yup from "yup";
+import { FormikHelpers } from "formik";
+import { v4 as uuidv4 } from "uuid";
+
+const courseSchema = yup.object().shape({
+  courseName: yup.string().required("Course Name is required"),
+  courseDescription: yup.string().required("Course Description is required"),
+  lessons: yup
+    .array()
+    .of(
+      yup.object().shape({
+        id: yup.string().required(),
+        title: yup.string().required("Lesson title is required"),
+        content: yup.string().required("Lesson content is required"),
+      })
+    )
+    .min(1, "At least one lesson is required"),
+  quizQuestions: yup
+    .array()
+    .of(
+      yup.object().shape({
+        id: yup.string().required(),
+        question: yup.string().required("Question is required"),
+        options: yup
+          .array()
+          .of(yup.string().required("Option is required"))
+          .min(1, "At least one option is required"),
+        correctOption: yup
+          .number()
+          .min(0, "A correct option is required")
+          .required(),
+        concept: yup.string().required("Concept is required"),
+      })
+    )
+    .min(1, "At least one quiz question is required"),
+});
 
 interface Lesson {
+  id: string;
   title: string;
   content: string;
 }
 
 interface QuizQuestion {
+  id: string;
   question: string;
   options: string[];
-  correctOption: number; // Index of the correct option
+  correctOption: number;
   concept: string;
 }
 
-const AddCourse: React.FC = () => {
+interface FormValues {
+  courseName: string;
+  courseDescription: string;
+  lessons: Lesson[];
+  quizQuestions: QuizQuestion[];
+}
+
+const NewAddCourse: React.FC = () => {
   const navigate = useNavigate();
 
-  const [lessons, setLessons] = useState<Lesson[]>([
-    {
-      title: "",
-      content: "",
-    },
-  ]);
-  const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([
-    {
-      question: "",
-      options: ["", "", "", ""],
-      correctOption: -1,
-      concept: "",
-    },
-  ]);
-
-  const [courseName, setCourseName] = useState("");
-  const [courseDescription, setCourseDescription] = useState("");
   const [courseImage, setCourseImage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,114 +74,14 @@ const AddCourse: React.FC = () => {
 
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
-  const addLesson = () => {
-    setLessons((lessons) => [...lessons, { title: "", content: "" }]);
-  };
-
-  const handleLessonChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number
-  ) => {
-    const { name, value } = event.target;
-    setLessons((lessons) =>
-      lessons.map((lesson, i) =>
-        i === index ? { ...lesson, [name]: value } : lesson
-      )
-    );
-  };
-
-  const removeLesson = (index: number) => {
-    setLessons((lessons) => lessons.filter((_, i) => i !== index));
-  };
-
-  const handleQuizQuestionChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    questionIndex: number,
-    optionIndex?: number, // This is only used for options, not for the question itself
-    isConcept?: boolean // Identify if the change is for the concept field
-  ) => {
-    const { value } = event.target;
-
-    // If change is for concept, update concept field
-    if (isConcept) {
-      const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
-        idx === questionIndex
-          ? { ...quizQuestion, concept: value }
-          : quizQuestion
-      );
-      setQuizQuestions(updatedQuizQuestions);
-      return;
-    }
-
-    // Update a quiz question
-    if (typeof optionIndex === "undefined") {
-      // If optionIndex is undefined, it means we're updating the question text
-      const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
-        idx === questionIndex
-          ? { ...quizQuestion, question: value }
-          : quizQuestion
-      );
-      setQuizQuestions(updatedQuizQuestions);
-    } else {
-      // Update an option value
-      const updatedOptions = quizQuestions[questionIndex].options.map(
-        (option, idx) => (idx === optionIndex ? value : option)
-      );
-      const updatedQuizQuestions = quizQuestions.map((quizQuestion, idx) =>
-        idx === questionIndex
-          ? { ...quizQuestion, options: updatedOptions }
-          : quizQuestion
-      );
-      setQuizQuestions(updatedQuizQuestions);
-    }
-  };
-  //   if (!isConcept && typeof optionIndex !== "undefined") {
-
-  const handleCorrectOptionChange = (index: number, optionIndex: number) => {
-    const updatedQuizQuestions = quizQuestions.map((qq, i) =>
-      i === index ? { ...qq, correctOption: optionIndex } : qq
-    );
-    setQuizQuestions(updatedQuizQuestions);
-  };
-
-  const addQuizQuestion = () => {
-    setQuizQuestions((quizQuestions) => [
-      ...quizQuestions,
-      {
-        question: "",
-        options: ["", "", "", ""],
-        correctOption: -1,
-        concept: "",
-      },
-    ]);
-  };
-
-  const removeQuizQuestion = (index: number) => {
-    setQuizQuestions((quizQuestions) =>
-      quizQuestions.filter((_, i) => i !== index)
-    );
-  };
-
-  const handleCourseNameChange = (
+  const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setCourseName(event.target.value);
-  };
-
-  const handleCourseDescriptionChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setCourseDescription(event.target.value);
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (!file) return;
-
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", "gpt_edtech360"); // Replace with your Cloudinary upload preset
+      formData.append("upload_preset", "gpt_edtech360"); // Adjust the upload preset
 
       setIsUploading(true);
 
@@ -161,10 +90,7 @@ const AddCourse: React.FC = () => {
           method: "POST",
           body: formData,
         });
-
         const data = await response.json();
-
-        console.log("Image uploaded successfully:", data.url);
         setCourseImage(data.url);
       } catch (error) {
         console.error("Error uploading image:", error);
@@ -174,43 +100,80 @@ const AddCourse: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsSubmitting(true); // Start submitting
-
-    // Log course details, lessons, and quiz questions
-    console.log("Course Name:", courseName);
-    console.log("Course Description:", courseDescription);
-    console.log("Lessons:", lessons);
-    console.log("Quiz Questions:", quizQuestions);
-    console.log("here");
-
-    console.log("Admin ID:", _id);
-    // Prepare the data object to be sent
-    const courseData = {
-      adminId: _id,
-      name: courseName,
-      description: courseDescription,
-      image_url: courseImage,
-      lessons: lessons,
-      // Ensure each quiz question includes the concept when being sent
-      quizQuestions: quizQuestions.map((question) => ({
-        ...question,
-        concept: question.concept,
-      })),
-    };
+  const handleSubmit = async (
+    values: FormValues,
+    { setSubmitting, setErrors }: FormikHelpers<FormValues>
+  ) => {
+    setIsUploading(true);
 
     try {
+      // Custom validation for lessons
+      if (
+        values.lessons.length === 0 ||
+        values.lessons.every((lesson) => !lesson.title || !lesson.content)
+      ) {
+        // Use Formik's setErrors method to set a form-level error for lessons
+        setErrors({
+          lessons: "At least one lesson with title and content is required.",
+        });
+
+        setSubmitting(false);
+        setIsUploading(false);
+        return;
+      }
+
+      // Custom validation for quiz questions
+      if (
+        values.quizQuestions.length === 0 ||
+        values.quizQuestions.every(
+          (q) =>
+            !q.question ||
+            q.options.length < 4 ||
+            q.correctOption < 0 ||
+            q.options.some((option) => option.trim() === "") ||
+            q.concept.trim() === ""
+        )
+      ) {
+        setErrors({
+          quizQuestions:
+            "Each quiz question must have a question text, at least four options, and a selected correct option.",
+        });
+        setIsUploading(false);
+        setSubmitting(false);
+        return;
+      }
+
+      const { courseName, courseDescription, lessons, quizQuestions } = values;
+      const courseData = {
+        adminId: _id,
+        name: courseName,
+        description: courseDescription,
+        image_url: courseImage,
+        lessons: lessons.map(({ title, content }) => ({ title, content })),
+        quizQuestions: quizQuestions.map(
+          ({ question, options, correctOption, concept }) => ({
+            question,
+            options,
+            correctOption,
+            concept,
+          })
+        ),
+      };
+
+      console.log("courseData", courseData);
       const response = await axios.post(CreateNewCourse, courseData);
+
       console.log("Course creation successful", response.data);
-      // Alert the user and navigate to the admin dashboard
       setShowSuccessToast(true);
-      navigate("/dash-admin");
+      // Delay navigation by 3 seconds
+setTimeout(() => {
+    navigate("/dash-admin");
+  }, 3000);
     } catch (error) {
       console.error("There was an error creating the course", error);
-      // Handle error, e.g., show an error message
     } finally {
-      setIsSubmitting(false); // End submitting
+      setIsUploading(false);
+      setSubmitting(false);
     }
   };
 
@@ -219,266 +182,323 @@ const AddCourse: React.FC = () => {
       <div>
         <h2 className="display-3 text-center fw-bold">Create new course</h2>
       </div>
-      <div style={{ width: "70%" }} className="mx-auto">
-        <form onSubmit={handleSubmit}>
-          <Card border="primary" className="mt-2 mb-2">
-            <Card.Body>
-              <Card.Title className="display-6 text-center fw-bold text-primary">
-                Course Details
-              </Card.Title>
-
-              {/* Add Course name and description form here */}
-              <div className="mb-3">
-                <label htmlFor="courseName" className="form-label fw-bold">
-                  Course Name
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="courseName"
-                  placeholder="Enter course name"
-                  required
-                  value={courseName}
-                  onChange={handleCourseNameChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label
-                  htmlFor="courseDescription"
-                  className="form-label fw-bold"
-                >
-                  Course Description
-                </label>
-                <textarea
-                  className="form-control"
-                  id="courseDescription"
-                  rows={3}
-                  placeholder="Enter course description"
-                  required
-                  value={courseDescription}
-                  onChange={handleCourseDescriptionChange}
-                ></textarea>
-              </div>
-            </Card.Body>
-          </Card>
-
-          {/* Image Upload */}
-          <h5 className="display-5 text-center fw-bold mt-4 text-primary">
-            Course Image
-          </h5>
-          <Form.Group controlId="formFile" className="mb-3">
-            <Form.Label>Upload Image</Form.Label>
-            <Form.Control
-              type="file"
-              onChange={handleImageUpload}
-              disabled={isUploading}
-            />
-            {isUploading ? (
-              <>
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-                <span className="ms-2">Uploading...</span>
-              </>
-            ) : (
-              <></>
-            )}
-            {courseImage && (
-              <img
-                src={courseImage}
-                alt="Course"
-                style={{ maxWidth: "100%", marginTop: "10px" }}
-              />
-            )}
-          </Form.Group>
-
-          {/* Lesson forms */}
-          <h3 className="display-4 text-center fw-bold mt-4 text-primary">
-            Lessons Section
-          </h3>
-          {lessons.map((lesson, index) => (
-            <div
-              key={index}
-              className="mt-2 mb-2 border border-primary border-1 rounded p-2"
-            >
-              {/* Omitted for brevity */}
-
-              <Card.Title className="display-6 text-center fw-bold">
-                Lesson {index + 1} Details
-              </Card.Title>
-
-              <div className="mb-3">
-                <label
-                  htmlFor={`lessonTitle-${index}`}
-                  className="form-label fw-bold"
-                >
-                  Lesson Title
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="title"
-                  placeholder="Enter lesson title"
-                  value={lesson.title}
-                  onChange={(e) => handleLessonChange(e, index)}
-                  required
-                />
-              </div>
-              <div className="mb-3">
-                <label
-                  htmlFor={`lessonContent-${index}`}
-                  className="form-label fw-bold"
-                >
-                  Content
-                </label>
-                <textarea
-                  className="form-control"
-                  name="content"
-                  rows={3}
-                  placeholder="Enter lesson content"
-                  value={lesson.content}
-                  onChange={(e) => handleLessonChange(e, index)}
-                  required
-                ></textarea>
-              </div>
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => removeLesson(index)}
-                style={{ marginTop: "10px" }}
-              >
-                Remove Lesson
-              </button>
-            </div>
-          ))}
-          <div>
-            {/* Add another lesson form  */}
-            <button
-              type="button"
-              className="btn btn-primary mx-auto"
-              onClick={addLesson}
-            >
-              Add New Lesson
-            </button>
-          </div>
-
-          {/* Quiz form */}
-          <div>
-            <h3 className="display-4 text-center fw-bold mt-4 text-primary">
-              Quiz Section
-            </h3>
-            {quizQuestions.map((quizQuestion, index) => (
-              <div
-                key={index}
-                className="mb-4 border border-primary rounded p-3 y"
-              >
-                <div className="mb-3">
-                  <label className="form-label fw-bold">
-                    Quiz Question {index + 1}
-                  </label>
-                  <textarea
-                    className="form-control"
-                    rows={2}
-                    placeholder="Enter quiz question"
-                    value={quizQuestion.question}
-                    onChange={(e) => handleQuizQuestionChange(e, index)}
-                    required
-                  ></textarea>
-                </div>
-                {quizQuestion.options.map((option, optionIndex) => (
-                  <div
-                    key={optionIndex}
-                    className="mb-2 d-flex align-items-center"
-                  >
-                    <input
-                      type="radio"
-                      name={`correctOption-${index}`}
-                      checked={quizQuestion.correctOption === optionIndex}
-                      onChange={() =>
-                        handleCorrectOptionChange(index, optionIndex)
-                      }
-                      className="me-2"
-                      required
-                    />
-                    <input
+      <div
+        style={{ width: "70%" }}
+        className="mx-auto shadow p-3 border rounded"
+      >
+        <Formik
+          initialValues={{
+            courseName: "",
+            courseDescription: "",
+            lessons: [{ id: uuidv4(), title: "", content: "" }],
+            quizQuestions: [
+              {
+                id: uuidv4(),
+                question: "",
+                options: Array(4).fill(""),
+                correctOption: -1,
+                concept: "",
+              },
+            ],
+          }}
+          validationSchema={courseSchema}
+          onSubmit={handleSubmit}
+        >
+          {({
+            values,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            isValid,
+            errors,
+            touched,
+          }) => (
+            <Form onSubmit={handleSubmit}>
+              <Card border="primary" className="mt-2 mb-2">
+                <Card.Body>
+                  <Card.Title className="display-6 text-center fw-bold text-primary">
+                    Course Details
+                  </Card.Title>
+                  <div className="mb-3">
+                    <label htmlFor="courseName" className="form-label fw-bold">
+                      Course Name
+                    </label>
+                    <Field
                       type="text"
+                      name="courseName"
                       className="form-control"
-                      placeholder={`Option ${optionIndex + 1}`}
-                      value={option}
-                      onChange={(e) =>
-                        handleQuizQuestionChange(e, index, optionIndex)
-                      }
-                      required
+                      placeholder="Enter course name"
+                    />
+                    <ErrorMessage
+                      name="courseName"
+                      component="div"
+                      className="text-danger"
                     />
                   </div>
-                ))}
-                {/* Concept input field */}
-                <div className="mb-3">
-                  <label className="form-label fw-bold">Concept</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter concept"
-                    value={quizQuestion.concept}
-                    onChange={(e) =>
-                      handleQuizQuestionChange(e, index, undefined, true)
-                    }
+                  <div className="mb-3">
+                    <label
+                      htmlFor="courseDescription"
+                      className="form-label fw-bold"
+                    >
+                      Course Description
+                    </label>
+                    <Field
+                      as="textarea"
+                      name="courseDescription"
+                      className="form-control"
+                      rows="3"
+                      placeholder="Enter course description"
+                    />
+                    <ErrorMessage
+                      name="courseDescription"
+                      component="div"
+                      className="text-danger"
+                    />
+                  </div>
+                </Card.Body>
+              </Card>
+
+              {/* Image Upload Field */}
+              <div className="mb-3 border border-primary rounded p-3 ">
+                <h5 className="display-5 text-center fw-bold mt-4 text-primary">
+                  Course Image
+                </h5>
+                <label htmlFor="courseImage" className="form-label fw-bold">
+                  Upload Image
+                </label>
+                <input
+                  type="file"
+                  className="form-control"
+                  id="courseImage"
+                  onChange={(event) => {
+                    handleImageUpload(event);
+                    // Optionally, update form field if you store the image URL in Formik state
+                  }}
+                  disabled={isUploading}
+                />
+                {isUploading && <Spinner animation="border" />}
+                {courseImage && (
+                  <img
+                    src={courseImage}
+                    alt="Course"
+                    style={{ maxWidth: "100%", marginTop: "10px" }}
                   />
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-danger mb-3"
-                  onClick={() => removeQuizQuestion(index)}
-                >
-                  Remove Question
-                </button>
+                )}
               </div>
-            ))}
-            <button
-              type="button"
-              className="btn btn-primary mb-3"
-              onClick={addQuizQuestion}
-            >
-              Add New Question
-            </button>
-          </div>
-          <hr className="mb-4" />
-          <div className="d-flex justify-content-center">
-            <button
-              type="submit"
-              className="btn btn-primary mx-auto mt-2"
-              disabled={isUploading || isSubmitting} // Disable button during upload or submission
-            >
-              {isSubmitting ? (
-                <>
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                  <span className="ms-2">Submitting...</span>
-                </>
-              ) : (
-                "Submit"
-              )}
-            </button>
-          </div>
-        </form>
-      </div>
-      <Toast onClose={() => setShowSuccessToast(false)} show={showSuccessToast} delay={3000} autohide>
-  <Toast.Header>
-    <strong className="me-auto">Course Creation</strong>
-  </Toast.Header>
-  <Toast.Body>Course created successfully!</Toast.Body>
-</Toast>
+
+              <div className="border border-primary rounded p-3">
+                <h3 className="display-4 text-center fw-bold mt-4 text-primary">
+                  Lessons Section
+                </h3>
+
+                <FieldArray name="lessons">
+                  {({ insert, remove, push }) => (
+                    <div>
+                      {values.lessons.map((lesson, index) => (
+                        <div key={lesson.id}>
+                          <Card className="mb-3">
+                            <Card.Body>
+                              <h5 className="mb-3">Lesson {index + 1}</h5>
+                              <div className="mb-3">
+                                <label className="form-label">Title</label>
+                                <input
+                                  className="form-control"
+                                  name={`lessons[${index}].title`}
+                                  value={lesson.title}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                />
+                                <ErrorMessage
+                                  name={`lessons[${index}].title`}
+                                  component="div"
+                                  className="text-danger"
+                                />
+                              </div>
+                              <div className="mb-3">
+                                <label className="form-label">Content</label>
+                                <textarea
+                                  className="form-control"
+                                  rows={3}
+                                  name={`lessons[${index}].content`}
+                                  value={lesson.content}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                ></textarea>
+                                <ErrorMessage
+                                  name={`lessons[${index}].content`}
+                                  component="div"
+                                  className="text-danger"
+                                />
+                              </div>
+                              <div className="d-grid gap-2">
+                                <Button
+                                  variant="danger"
+                                  onClick={() => remove(index)}
+                                  style={{ width: "15%" }}
+                                >
+                                  Remove Lesson
+                                </Button>
+                              </div>
+                            </Card.Body>
+                          </Card>
+                        </div>
+                      ))}
+                      <Button
+                        onClick={() =>
+                          push({ id: uuidv4(), title: "", content: "" })
+                        }
+                      >
+                        Add Lesson
+                      </Button>
+                    </div>
+                  )}
+                </FieldArray>
+              </div>
+
+              {/* Quiz Section  */}
+              <div className="border border-primary rounded p-3 mt-4">
+                <FieldArray name="quizQuestions">
+                  {({ push, remove }) => (
+                    <div>
+                      <h3 className="display-4 text-center fw-bold mt-4 text-primary">
+                        Quiz Questions
+                      </h3>
+                      {values.quizQuestions.map((question, index) => (
+                        <Card key={question.id} className="mb-3">
+                          <Card.Body>
+                            <h5 className="mb-3">Question {index + 1}</h5>
+                            <div className="mb-3">
+                              <Field
+                                name={`quizQuestions[${index}].question`}
+                                as="textarea"
+                                className="form-control"
+                                placeholder="Enter quiz question"
+                              />
+                              <ErrorMessage
+                                name={`quizQuestions[${index}].question`}
+                                component="div"
+                                className="text-danger"
+                              />
+                            </div>
+                            {question.options.map((_, optionIndex) => (
+                              <div key={optionIndex} className="mb-3">
+                                <Field
+                                  name={`quizQuestions[${index}].options[${optionIndex}]`}
+                                  as="input"
+                                  className="form-control"
+                                  placeholder={`Option ${optionIndex + 1}`}
+                                />
+                                <ErrorMessage
+                                  name={`quizQuestions[${index}].options[${optionIndex}]`}
+                                  component="div"
+                                  className="text-danger"
+                                />
+                              </div>
+                            ))}
+                            <div className="mb-3">
+                              <Field
+                                name={`quizQuestions[${index}].correctOption`}
+                                as="select"
+                                className="form-select"
+                              >
+                                <option value="">Select Correct Option</option>
+                                {question.options.map((option, optionIndex) => (
+                                  <option
+                                    key={optionIndex}
+                                    value={optionIndex}
+                                  >{`Option ${optionIndex + 1}`}</option>
+                                ))}
+                              </Field>
+                              <ErrorMessage
+                                name={`quizQuestions[${index}].correctOption`}
+                                component="div"
+                                className="text-danger"
+                              />
+                            </div>
+                            <div className="mb-3">
+                              <Field
+                                name={`quizQuestions[${index}].concept`}
+                                as="input"
+                                className="form-control"
+                                placeholder="Concept"
+                              />
+                              <ErrorMessage
+                                name={`quizQuestions[${index}].concept`}
+                                component="div"
+                                className="text-danger"
+                              />
+                            </div>
+                            <Button
+                              variant="danger"
+                              onClick={() => remove(index)}
+                            >
+                              Remove Question
+                            </Button>
+                          </Card.Body>
+                        </Card>
+                      ))}
+
+                      <Button
+                        className="mt-3"
+                        onClick={() =>
+                          push({
+                            id: uuidv4(),
+                            question: "",
+                            options: Array(4).fill(""),
+                            correctOption: -1,
+                            concept: "",
+                          })
+                        }
+                      >
+                        Add Question
+                      </Button>
+                    </div>
+                  )}
+                </FieldArray>
+              </div>
+              <div className="mt-3">
+                {/* Displaying Form-level Custom Error Message for Lessons */}
+                {errors.lessons && typeof errors.lessons === "string" && (
+                  <div className="alert alert-danger">{errors.lessons}</div>
+                )}
+
+                {/* Displaying Form-level Custom Error Message for Quiz Questions */}
+                {errors.quizQuestions &&
+                  typeof errors.quizQuestions === "string" && (
+                    <div className="alert alert-danger">
+                      {errors.quizQuestions}
+                    </div>
+                  )}
+              </div>
+
+              {/* Submit Button  */}
+              <div className="d-flex justify-content-center">
+                <Button
+                  type="submit"
+                  className="btn btn-primary mx-auto mt-2"
+                  disabled={isSubmitting || isUploading}
+                >
+                  {isSubmitting || isUploading ? "Uploading..." : "Submit"}
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      <Toast
+        onClose={() => setShowSuccessToast(false)}
+        show={showSuccessToast}
+        delay={3000}
+        autohide
+        >
+        <Toast.Header>
+          <strong className="me-auto">Course Creation</strong>
+        </Toast.Header>
+        <Toast.Body>Course created successfully!</Toast.Body>
+      </Toast>
+        </div>
     </div>
   );
 };
 
-export default AddCourse;
+export default NewAddCourse;
