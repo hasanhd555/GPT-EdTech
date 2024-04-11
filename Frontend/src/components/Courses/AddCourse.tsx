@@ -64,7 +64,7 @@ interface FormValues {
   quizQuestions: QuizQuestion[];
 }
 
-const NewAddCourse: React.FC = () => {
+const AddCourse: React.FC = () => {
   const navigate = useNavigate();
 
   const [courseImage, setCourseImage] = useState("");
@@ -335,7 +335,7 @@ setTimeout(() => {
                                 <Button
                                   variant="danger"
                                   onClick={() => remove(index)}
-                                  style={{ width: "15%" }}
+                                  style={{ width: "20%" }}
                                 >
                                   Remove Lesson
                                 </Button>
@@ -501,4 +501,4 @@ setTimeout(() => {
   );
 };
 
-export default NewAddCourse;
+export default AddCourse;

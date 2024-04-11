@@ -11,6 +11,7 @@ const {
   getCourseAllInfo,
   updateDetails,
   getCourseAnalytics,
+  updateImage,
 } = require("../controllers/courseController");
 
 // Get All Courses
@@ -26,6 +27,9 @@ router.get("/get-all-info", getCourseAllInfo);
 router.get("/get-course-analytics", getCourseAnalytics);
 
 router.put("/update-details/:courseId", updateDetails);
+
+// Update Image
+router.post("/image-update", updateImage);
 
 // Create a new course 
 router.post("/create", createCourse);

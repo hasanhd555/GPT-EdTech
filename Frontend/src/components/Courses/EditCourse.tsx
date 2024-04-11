@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
+import { Spinner } from "react-bootstrap";
 import {
   getCourseAllInfoAPI,
   updateCourseDetailsAPI,
-  updateLessonAPI,updateQuestionAPI,
+  updateLessonAPI,
+  updateQuestionAPI,
+  updateCourseImageAPI,
+  CloudinaryUploadAPI,
 } from "../../constant"; // Assuming you have this constant
 import { course_type, lesson_type, question_type } from "../../constant";
 
@@ -12,7 +16,6 @@ function EditCourse() {
   const [course, setCourse] = useState<course_type | null>(null);
   const [lessons, setLessons] = useState<lesson_type[]>([]);
   const [questions, setQuestions] = useState<question_type[]>([]);
-  
 
   const [editModeCourse, setEditModeCourse] = useState(false);
   const [editModeLessons, setEditModeLessons] = useState(false);
@@ -21,7 +24,12 @@ function EditCourse() {
     useState("");
   const [editableLessons, setEditableLessons] = useState<lesson_type[]>([]);
   const [editModeQuestions, setEditModeQuestions] = useState(false);
-  const [editableQuestions, setEditableQuestions] = useState<question_type[]>([]);
+  const [editableQuestions, setEditableQuestions] = useState<question_type[]>(
+    []
+  );
+
+  const [courseImage, setCourseImage] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -33,7 +41,7 @@ function EditCourse() {
           const response = await axios.get(
             `${getCourseAllInfoAPI}?courseId=${courseId}`
           );
-          const { course, lessons, questions } = response.data;
+          const { course, lessons, questions, imageUrl } = response.data;
           setCourse(course);
           setLessons(lessons);
           setQuestions(questions);
@@ -41,6 +49,7 @@ function EditCourse() {
           setEditableCourseDescription(course.description);
           setEditableLessons(lessons);
           setEditableQuestions([...questions]);
+          setCourseImage(imageUrl);
         } catch (error) {
           console.error("Error fetching course info", error);
         }
@@ -134,12 +143,14 @@ function EditCourse() {
   }
 
   const handleQuestionChange = (index: number, field: string, value: any) => {
-    const updatedQuestions = editableQuestions.map((question, questionIndex) => {
-      if (index === questionIndex) {
-        return { ...question, [field]: value };
+    const updatedQuestions = editableQuestions.map(
+      (question, questionIndex) => {
+        if (index === questionIndex) {
+          return { ...question, [field]: value };
+        }
+        return question;
       }
-      return question;
-    });
+    );
     setEditableQuestions(updatedQuestions);
   };
 
@@ -160,6 +171,60 @@ function EditCourse() {
     setEditableQuestions([...questions]);
     setEditModeQuestions(false);
   };
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "gpt_edtech360");
+
+    setIsUploading(true);
+
+    try {
+      const response = await fetch(CloudinaryUploadAPI, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      setCourseImage(data.url);
+
+      await updateCourseImageOnBackend(data.url);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Assuming imageUrl should be a string, explicitly type it.
+const updateCourseImageOnBackend = async (imageUrl: string): Promise<void> => {
+  const params = new URLSearchParams(window.location.search);
+  const courseId = params.get("id");
+  if (!courseId) return;
+
+  try {
+    const response = await axios.post(updateCourseImageAPI, {
+      courseId,
+      imageUrl
+    });
+    console.log("Course image updated successfully", response.data);
+  } catch (error: any) { // Catching error as any temporarily
+    // Proper error handling
+    if (axios.isAxiosError(error)) {
+      // Now we know it's an AxiosError, we can access response safely
+      console.error("Error updating course image:", error.response?.data);
+    } else {
+      // Handle case where error is not from Axios
+      console.error("An unexpected error occurred:", error);
+    }
+  }
+};
+
+  
 
   return (
     <div className="mt-2 mb-3">
@@ -229,6 +294,39 @@ function EditCourse() {
           )}
         </div>
       )}
+
+      {/*  Image Section  */}
+<Card border="primary" className="mx-auto mt-3 mb-3" style={{ width: "70%" }} >
+  <Card.Body>
+    <Card.Title className="display-6 text-center fw-bold text-primary">
+      Course Image
+    </Card.Title>
+    {/* Existing Course Image Display */}
+    {courseImage && (
+      <div className="text-center mb-3">
+        <img
+          src={courseImage}
+          alt="Current Course"
+          style={{ maxWidth: "100%", maxHeight: "300px" }}
+        />
+      </div>
+    )}
+    <div className="mb-3">
+      <label htmlFor="courseImage" className="form-label">
+        Upload New Course Image
+      </label>
+      <input
+        type="file"
+        className="form-control"
+        id="courseImage"
+        onChange={handleImageUpload}
+        disabled={isUploading}
+      />
+      {isUploading && <Spinner animation="border" />}
+    </div>
+  </Card.Body>
+</Card>
+
 
       {/* Lessons Editing Interface */}
       <div style={{ width: "70%" }} className="mx-auto">
@@ -309,7 +407,13 @@ function EditCourse() {
                     className="form-control mb-2"
                     placeholder="Question Text"
                     value={question.question_text}
-                    onChange={(e) => handleQuestionChange(index, 'question_text', e.target.value)}
+                    onChange={(e) =>
+                      handleQuestionChange(
+                        index,
+                        "question_text",
+                        e.target.value
+                      )
+                    }
                   />
                   {question.options.map((option, optionIndex) => (
                     <input
@@ -321,14 +425,20 @@ function EditCourse() {
                       onChange={(e) => {
                         const newOptions = [...question.options];
                         newOptions[optionIndex] = e.target.value;
-                        handleQuestionChange(index, 'options', newOptions);
+                        handleQuestionChange(index, "options", newOptions);
                       }}
                     />
                   ))}
                   <select
                     className="form-select mb-2"
                     value={question.correct_answer}
-                    onChange={(e) => handleQuestionChange(index, 'correct_answer', parseInt(e.target.value))}
+                    onChange={(e) =>
+                      handleQuestionChange(
+                        index,
+                        "correct_answer",
+                        parseInt(e.target.value)
+                      )
+                    }
                   >
                     <option value="0">Option 1</option>
                     <option value="1">Option 2</option>
@@ -340,7 +450,9 @@ function EditCourse() {
                     className="form-control mb-2"
                     placeholder="Concept"
                     value={question.concept}
-                    onChange={(e) => handleQuestionChange(index, 'concept', e.target.value)}
+                    onChange={(e) =>
+                      handleQuestionChange(index, "concept", e.target.value)
+                    }
                   />
                 </>
               ) : (
@@ -351,7 +463,9 @@ function EditCourse() {
                       <li key={i}>{option}</li>
                     ))}
                   </ul>
-                  <p>Correct Answer: {question.options[question.correct_answer]}</p>
+                  <p>
+                    Correct Answer: {question.options[question.correct_answer]}
+                  </p>
                   <p>Concept: {question.concept}</p>
                 </>
               )}
@@ -375,7 +489,8 @@ function EditCourse() {
           </div>
         ) : (
           <div className="text-center mt-3 mb-3">
-            <button              className="btn btn-primary"
+            <button
+              className="btn btn-primary"
               onClick={() => setEditModeQuestions(true)}
             >
               Edit Questions
@@ -388,4 +503,3 @@ function EditCourse() {
 }
 
 export default EditCourse;
-
