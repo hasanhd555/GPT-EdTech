@@ -15,13 +15,13 @@ const testimonialData = [
     id: 2,
     name: "Wade Warren",
     image: img2,
-    text: "Cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Reprehenderit in voluptate velit esse Esse cillum dolore eu fugiat nulla pariatur.",
+    text: "Cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   },
   {
     id: 3,
     name: "Jacob Jones",
     image: img3,
-    text: "Esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit",
+    text: "Esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est ",
   },
 ];
 
@@ -37,8 +37,8 @@ const Testimonials: React.FC = () => {
       <Row className="justify-content-around">
         {testimonialData.map((testimonial, index) => (
           <Col md={4} className="mb-3" key={testimonial.id}>
-            <Card style={{ height: `${maxTextHeight * 1.5}px`, borderRadius: "30px" }}>
-              <Card.Body className="d-flex flex-column justify-content-between">
+            <Card style={{ borderRadius: "30px", display: "flex", flexDirection: "column", height: "100%" }}>
+              <Card.Body className="d-flex flex-column justify-content-between" style={{ height: "100%" }}>
                 <div>
                   <img
                     src={testimonial.image}
@@ -48,14 +48,14 @@ const Testimonials: React.FC = () => {
                   />
                   <div>
                     <Card.Title className="mb-3">{testimonial.name}</Card.Title>
-                    <Card.Text style={{ padding: "0 10px" }}>{testimonial.text}</Card.Text>
+                    <Card.Text style={{ padding: "0 10px", flex: "1" }}>{testimonial.text}</Card.Text>
                   </div>
                 </div>
                 <img
                   src={stars}
                   alt={`Bottom Left Image ${testimonial.id}`}
                   className="img-fluid"
-                  style={{ width: "100px", float: "left", marginTop: "10px" }}
+                  style={{ width: "100px", float: "left", marginTop: "10px" ,marginBottom: "10px"}}
                 />
               </Card.Body>
             </Card>
@@ -67,4 +67,3 @@ const Testimonials: React.FC = () => {
 };
 
 export default Testimonials;
-
