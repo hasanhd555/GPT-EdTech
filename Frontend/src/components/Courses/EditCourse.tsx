@@ -61,6 +61,19 @@ function EditCourse() {
     lessons: Yup.array().of(lessonSchema),
   });
 
+  // Validation schema for a single question
+const questionSchema = Yup.object().shape({
+  question_text: Yup.string().required("Question text is required"),
+  options: Yup.array().of(Yup.string().required("Option text is required")).min(2, "At least two options are required"),
+  correct_answer: Yup.number().required("A correct answer is required").min(0, "Invalid answer selected").max(3, "Invalid answer selected"),
+  concept: Yup.string().required("Concept is required"),
+});
+
+// Validation schema for the array of questions
+const quizValidationSchema = Yup.object().shape({
+  questions: Yup.array().of(questionSchema),
+});
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const courseId = params.get("id");
@@ -148,18 +161,48 @@ function EditCourse() {
     setEditableQuestions(updatedQuestions);
   };
 
-  const handleSaveQuestionsChanges = async () => {
-    for (const question of editableQuestions) {
-      await axios.put(`${updateQuestionAPI}/${question._id}`, {
-        question_text: question.question_text,
-        correct_answer: question.correct_answer,
-        options: question.options,
-        concept: question.concept, // Ensure the concept is updated
-      });
+  // const handleSaveQuestionsChanges = async () => {
+  //   for (const question of editableQuestions) {
+  //     await axios.put(`${updateQuestionAPI}/${question._id}`, {
+  //       question_text: question.question_text,
+  //       correct_answer: question.correct_answer,
+  //       options: question.options,
+  //       concept: question.concept, // Ensure the concept is updated
+  //     });
+  //   }
+  //   setEditModeQuestions(false);
+  //   // Consider refetching updated questions or updating local state as needed
+  // };
+
+  const handleSaveQuestionsChanges = async (questions: question_type[]) => {
+    const params = new URLSearchParams(window.location.search);
+    const courseId = params.get("id");
+    if (!courseId) return;
+  
+    try {
+      // Assuming you're updating all questions at once or individually in a loop
+      for (const question of questions) {
+        await axios.put(`${updateQuestionAPI}/${question._id}`, {
+          question_text: question.question_text,
+          correct_answer: question.correct_answer,
+          options: question.options,
+          concept: question.concept, // Ensure the concept is updated
+        });
+      }
+      
+      // Refetch updated questions to update local state
+      const response = await axios.get(`${getCourseAllInfoAPI}?courseId=${courseId}`);
+      const updatedQuestions = response.data.questions;
+      setQuestions(updatedQuestions); // Update questions with the newly fetched data
+      setEditableQuestions(updatedQuestions); // Update editable questions with the latest data
+      setEditModeQuestions(false); // Exit edit mode after saving
+    } catch (error) {
+      console.error("Error updating questions", error);
+      // Handle error appropriately
     }
-    setEditModeQuestions(false);
-    // Consider refetching updated questions or updating local state as needed
   };
+  
+  
 
   const handleCancelQuestionsChanges = () => {
     setEditableQuestions([...questions]);
@@ -305,7 +348,7 @@ function EditCourse() {
                         </button>
                         <button
                           type="button"
-                          className="btn btn-secondary"
+                          className="btn btn-danger"
                           onClick={handleCancelCourseChanges}
                         >
                           Cancel
@@ -395,9 +438,10 @@ function EditCourse() {
                       ) => (
                         <div key={index} className="card mb-3">
                           <div className="card-body">
-                            <h5 className="card-title">
+                            <h3 className="card-title text-primary text-center">
                               Lesson {index + 1}
-                            </h5>
+                            </h3>
+                            <h6>Title</h6>
                             <Field
                               name={`lessons.${index}.title`}
                               placeholder="Title"
@@ -410,6 +454,7 @@ function EditCourse() {
                               component="div"
                               className="text-danger" // Apply red color style
                             />
+                            <h6>Content</h6>
                             <Field
                               name={`lessons.${index}.content`}
                               placeholder="Content"
@@ -439,7 +484,7 @@ function EditCourse() {
               </button>
               <button
                 type="button"
-                className="btn btn-secondary"
+                className="btn btn-danger"
                 onClick={toggleEditModeLessons}
               >
                 Cancel
@@ -457,7 +502,7 @@ function EditCourse() {
             {lessons.map((lesson, index) => (
               <Card key={lesson._id || index} className="mt-2 mb-2">
                 <Card.Body>
-                  <Card.Title>Lesson {index + 1}</Card.Title>
+                  <Card.Title className="text-primary text-center">Lesson {index + 1}</Card.Title>
                   <Card.Text>Title: {lesson.title}</Card.Text>
                   <Card.Text>Content: {lesson.content}</Card.Text>
                 </Card.Body>
@@ -472,111 +517,84 @@ function EditCourse() {
         )}
       </div>
 
-      {/* Quiz Questions Editing Interface */}
-      <div  className="mx-auto">
-        <h3 className="display-4 text-center fw-bold mt-4 text-primary">
-          Quiz Questions
-        </h3>
-        {editableQuestions.map((question, index) => (
-          <Card key={question._id} className="mt-2 mb-2 border border-primary">
-            <Card.Body>
-              {editModeQuestions ? (
-                <>
-                  <input
-                    type="text"
-                    className="form-control mb-2"
-                    placeholder="Question Text"
-                    value={question.question_text}
-                    onChange={(e) =>
-                      handleQuestionChange(
-                        index,
-                        "question_text",
-                        e.target.value
-                      )
-                    }
-                  />
+   {/* Quiz Questions Viewing and Editing Interface */}
+   <div className="mx-auto"  >
+        <h3 className="display-4 text-center fw-bold mt-4 text-primary">Quiz Questions</h3>
+        {!editModeQuestions ? (
+          <>
+            {questions.map((question, index) => (
+              <Card key={index} className="mt-2 mb-2">
+                <Card.Body>
+                  <Card.Title>Question {index + 1}</Card.Title>
+                  <Card.Text>{question.question_text}</Card.Text>
                   {question.options.map((option, optionIndex) => (
-                    <input
-                      key={optionIndex}
-                      type="text"
-                      className="form-control mb-2"
-                      placeholder={`Option ${optionIndex + 1}`}
-                      value={option}
-                      onChange={(e) => {
-                        const newOptions = [...question.options];
-                        newOptions[optionIndex] = e.target.value;
-                        handleQuestionChange(index, "options", newOptions);
-                      }}
-                    />
+                    <Card.Text key={optionIndex}>
+                      Option {optionIndex + 1}: {option}
+                    </Card.Text>
                   ))}
-                  <select
-                    className="form-select mb-2"
-                    value={question.correct_answer}
-                    onChange={(e) =>
-                      handleQuestionChange(
-                        index,
-                        "correct_answer",
-                        parseInt(e.target.value)
-                      )
-                    }
-                  >
-                    <option value="0">Option 1</option>
-                    <option value="1">Option 2</option>
-                    <option value="2">Option 3</option>
-                    <option value="3">Option 4</option>
-                  </select>
-                  <input
-                    type="text"
-                    className="form-control mb-2"
-                    placeholder="Concept"
-                    value={question.concept}
-                    onChange={(e) =>
-                      handleQuestionChange(index, "concept", e.target.value)
-                    }
-                  />
-                </>
-              ) : (
-                <>
-                  <p>{question.question_text}</p>
-                  <ul>
-                    {question.options.map((option, i) => (
-                      <li key={i}>{option}</li>
-                    ))}
-                  </ul>
-                  <p>
-                    Correct Answer: {question.options[question.correct_answer]}
-                  </p>
-                  <p>Concept: {question.concept}</p>
-                </>
-              )}
-            </Card.Body>
-          </Card>
-        ))}
-        {editModeQuestions ? (
-          <div className="d-flex justify-content-center mt-3">
-            <button
-              className="btn btn-success me-2"
-              onClick={handleSaveQuestionsChanges}
-            >
-              Save Questions
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={handleCancelQuestionsChanges}
-            >
-              Cancel
-            </button>
-          </div>
+                  <Card.Text>Correct Answer: Option {question.correct_answer + 1}</Card.Text>
+                  <Card.Text>Concept: {question.concept}</Card.Text>
+                </Card.Body>
+              </Card>
+            ))}
+            <div className="text-center">
+              <Button variant="primary" onClick={() => setEditModeQuestions(true)}>Edit Questions</Button>
+            </div>
+          </>
         ) : (
-          <div className="text-center mt-3 mb-3">
-            <button
-              className="btn btn-primary"
-              onClick={() => setEditModeQuestions(true)}
-            >
-              Edit Questions
-            </button>
+          // The Formik component for editing quiz questions as you've defined above
+          <Formik
+  initialValues={{ questions: editableQuestions }}
+  validationSchema={quizValidationSchema}
+  onSubmit={(values, actions) => {
+    handleSaveQuestionsChanges(values.questions).then(() => {
+      setEditModeQuestions(false); // Make sure to set edit mode to false after saving
+      actions.setSubmitting(false);
+    });
+  }}
+>
+  {({ values, handleSubmit, isSubmitting }) => (
+    <Form onSubmit={handleSubmit}>
+      <FieldArray name="questions">
+        {() => (
+          <div>
+            {values.questions.map((question, index) => (
+              <div key={index} className="mb-3">
+                <Field name={`questions[${index}].question_text`} placeholder="Question Text" className="form-control mb-2" />
+                <ErrorMessage name={`questions[${index}].question_text`} component="div" className="text-danger" />
+                {question.options.map((option, optionIndex) => (
+                  <div key={optionIndex} className="mb-2">
+                    <Field name={`questions[${index}].options[${optionIndex}]`} placeholder={`Option ${optionIndex + 1}`} className="form-control" />
+                    <ErrorMessage name={`questions[${index}].options[${optionIndex}]`} component="div" className="text-danger" />
+                  </div>
+                ))}
+                <Field as="select" name={`questions[${index}].correct_answer`} className="form-select mb-2">
+                  <option value="">Select Correct Answer</option>
+                  {question.options.map((_, optionIndex) => (
+                    <option key={optionIndex} value={optionIndex}>{`Option ${optionIndex + 1}`}</option>
+                  ))}
+                </Field>
+                <ErrorMessage name={`questions[${index}].correct_answer`} component="div" className="text-danger" />
+                <Field name={`questions[${index}].concept`} placeholder="Concept" className="form-control mb-2" />
+                <ErrorMessage name={`questions[${index}].concept`} component="div" className="text-danger" />
+              </div>
+            ))}
           </div>
         )}
+      </FieldArray>
+      <div className="d-flex justify-content-between">
+        <button type="submit" className="btn btn-success" disabled={isSubmitting}>
+          Save Questions
+        </button>
+        <button type="button" className="btn btn-danger" onClick={handleCancelQuestionsChanges}>
+          Cancel
+        </button>
+      </div>
+    </Form>
+  )}
+</Formik>
+
+)}
       </div>
     </div>
     </div>

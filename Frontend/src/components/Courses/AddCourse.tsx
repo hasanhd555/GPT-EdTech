@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from "react";
-import { Card, Button, Spinner, Toast } from "react-bootstrap";
+import { Card, Spinner, Toast } from "react-bootstrap";
+import Button from 'react-bootstrap/Button';
 // import from constant
 import { CreateNewCourse, CloudinaryUploadAPI } from "../../constant";
 import axios from "axios";
@@ -345,6 +346,7 @@ setTimeout(() => {
                         </div>
                       ))}
                       <Button
+              className="btn btn-success"
                         onClick={() =>
                           push({ id: uuidv4(), title: "", content: "" })
                         }
@@ -440,7 +442,7 @@ setTimeout(() => {
                       ))}
 
                       <Button
-                        className="mt-3"
+                        className="mt-3 btn btn-success"
                         onClick={() =>
                           push({
                             id: uuidv4(),
