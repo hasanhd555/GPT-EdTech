@@ -16,8 +16,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCourseAnalytics = exports.updateDetails = exports.getCourseAllInfo = exports.getEditableCourses = exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const course_1 = __importDefault(require("../models/course"));
-const lesson_1 = __importDefault(require("../models/lesson")); // Assuming you have this model
-const question_1 = __importDefault(require("../models/question")); // Assuming you have this model
+const lesson_1 = __importDefault(require("../models/lesson"));
+const question_1 = __importDefault(require("../models/question"));
 const enrollment_1 = __importDefault(require("../models/enrollment"));
 const student_1 = __importDefault(require("../models/student"));
 // Get all courses

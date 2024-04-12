@@ -1,41 +1,35 @@
 import React, { useEffect, useState } from "react";
-import CourseCard from "../CourseCard/CourseCard";
-import styles from "./UserDashboard.module.css";
-import StudentCard from "../StudentCard/StudentCard";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import { useAppSelector } from "../../redux/hooks";
-import { useNavigate } from "react-router-dom";
-import { FetchCourseAPI } from "../../constant";
-
-interface Course {
-  _id: string;
-  title: string;
-  description: string;
-  image_url: string;
-}
+import CourseCard from "../CourseCard/CourseCard";
+import StudentCard from "../StudentCard/StudentCard";
+import styles from "./UserDashboard.module.css";
+import { FetchCourseAPI, course_type } from "../../constant"; // Import constants and course_type interface
 
 const UserDashboard = () => {
   const navigate = useNavigate();
-  const [courses, setCourses] = useState<Course[]>([]);
-  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
+  const [courses, setCourses] = useState<course_type[]>([]); // Using course_type from constants
+  const { isAdmin, email, _id } = useAppSelector(state => state.User);
 
   useEffect(() => {
-    if (_id === null || isAdmin === true) {
+    // Redirect if no user ID or if the user is an admin
+    if (_id === null || isAdmin) {
       navigate("/");
     }
+    
+    // Function to fetch courses from the API
     const fetchCourses = async () => {
       try {
-        const response = await axios.post(FetchCourseAPI, {
-          user_id: _id,
-        });
+        const response = await axios.post(FetchCourseAPI, { user_id: _id });
         setCourses(response.data);
       } catch (error) {
         console.error("Error fetching courses", error);
       }
     };
 
-    fetchCourses();
+    fetchCourses(); // Execute the function on component mount
   }, [_id]);
 
   return (
@@ -51,21 +45,10 @@ const UserDashboard = () => {
       </div>
 
       <Row xs={1} md={2} lg={3} className="mx-5">
-        {courses.map((course: Course) => (
-          <Col
-            key={course._id}
-            className={`d-flex justify-content-center my-4 ${styles.coursecardcontainer}`}
-          >
-            <div
-              onClick={() => navigate(`/course-content?id=${course._id}`)}
-              style={{ width: "80%" }}
-            >
-              <CourseCard
-                key={course._id}
-                title={course.title}
-                description={course.description}
-                imageUrl={course.image_url}
-              />
+        {courses.map((course) => (
+          <Col key={course._id} className={`d-flex justify-content-center my-4 ${styles.coursecardcontainer}`}>
+            <div onClick={() => navigate(`/course-content?id=${course._id}`)} style={{ width: "80%" }}>
+              <CourseCard key={course._id} title={course.title} description={course.description} imageUrl={course.image_url} />
             </div>
           </Col>
         ))}

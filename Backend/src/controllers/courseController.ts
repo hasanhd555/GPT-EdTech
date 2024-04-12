@@ -3,8 +3,8 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import Course from "../models/course";
-import Lesson from "../models/lesson"; // Assuming you have this model
-import Question from "../models/question"; // Assuming you have this model
+import Lesson from "../models/lesson";
+import Question from "../models/question";
 import { course_type } from "../Constant";
 import Enrollment from '../models/enrollment';  
 import Student from '../models/student'; 

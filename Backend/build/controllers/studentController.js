@@ -28,32 +28,33 @@ const http_status_codes_1 = require("http-status-codes");
 const student_1 = __importDefault(require("../models/student"));
 const Constant_1 = require("../Constant");
 const cloudinary_1 = require("cloudinary");
-// Get one specific student
+// Retrieves a specific student by ID
 const getOneStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("In get 1 student function");
-        const studentId = req.query.id;
+        const studentId = req.query.id; // Extracting student ID from query parameters
         const student = yield student_1.default.findById(studentId);
         if (!student) {
+            // If no student found, return 404 Not Found
             return res
                 .status(http_status_codes_1.StatusCodes.NOT_FOUND)
                 .json({ error: "Student not found" });
         }
+        // Send the found student back with 200 OK
         res.status(http_status_codes_1.StatusCodes.OK).json(student);
     }
     catch (error) {
+        // Handle errors with a 500 Internal Server Error
         res
             .status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ error: "Server error" });
     }
 });
 exports.getOneStudent = getOneStudent;
-// Get all students
+// Fetches all students from the database
 const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("In student getall");
-        const students = yield student_1.default.find();
-        res.status(http_status_codes_1.StatusCodes.OK).json(students);
+        const students = yield student_1.default.find(); // Retrieve all students
+        res.status(http_status_codes_1.StatusCodes.OK).json(students); // Respond with the list of all students
     }
     catch (error) {
         res
@@ -62,29 +63,31 @@ const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getAllStudents = getAllStudents;
-// Student signup
+// Handles student registration
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("In student signup");
-        const { email, password, fullName, username, age, gender } = req.body;
+        const { email, password, fullName, username, age, gender } = req.body; // Destructure required fields from the body
+        // Check if a student with the same email already exists
         const existingStudent = yield student_1.default.findOne({ email });
         if (existingStudent) {
+            // If the email is already used, return 409 Conflict
             return res
                 .status(http_status_codes_1.StatusCodes.CONFLICT)
                 .json({ error: "Email already in use" });
         }
+        // Create a new student object
         const objStudent = {
-            username: username,
-            email: email,
-            password: password,
+            username,
+            email,
+            password,
             name: fullName,
-            age: age,
-            gender: gender,
+            age,
+            gender,
             profile_picture: Constant_1.CloudinarBaseImageUrl,
         };
         const student = new student_1.default(objStudent);
-        yield student.save();
-        res.status(http_status_codes_1.StatusCodes.CREATED).json(student);
+        yield student.save(); // Save the new student to the database
+        res.status(http_status_codes_1.StatusCodes.CREATED).json(student); // Return the newly created student
     }
     catch (error) {
         console.log("Cannot Signup", error);
@@ -94,20 +97,19 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.signup = signup;
-// Student login
+// Handles student login
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("In student login");
-        const { email, password } = req.body;
+        const { email, password } = req.body; // Extract email and password from request body
         const student = yield student_1.default.findOne({ email });
         const validPassword = yield (student === null || student === void 0 ? void 0 : student.isPasswordValid(password));
         if (!validPassword) {
-            console.log("FunctionReturns", student === null || student === void 0 ? void 0 : student.isPasswordValid(password));
+            // If password is invalid, return 401 Unauthorized
             return res
                 .status(http_status_codes_1.StatusCodes.UNAUTHORIZED)
                 .json({ error: "Invalid credentials" });
         }
-        res.status(http_status_codes_1.StatusCodes.OK).json(student);
+        res.status(http_status_codes_1.StatusCodes.OK).json(student); // Respond with the student details on successful login
     }
     catch (error) {
         res
@@ -116,21 +118,20 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.login = login;
-// Update a specific student
+// Updates the details of a specific student
 const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const _a = req.body, { id } = _a, updateData = __rest(_a, ["id"]); // Destructure the ID from the body
+    const _a = req.body, { id } = _a, updateData = __rest(_a, ["id"]); // Extract student ID and update data from body
     try {
         const student = yield student_1.default.findById(id);
         if (!student) {
+            // If student is not found, return 404 Not Found
             return res
                 .status(http_status_codes_1.StatusCodes.NOT_FOUND)
                 .json({ error: "Student not found" });
         }
-        // Update the Student object with new data
-        Object.assign(student, updateData);
-        // Save the updated Student, triggering pre-save hooks
-        const updatedStudent = yield student.save();
-        res.status(http_status_codes_1.StatusCodes.OK).json(updatedStudent);
+        Object.assign(student, updateData); // Update the student object with new data
+        const updatedStudent = yield student.save(); // Save the updated student
+        res.status(http_status_codes_1.StatusCodes.OK).json(updatedStudent); // Return the updated student
     }
     catch (error) {
         res
@@ -139,21 +140,21 @@ const updateStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.updateStudent = updateStudent;
-// Cloudinary configuration (usually you would place this in a separate config file)
+// Cloudinary configuration should ideally be placed in a separate configuration file
 cloudinary_1.v2.config({
     cloud_name: "do2hqf8du",
     api_key: "458569939539534",
     api_secret: "4LkbMXSeh-CG58fZPRWv12Tit6U",
     secure: true,
 });
-// Endpoint to upload image to Cloudinary
+// Endpoint to upload an image to Cloudinary
 const uploadImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const fileStr = req.body.data;
+        const fileStr = req.body.data; // Get the image data from request body
         const uploadResponse = yield cloudinary_1.v2.uploader.upload(fileStr, {
             upload_preset: "gpt_edtech360",
         });
-        res.json({ url: uploadResponse.url });
+        res.json({ url: uploadResponse.url }); // Return the URL of the uploaded image
     }
     catch (error) {
         console.error(error);
