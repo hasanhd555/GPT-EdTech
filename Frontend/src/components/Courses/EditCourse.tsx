@@ -4,13 +4,10 @@ import Card from "react-bootstrap/Card";
 import { Spinner, Button } from "react-bootstrap";
 import {
   getCourseAllInfoAPI,
-  updateCourseDetailsAPI,
   updateLessonAPI,
   updateQuestionAPI,
-  updateCourseImageAPI,
-  CloudinaryUploadAPI,
 } from "../../constant";
-import { course_type, lesson_type, question_type } from "../../constant";
+import {  lesson_type, question_type } from "../../constant";
 import {
   Formik,
   Form,
@@ -23,14 +20,12 @@ import * as Yup from "yup";
 import { useAppSelector } from "../../redux/hooks"; // Redux hook to access the store
 import { NavigateFunction, useNavigate } from "react-router"; // Hook for navigation
 import EditCourseDetails from "./EditCourseDetails"; // Component for editing course details
+import EditCourseImage from "./EditCourseImage";
 
 function EditCourse() {
   const [courseId, setCourseId] = useState("");
-  const [course, setCourse] = useState<course_type | null>(null);
   const [lessons, setLessons] = useState<lesson_type[]>([]);
   const [questions, setQuestions] = useState<question_type[]>([]);
-
-  const [editModeCourse, setEditModeCourse] = useState(false);
   const [editModeLessons, setEditModeLessons] = useState(false);
   const [editableLessons, setEditableLessons] = useState<lesson_type[]>([]);
   const [editModeQuestions, setEditModeQuestions] = useState(false);
@@ -38,14 +33,10 @@ function EditCourse() {
     []
   );
 
-  const [courseImage, setCourseImage] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
-  const [savingCourseDetails, setSavingCourseDetails] = useState(false);
   const [savingLessons, setSavingLessons] = useState(false);
   const [savingQuestions, setSavingQuestions] = useState(false);
   const navigate: NavigateFunction = useNavigate();
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
-
 
   // Validation schema for a single lesson
   const lessonSchema = Yup.object().shape({
@@ -91,12 +82,11 @@ function EditCourse() {
             `${getCourseAllInfoAPI}?courseId=${courseId}`
           );
           const { course, lessons, questions, imageUrl } = response.data;
-          setCourse(course);
+
           setLessons(lessons);
           setQuestions(questions);
           setEditableLessons(lessons);
           setEditableQuestions([...questions]);
-          setCourseImage(imageUrl);
         } catch (error) {
           console.error("Error fetching course info", error);
         }
@@ -106,14 +96,13 @@ function EditCourse() {
     fetchCourseInfo();
   }, []);
 
-
   const handleSaveQuestionsChanges = async (questions: question_type[]) => {
     const params = new URLSearchParams(window.location.search);
     const courseId = params.get("id");
     if (!courseId) return;
 
     try {
-      setSavingQuestions(true);  // Set loading to true before the request
+      setSavingQuestions(true); // Set loading to true before the request
       // Assuming you're updating all questions at once or individually in a loop
       for (const question of questions) {
         await axios.put(`${updateQuestionAPI}/${question._id}`, {
@@ -135,9 +124,8 @@ function EditCourse() {
     } catch (error) {
       console.error("Error updating questions", error);
       // Handle error appropriately
-    }
-    finally {
-      setSavingQuestions(false);  // Set loading to false after the request
+    } finally {
+      setSavingQuestions(false); // Set loading to false after the request
     }
   };
 
@@ -146,67 +134,12 @@ function EditCourse() {
     setEditModeQuestions(false);
   };
 
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files ? event.target.files[0] : null;
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "gpt_edtech360");
-
-    setIsUploading(true);
-
-    try {
-      const response = await fetch(CloudinaryUploadAPI, {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      setCourseImage(data.url);
-
-      await updateCourseImageOnBackend(data.url);
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  // Assuming imageUrl should be a string, explicitly type it.
-  const updateCourseImageOnBackend = async (
-    imageUrl: string
-  ): Promise<void> => {
-    const params = new URLSearchParams(window.location.search);
-    const courseId = params.get("id");
-    if (!courseId) return;
-
-    try {
-      const response = await axios.post(updateCourseImageAPI, {
-        courseId,
-        imageUrl,
-      });
-      console.log("Course image updated successfully", response.data);
-    } catch (error: any) {
-      // Catching error as any temporarily
-      // Proper error handling
-      if (axios.isAxiosError(error)) {
-        // Now we know it's an AxiosError, we can access response safely
-        console.error("Error updating course image:", error.response?.data);
-      } else {
-        // Handle case where error is not from Axios
-        console.error("An unexpected error occurred:", error);
-      }
-    }
-  };
-
   const handleSaveLessonsChanges = async (
     lessons: lesson_type[],
     actions: FormikHelpers<{ lessons: lesson_type[] }>
   ) => {
     try {
-      setSavingLessons(true);  // Set loading to true before the request
+      setSavingLessons(true); // Set loading to true before the request
       const params = new URLSearchParams(window.location.search);
       const courseId = params.get("id");
       // Assuming you're updating all lessons at once or individually in a loop
@@ -227,9 +160,8 @@ function EditCourse() {
     } catch (error) {
       console.error("Error updating lessons", error);
       actions.setSubmitting(false);
-    }
-    finally {
-      setSavingLessons(false);  // Set loading to false after the request
+    } finally {
+      setSavingLessons(false); // Set loading to false after the request
     }
   };
 
@@ -248,42 +180,8 @@ function EditCourse() {
         className="mx-auto shadow p-3 border rounded"
       >
         <EditCourseDetails courseId={courseId} />
-        
 
-        {/*  Image Section  */}
-        <Card border="primary" className="mx-auto mt-3 mb-3">
-          <Card.Body>
-            <Card.Title className="display-6 text-center fw-bold text-primary">
-              Course Image
-            </Card.Title>
-            {/* Existing Course Image Display */}
-            {courseImage && (
-              <div className="text-center mb-3">
-                <img
-                  src={courseImage}
-                  alt="Current Course"
-                  style={{ maxWidth: "100%", maxHeight: "300px" }}
-                />
-              </div>
-            )}
-            <div className="mb-3">
-              <label
-                htmlFor="courseImage"
-                className="form-label fw-bold  text-primary"
-              >
-                Upload New Course Image
-              </label>
-              <input
-                type="file"
-                className="form-control"
-                id="courseImage"
-                onChange={handleImageUpload}
-                disabled={isUploading}
-              />
-              {isUploading && <Spinner animation="border" variant="primary" />}
-            </div>
-          </Card.Body>
-        </Card>
+        <EditCourseImage courseId={courseId} />
 
         {/* Lessons Editing Interface */}
         <div className="mx-auto border rounded border-primary p-3 m-3">
@@ -576,12 +474,9 @@ function EditCourse() {
               )}
             </Formik>
           )}
-        {savingQuestions && <Spinner animation="border" variant="primary" />}
+          {savingQuestions && <Spinner animation="border" variant="primary" />}
         </div>
-
       </div>
-
-
     </div>
   );
 }
