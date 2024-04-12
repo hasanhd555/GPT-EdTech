@@ -20,6 +20,8 @@ import {
   FormikHelpers,
 } from "formik";
 import * as Yup from "yup";
+import { useAppSelector } from "../../redux/hooks"; // Redux hook to access the store
+import { NavigateFunction, useNavigate } from "react-router"; // Hook for navigation
 
 function EditCourse() {
   const [course, setCourse] = useState<course_type | null>(null);
@@ -39,6 +41,8 @@ function EditCourse() {
   const [savingCourseDetails, setSavingCourseDetails] = useState(false);
   const [savingLessons, setSavingLessons] = useState(false);
   const [savingQuestions, setSavingQuestions] = useState(false);
+  const navigate: NavigateFunction = useNavigate();
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
   const courseValidationSchema = Yup.object().shape({
     title: Yup.string()
@@ -80,6 +84,9 @@ function EditCourse() {
   });
 
   useEffect(() => {
+    if (!isAdmin) {
+      navigate("/");
+    }
     const params = new URLSearchParams(window.location.search);
     const courseId = params.get("id");
 

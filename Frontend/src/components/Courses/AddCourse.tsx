@@ -1,6 +1,6 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { Card, Spinner, Toast } from "react-bootstrap";
-import Button from 'react-bootstrap/Button';
+import Button from "react-bootstrap/Button";
 // import from constant
 import { CreateNewCourse, CloudinaryUploadAPI } from "../../constant";
 import axios from "axios";
@@ -74,6 +74,13 @@ const AddCourse: React.FC = () => {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
+  // Redirect non-admin users to the homepage immediately after component mounts
+
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate("/");
+    }
+  }, [isAdmin, navigate]);
 
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -167,9 +174,9 @@ const AddCourse: React.FC = () => {
       console.log("Course creation successful", response.data);
       setShowSuccessToast(true);
       // Delay navigation by 3 seconds
-setTimeout(() => {
-    navigate("/dash-admin");
-  }, 3000);
+      setTimeout(() => {
+        navigate("/dash-admin");
+      }, 3000);
     } catch (error) {
       console.error("There was an error creating the course", error);
     } finally {
@@ -278,7 +285,9 @@ setTimeout(() => {
                   }}
                   disabled={isUploading}
                 />
-                {isUploading && <Spinner animation="border" variant="primary" />}
+                {isUploading && (
+                  <Spinner animation="border" variant="primary" />
+                )}
                 {courseImage && (
                   <img
                     src={courseImage}
@@ -300,9 +309,13 @@ setTimeout(() => {
                         <div key={lesson.id}>
                           <Card className="mb-3">
                             <Card.Body>
-                              <h3 className="text-primary text-center fw-bold mb-3">Lesson {index + 1}</h3>
+                              <h3 className="text-primary text-center fw-bold mb-3">
+                                Lesson {index + 1}
+                              </h3>
                               <div className="mb-3">
-                                <label className="form-label fw-bold">Title</label>
+                                <label className="form-label fw-bold">
+                                  Title
+                                </label>
                                 <input
                                   className="form-control text-primary"
                                   name={`lessons[${index}].title`}
@@ -317,7 +330,9 @@ setTimeout(() => {
                                 />
                               </div>
                               <div className="mb-3">
-                                <label className="form-label fw-bold">Content</label>
+                                <label className="form-label fw-bold">
+                                  Content
+                                </label>
                                 <textarea
                                   className="form-control text-primary"
                                   rows={3}
@@ -346,7 +361,7 @@ setTimeout(() => {
                         </div>
                       ))}
                       <Button
-              className="btn btn-success"
+                        className="btn btn-success"
                         onClick={() =>
                           push({ id: uuidv4(), title: "", content: "" })
                         }
@@ -369,11 +384,13 @@ setTimeout(() => {
                       {values.quizQuestions.map((question, index) => (
                         <Card key={question.id} className="mb-3">
                           <Card.Body>
-                            <h5 className="mb-3 text-primary text-center fw-bold fs-3">Question {index + 1}</h5>
+                            <h5 className="mb-3 text-primary text-center fw-bold fs-3">
+                              Question {index + 1}
+                            </h5>
                             <div className="mb-3">
-                            <Card.Text className="card-title  fw-bold">
-                      Question Statement
-                    </Card.Text>
+                              <Card.Text className="card-title  fw-bold">
+                                Question Statement
+                              </Card.Text>
                               <Field
                                 name={`quizQuestions[${index}].question`}
                                 as="textarea"
@@ -389,8 +406,8 @@ setTimeout(() => {
                             {question.options.map((_, optionIndex) => (
                               <div key={optionIndex} className="mb-3">
                                 <span className="card-title fw-bold">
-                          Option {optionIndex + 1} 
-                        </span>
+                                  Option {optionIndex + 1}
+                                </span>
                                 <Field
                                   name={`quizQuestions[${index}].options[${optionIndex}]`}
                                   as="input"
@@ -405,15 +422,14 @@ setTimeout(() => {
                               </div>
                             ))}
                             <div className="mb-3">
-                            <span className="card-title   fw-bold">
-                        Correct Answer 
-                      </span>
+                              <span className="card-title   fw-bold">
+                                Correct Answer
+                              </span>
                               <Field
                                 name={`quizQuestions[${index}].correctOption`}
                                 as="select"
                                 className="form-select text-primary"
                               >
-                                
                                 <option value="">Select Correct Option</option>
                                 {question.options.map((option, optionIndex) => (
                                   <option
@@ -429,9 +445,9 @@ setTimeout(() => {
                               />
                             </div>
                             <div className="mb-3">
-                            <span className="card-title   fw-bold">
-                        Concept  
-                      </span>
+                              <span className="card-title   fw-bold">
+                                Concept
+                              </span>
                               <Field
                                 name={`quizQuestions[${index}].concept`}
                                 as="input"
@@ -500,18 +516,18 @@ setTimeout(() => {
             </Form>
           )}
         </Formik>
-      <Toast
-        onClose={() => setShowSuccessToast(false)}
-        show={showSuccessToast}
-        delay={3000}
-        autohide
+        <Toast
+          onClose={() => setShowSuccessToast(false)}
+          show={showSuccessToast}
+          delay={3000}
+          autohide
         >
-        <Toast.Header>
-          <strong className="me-auto">Course Creation</strong>
-        </Toast.Header>
-        <Toast.Body>Course created successfully!</Toast.Body>
-      </Toast>
-        </div>
+          <Toast.Header>
+            <strong className="me-auto">Course Creation</strong>
+          </Toast.Header>
+          <Toast.Body>Course created successfully!</Toast.Body>
+        </Toast>
+      </div>
     </div>
   );
 };
