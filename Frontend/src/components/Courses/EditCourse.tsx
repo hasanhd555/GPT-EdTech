@@ -22,8 +22,10 @@ import {
 import * as Yup from "yup";
 import { useAppSelector } from "../../redux/hooks"; // Redux hook to access the store
 import { NavigateFunction, useNavigate } from "react-router"; // Hook for navigation
+import EditCourseDetails from "./EditCourseDetails"; // Component for editing course details
 
 function EditCourse() {
+  const [courseId, setCourseId] = useState("");
   const [course, setCourse] = useState<course_type | null>(null);
   const [lessons, setLessons] = useState<lesson_type[]>([]);
   const [questions, setQuestions] = useState<question_type[]>([]);
@@ -44,15 +46,6 @@ function EditCourse() {
   const navigate: NavigateFunction = useNavigate();
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
 
-  const courseValidationSchema = Yup.object().shape({
-    title: Yup.string()
-      .required("Title is required")
-      .min(2, "Title is too short")
-      .max(50, "Title is too long"),
-    description: Yup.string()
-      .required("Description is required")
-      .min(5, "Description is too short"),
-  });
 
   // Validation schema for a single lesson
   const lessonSchema = Yup.object().shape({
@@ -93,6 +86,7 @@ function EditCourse() {
     async function fetchCourseInfo() {
       if (courseId) {
         try {
+          setCourseId(courseId);
           const response = await axios.get(
             `${getCourseAllInfoAPI}?courseId=${courseId}`
           );
@@ -112,32 +106,6 @@ function EditCourse() {
     fetchCourseInfo();
   }, []);
 
-  const handleSaveCourseChanges = (values: any, actions: any) => {
-    const params = new URLSearchParams(window.location.search);
-    const courseId = params.get("id");
-    setSavingCourseDetails(true);  // Set loading to true before the request
-    
-
-      axios
-      .put(`${updateCourseDetailsAPI}/${courseId}`, values)
-      .then((response) => {
-        setCourse(response.data);
-        setEditModeCourse(false);
-        actions.setSubmitting(false);
-      })
-      .catch((error) => {
-        console.error("Error updating course details", error);
-        actions.setSubmitting(false);
-      })
-      .finally(() => {
-        setSavingCourseDetails(false);  // Set loading to false after the request
-      });
-    
-  };
-
-  function handleCancelCourseChanges() {
-    setEditModeCourse(false);
-  }
 
   const handleSaveQuestionsChanges = async (questions: question_type[]) => {
     const params = new URLSearchParams(window.location.search);
@@ -279,96 +247,8 @@ function EditCourse() {
         style={{ width: "70%" }}
         className="mx-auto shadow p-3 border rounded"
       >
-        {/* Course Details Editing */}
-        {course && (
-          <div className="mx-auto">
-            <Card border="primary" className="mt-2 mb-2">
-              <Card.Body>
-                <Card.Title className="display-6 text-center fw-bold text-primary">
-                  Course Details
-                </Card.Title>
-                {editModeCourse ? (
-                  <>
-                  <Formik
-                    initialValues={{
-                      title: course.title,
-                      description: course.description,
-                    }}
-                    validationSchema={courseValidationSchema}
-                    onSubmit={handleSaveCourseChanges}
-                  >
-                    {({ isSubmitting }) => (
-                      <Form>
-                        <h5 className="fw-bold">Course Title</h5>
-                        <Field
-                          name="title"
-                          className="form-control mb-2 text-primary"
-                        />
-                        <ErrorMessage
-                          name="title"
-                          component="div"
-                          className="text-danger"
-                        />
-                        <h5 className="fw-bold">Course Description</h5>
-                        <Field
-                          as="textarea"
-                          name="description"
-                          className="form-control  text-primary"
-                        />
-                        <ErrorMessage
-                          name="description"
-                          component="div"
-                          className="text-danger"
-                        />
-                        <div className="d-flex justify-content-center mt-3">
-                          <button
-                            type="submit"
-                            className="btn btn-success me-2"
-                            disabled={isSubmitting}
-                          >
-                            Save Changes
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-danger"
-                            onClick={handleCancelCourseChanges}
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </Form>
-                    )}
-                  </Formik>
-                  
-
-                  </>
-                ) : (
-                  <>
-                    <hr />
-                    <h5 className="fw-bold">Course Title</h5>
-                    <h5 className="text-primary fw-bold">{course.title}</h5>
-                    <hr />
-                    <p className="fw-bold">Course Description</p>
-                    <p className="text-primary fw-bold">{course.description}</p>
-                    <hr />
-                    <div className="text-center mt-3 mb-3">
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => setEditModeCourse(true)}
-                      >
-                        Edit Course Details
-                      </button>
-                    </div>
-                  </>
-                )}
-                
-                
-                {savingCourseDetails && <Spinner animation="border" variant="primary" />}
-              </Card.Body>
-            </Card>
-          </div>
-          
-        )}
+        <EditCourseDetails courseId={courseId} />
+        
 
         {/*  Image Section  */}
         <Card border="primary" className="mx-auto mt-3 mb-3">
