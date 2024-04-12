@@ -44,7 +44,7 @@ function FeaturedCourses() {
 
   return (
     <Container fluid className="text-center" 
-    style={{  backgroundColor: "#D9ECFF",paddingBottom: "50px",paddingTop: "50px" }}>
+    style={{  backgroundColor: "#D9ECFF",paddingBottom: "50px",paddingTop: "50px" ,overflowX:"hidden"}}>
       {courses.length === 0 ? (
         <div className="d-flex justify-content-center align-items-center pt-5">
           <Spinner animation="grow" variant="primary" />
@@ -60,7 +60,7 @@ function FeaturedCourses() {
               </span>
             </h2>
           <p className={`${Styles["saira-txt"]} `}>
-            lorem ipsum bing bong ting
+          Unlock Your Potential with Our Courses!
             </p>
           <Row xs={1} md={2} lg={3} className="my-5">
             {courses.map((course: Course) => (
