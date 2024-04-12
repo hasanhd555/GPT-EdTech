@@ -9,19 +9,19 @@ const testimonialData = [
     id: 1,
     name: "Ronald Richards",
     image: img1,
-    text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    text: "I've never felt more empowered to learn. The engaging content and supportive community made my educational journey truly fulfilling.",
   },
   {
     id: 2,
     name: "Wade Warren",
     image: img2,
-    text: "Cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    text: "Thanks to the practical skills I gained here, I've landed my dream job. This platform truly prepares you for the real world.",
   },
   {
     id: 3,
     name: "Jacob Jones",
     image: img3,
-    text: "Esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est ",
+    text: "The flexibility to study on my own schedule was a game-changer. I could balance work, life, and learning seamlessly.",
   },
 ];
 

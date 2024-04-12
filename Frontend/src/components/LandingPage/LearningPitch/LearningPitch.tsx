@@ -10,7 +10,7 @@ const LearningPitch: React.FC = () => {
         courses?
       </h2>
       <p className={`${styles["saira-txt"]} text-white`}>
-        lorem ipsum bla blue{" "}
+      Explore Boundless Learning Opportunities 
       </p>
 
       <Row className="mt-4 text-white pt-4 pb-4">
@@ -20,8 +20,7 @@ const LearningPitch: React.FC = () => {
             01. Learn
           </h3>
           <p className={`${styles["saira-txt"]} text-white`}>
-            Lorem ipsum dolor sit amet, consectetur dolorili adipiscing elit.
-            Felis donec massa aliqua.
+          Begin your educational journey and expand your knowledge with our diverse learning opportunities
           </p>
         </Col>
         <Col className={`text-center  ${styles["border-right"]} py-4 px-4 pd-4`} xs={4}>
@@ -30,8 +29,7 @@ const LearningPitch: React.FC = () => {
             02. Graduate
           </h3>
           <p className={`${styles["saira-txt"]} text-white`}>
-            Lorem ipsum dolor sit amet, consectetur dolorili adipiscing elit.
-            Felis donec massa aliqua.
+          Achieve your academic goals and advance to the next level with our comprehensive graduation programs
           </p>
         </Col>
         <Col className={`text-center  py-4 px-4 pd-4`} xs={4}>
@@ -40,8 +38,7 @@ const LearningPitch: React.FC = () => {
             03. Work
           </h3>
           <p className={`${styles["saira-txt"]} text-white`}>
-            Lorem ipsum dolor sit amet, consectetur dolorili adipiscing elit.
-            Felis donec massa aliqua.
+          Unlock career opportunities and practical skills through our specialized professional development courses
           </p>
         </Col>
       </Row>
