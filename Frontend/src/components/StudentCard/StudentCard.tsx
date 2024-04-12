@@ -33,6 +33,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
     gender: "",
     profile_picture: "",
   });
+  const [formErrors, setFormErrors] = useState<{ name?: string }>({})
 
   // Fetch student data on mount or when studentId changes
   useEffect(() => {
@@ -78,20 +79,51 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
-    const target = e.target; // Target input from form
-    setFormData({ ...formData, [target.name]: target.value }); // Spread existing formData and update the changed field
+    const target = e.target;
+    const value = target.value;
+    const name = target.name;
+  
+    // Validate name input to ensure it is not empty and not purely numeric
+    if (name === "name") {
+      if (!value.trim()) {
+        setFormErrors((prevErrors) => ({
+          ...prevErrors,
+          name: "Name cannot be empty.",
+        }));
+      } else if (!isNaN(Number(value))) {
+        setFormErrors((prevErrors) => ({
+          ...prevErrors,
+          name: "Name cannot be only numbers.",
+        }));
+      } else {
+        setFormErrors((prevErrors) => ({
+          ...prevErrors,
+          name: undefined,
+        }));
+      }
+    }
+  
+    setFormData({ ...formData, [name]: value });
   };
 
   // Submit updated data to server
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent the default form submission behavior
+    e.preventDefault(); // Prevent default form submission behavior
+  
+    // Check for errors before submitting
+    if (formErrors.name) {
+      alert(formErrors.name);
+      return;
+    }
+  
     if (!student) return; // Guard clause if no student is loaded
-
-    const updateData = { // Prepare the updated data including the student's ID
+  
+    // Proceed with the API call if validations pass
+    const updateData = {
       ...formData,
       id: studentId,
     };
-
+  
     try {
       const response = await fetch(UpdateStudentAPI, {
         method: "PUT",
@@ -100,17 +132,18 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
         },
         body: JSON.stringify(updateData),
       });
-
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const updatedStudent: student_type = await response.json();
-      setStudent(updatedStudent); // Update student state with the newly updated data
+      setStudent(updatedStudent); // Update student state
       setEditMode(false); // Exit edit mode
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   // Handle image upload and update student's profile picture
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -216,16 +249,21 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                         
                         
                         <Form.Group as={Row} className="">
-                          <Form.Label column sm={2}>Name:</Form.Label>
-                          <Col sm={10}>
-                            <Form.Control
-                              type="text"
-                              name="name"
-                              value={formData.name}
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Form.Group>
+                        <Form.Label column sm={2}>Name:</Form.Label>
+                        <Col sm={10}>
+                          <Form.Control
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            isInvalid={!!formErrors.name}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {formErrors.name}
+                          </Form.Control.Feedback>
+                        </Col>
+                      </Form.Group>
+
                         <Form.Group as={Row} className="">
                           <Form.Label column sm={2}>Age:</Form.Label>
                           <Col sm={10}>
