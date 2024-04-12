@@ -66,15 +66,15 @@ export const serchCourseByName = async (req: Request, res: Response) => {
 export const createCourse = async (req: Request, res: Response) => {
   try {
     console.log("In createCourse", req.body);
-    const { adminId, name, description, lessons, quizQuestions } = req.body;
+    
+    const { adminId, name, description, lessons, quizQuestions,image_url } = req.body;
 
     // Step 0: Create the course without lessons and quiz questions initially
     const course = new Course({
       title: name,
       description,
-      admin_id: adminId,
-      // Assuming an image_url field is required; use a placeholder or actual URL as needed
-      image_url: "https://via.placeholder.com/150",
+      admin_id: adminId, 
+      image_url: image_url || "https://via.placeholder.com/150",
     });
 
     const savedCourse = await course.save();
@@ -155,6 +155,13 @@ export const getCourseAllInfo = async (req: Request, res: Response) => {
     //     .json({ error: "Course not found" });
     // }
 
+    if (!course) {
+      return res.status(StatusCodes.NOT_FOUND).json({ error: "Course not found" });
+    }
+
+    // Check if the course has an image_url, otherwise, provide a default
+    const imageUrl = course.image_url
+
     // Fetch lessons and questions associated with the course
     const lessons = await Lesson.find
       ({ course_id: course?._id });
@@ -162,7 +169,7 @@ export const getCourseAllInfo = async (req: Request, res: Response) => {
       ({ course_id: course?._id });
 
     // Return the course along with lessons and questions
-    res.status(StatusCodes.OK).json({ course, lessons, questions });
+    res.status(StatusCodes.OK).json({ course, lessons, questions,imageUrl });
   } catch (error) {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -229,6 +236,34 @@ export const getCourseAnalytics = async (req: Request, res: Response) => {
   }
 };
 
+export const updateImage = async (req: Request, res: Response) => {
+  const { courseId, imageUrl } = req.body;
+
+  if (!courseId || !imageUrl) {
+    return res.status(400).json({ message: 'Course ID and new image URL are required.' });
+  }
+
+  try {
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId,
+      { image_url: imageUrl },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCourse) {
+      return res.status(404).json({ message: 'Course not found.' });
+    }
+
+    res.status(200).json({ message: 'Course image updated successfully.', data: updatedCourse });
+  } catch (error: unknown) {  // Using unknown type for error which is safer than any
+    console.error('Update image error:', error);
+    if (error instanceof Error) {
+      res.status(500).json({ message: 'Error updating course image.', error: error.message });
+    } else {
+      res.status(500).json({ message: 'Error updating course image.', error: 'Unknown error' });
+    }
+  }
+};
 
 
 module.exports = {
@@ -240,4 +275,5 @@ module.exports = {
   getCourseAllInfo,
   updateDetails,
   getCourseAnalytics,
+  updateImage,
 };

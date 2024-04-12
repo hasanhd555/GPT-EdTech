@@ -73,6 +73,7 @@ export const getCourseAnalyticsAPI: string = "http://localhost:5001/api/course/g
 export const updateCourseDetailsAPI: string = "http://localhost:5001/api/course/update-details";
 export const updateLessonAPI: string = "http://localhost:5001/api/course/lessons/update";
 export const updateQuestionAPI: string = "http://localhost:5001/api/course/quiz/update";
+export const updateCourseImageAPI: string = "http://localhost:5001/api/course/image-update";
 
 export const getTotalPointsAPI: string =
   "http://localhost:5001/api/enrollment/get-total-points";

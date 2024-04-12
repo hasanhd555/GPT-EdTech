@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCourseAnalytics = exports.updateDetails = exports.getCourseAllInfo = exports.getEditableCourses = exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
+exports.updateImage = exports.getCourseAnalytics = exports.updateDetails = exports.getCourseAllInfo = exports.getEditableCourses = exports.createCourse = exports.serchCourseByName = exports.getCourseById = exports.getAllCourses = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const course_1 = __importDefault(require("../models/course"));
 const lesson_1 = __importDefault(require("../models/lesson"));
@@ -79,14 +79,13 @@ exports.serchCourseByName = serchCourseByName;
 const createCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("In createCourse", req.body);
-        const { adminId, name, description, lessons, quizQuestions } = req.body;
+        const { adminId, name, description, lessons, quizQuestions, image_url } = req.body;
         // Step 0: Create the course without lessons and quiz questions initially
         const course = new course_1.default({
             title: name,
             description,
             admin_id: adminId,
-            // Assuming an image_url field is required; use a placeholder or actual URL as needed
-            image_url: "https://via.placeholder.com/150",
+            image_url: image_url || "https://via.placeholder.com/150",
         });
         const savedCourse = yield course.save();
         // Step 1: Create and store lessons with the course_id
@@ -149,11 +148,16 @@ const getCourseAllInfo = (req, res) => __awaiter(void 0, void 0, void 0, functio
         //     .status(StatusCodes.NOT_FOUND)
         //     .json({ error: "Course not found" });
         // }
+        if (!course) {
+            return res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json({ error: "Course not found" });
+        }
+        // Check if the course has an image_url, otherwise, provide a default
+        const imageUrl = course.image_url;
         // Fetch lessons and questions associated with the course
         const lessons = yield lesson_1.default.find({ course_id: course === null || course === void 0 ? void 0 : course._id });
         const questions = yield question_1.default.find({ course_id: course === null || course === void 0 ? void 0 : course._id });
         // Return the course along with lessons and questions
-        res.status(http_status_codes_1.StatusCodes.OK).json({ course, lessons, questions });
+        res.status(http_status_codes_1.StatusCodes.OK).json({ course, lessons, questions, imageUrl });
     }
     catch (error) {
         res
@@ -214,6 +218,29 @@ const getCourseAnalytics = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.getCourseAnalytics = getCourseAnalytics;
+const updateImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { courseId, imageUrl } = req.body;
+    if (!courseId || !imageUrl) {
+        return res.status(400).json({ message: 'Course ID and new image URL are required.' });
+    }
+    try {
+        const updatedCourse = yield course_1.default.findByIdAndUpdate(courseId, { image_url: imageUrl }, { new: true, runValidators: true });
+        if (!updatedCourse) {
+            return res.status(404).json({ message: 'Course not found.' });
+        }
+        res.status(200).json({ message: 'Course image updated successfully.', data: updatedCourse });
+    }
+    catch (error) { // Using unknown type for error which is safer than any
+        console.error('Update image error:', error);
+        if (error instanceof Error) {
+            res.status(500).json({ message: 'Error updating course image.', error: error.message });
+        }
+        else {
+            res.status(500).json({ message: 'Error updating course image.', error: 'Unknown error' });
+        }
+    }
+});
+exports.updateImage = updateImage;
 module.exports = {
     getAllCourses: exports.getAllCourses,
     getCourseById: exports.getCourseById,
@@ -223,4 +250,5 @@ module.exports = {
     getCourseAllInfo: exports.getCourseAllInfo,
     updateDetails: exports.updateDetails,
     getCourseAnalytics: exports.getCourseAnalytics,
+    updateImage: exports.updateImage,
 };
