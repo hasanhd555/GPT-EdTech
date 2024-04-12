@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import { Spinner, Card, Button } from "react-bootstrap";
 import * as Yup from "yup";
-import { getCourseAllInfoAPI, updateCourseDetailsAPI } from "../../constant";
+import { getCourseAllInfoAPI, updateCourseDetailsAPI } from "../../../constant";
 
 // Type for the incoming course ID prop
 interface CourseDetailsProps {
@@ -12,8 +12,13 @@ interface CourseDetailsProps {
 
 // Validation schema
 const courseValidationSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required").min(2, "Title is too short").max(50, "Title is too long"),
-  description: Yup.string().required("Description is required").min(5, "Description is too short"),
+  title: Yup.string()
+    .required("Title is required")
+    .min(2, "Title is too short")
+    .max(50, "Title is too long"),
+  description: Yup.string()
+    .required("Description is required")
+    .min(5, "Description is too short"),
 });
 
 // Type for the course object
@@ -29,23 +34,25 @@ function EditCourseDetails({ courseId }: CourseDetailsProps) {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    axios.get(`${getCourseAllInfoAPI}?courseId=${courseId}`)
-      .then(response => {
+    axios
+      .get(`${getCourseAllInfoAPI}?courseId=${courseId}`)
+      .then((response) => {
         const { course, lessons, questions, imageUrl } = response.data;
-          setCourse(course);
+        setCourse(course);
       })
-      .catch(error => console.error("Failed to fetch course", error));
+      .catch((error) => console.error("Failed to fetch course", error));
   }, [courseId]);
 
   const handleSaveChanges = (values: Course, actions: any) => {
     setSaving(true);
-    axios.put(`${updateCourseDetailsAPI}/${courseId}`, values)
-      .then(response => {
+    axios
+      .put(`${updateCourseDetailsAPI}/${courseId}`, values)
+      .then((response) => {
         setCourse(response.data);
         setEditMode(false);
         actions.setSubmitting(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error updating course details", error);
         actions.setSubmitting(false);
       })
@@ -61,23 +68,50 @@ function EditCourseDetails({ courseId }: CourseDetailsProps) {
         {editMode ? (
           <Formik
             initialValues={{
-              title: course?.title || "",  // Fallback to empty string if course is null
-              description: course?.description || ""  // Fallback to empty string if course is null
+              title: course?.title || "", // Fallback to empty string if course is null
+              description: course?.description || "", // Fallback to empty string if course is null
             }}
             validationSchema={courseValidationSchema}
             onSubmit={handleSaveChanges}
           >
             {({ isSubmitting }) => (
               <Form>
-                <Field name="title" className="form-control mb-2" />
-                <ErrorMessage name="title" component="div" className="text-danger" />
-                <Field as="textarea" name="description" className="form-control mb-2" />
-                <ErrorMessage name="description" component="div" className="text-danger" />
+                <h5 className="fw-bold">Course Title</h5>
+                <Field
+                  name="title"
+                  className="form-control mb-2 text-primary"
+                />
+
+                <ErrorMessage
+                  name="title"
+                  component="div"
+                  className="text-danger"
+                />
+                <h5 className="fw-bold">Course Description</h5>
+                <Field
+                  as="textarea"
+                  name="description"
+                  className="form-control  text-primary"
+                />
+
+                <ErrorMessage
+                  name="description"
+                  component="div"
+                  className="text-danger"
+                />
                 <div className="d-flex justify-content-center mt-3">
-                  <Button type="submit" disabled={isSubmitting || saving} className="btn btn-success me-2">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting || saving}
+                    className="btn btn-success me-2"
+                  >
                     Save Changes
                   </Button>
-                  <Button type="button" className="btn btn-danger" onClick={() => setEditMode(false)}>
+                  <Button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => setEditMode(false)}
+                  >
                     Cancel
                   </Button>
                 </div>
@@ -86,8 +120,15 @@ function EditCourseDetails({ courseId }: CourseDetailsProps) {
           </Formik>
         ) : (
           <>
-            <h5>{course?.title}</h5>
-            <p>{course?.description}</p>
+            <hr />
+            <h5 className="fw-bold">Course Title</h5>
+
+            <h5 className="text-primary fw-bold">{course?.title}</h5>
+            <hr />
+            <p className="fw-bold">Course Description</p>
+            <p className="text-primary fw-bold">{course?.description}</p>
+            <hr />
+
             <div className="text-center mt-3 mb-3">
               <Button variant="primary" onClick={() => setEditMode(true)}>
                 Edit Course Details

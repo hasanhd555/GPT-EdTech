@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../redux/hooks"; // Import to access Redux state
 import { NavigateFunction, useNavigate } from "react-router"; // Import navigation functions from react-router
-import EditCourseDetails from "./EditCourseDetails"; // Import component for editing course details
-import EditCourseImage from "./EditCourseImage"; // Import component for editing course image
-import LessonsEditComponent from "./LessonsEditComponent"; // Import component for editing lessons
-import QuizQuestionsEditComponent from "./QuizQuestionsEditComponent"; // Import component for editing quiz questions
+import EditCourseDetails from "./Edit Components/EditCourseDetails"; // Import component for editing course details
+import EditCourseImage from "./Edit Components/EditCourseImage"; // Import component for editing course image
+import LessonsEditComponent from "./Edit Components/LessonsEditComponent"; // Import component for editing lessons
+import QuizQuestionsEditComponent from "./Edit Components/QuizQuestionsEditComponent"; // Import component for editing quiz questions
 
 function EditCourse() {
   const [courseId, setCourseId] = useState(""); // State to hold the current course ID

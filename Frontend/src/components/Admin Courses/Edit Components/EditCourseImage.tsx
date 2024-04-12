@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Spinner, Button } from 'react-bootstrap';
-import { CloudinaryUploadAPI, updateCourseImageAPI, getCourseAllInfoAPI } from '../../constant';
+import { CloudinaryUploadAPI, updateCourseImageAPI, getCourseAllInfoAPI } from '../../../constant';
 import axios from 'axios';
 
 interface Props {

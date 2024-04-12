@@ -16,11 +16,11 @@ import QuizPage from "./components/Quiz/QuizPage";
 import CourseContentPage from "./components/Course/CourseContentPage";
 import LeaderBoard from "./components/LeaderBoard/LeaderBoard";
 import LandingPage from "./components/LandingPage/LandingPage";
-import NewAddCourse from "./components/Courses/AddCourse";
-import EditableCourse from "./components/Courses/EditableCourse";
-import EditCourse from "./components/Courses/EditCourse";
-import AllCourseAnalytics from "./components/Courses/AllCourseAnalytics";
-import CourseAnalytics from "./components/Courses/CourseAnalytics";
+import NewAddCourse from "./components/Admin Courses/AddCourse";
+import EditableCourse from "./components/Admin Courses/EditableCourse";
+import EditCourse from "./components/Admin Courses/EditCourse";
+import AllCourseAnalytics from "./components/Admin Courses/AllCourseAnalytics";
+import CourseAnalytics from "./components/Admin Courses/CourseAnalytics";
 import Summarizer from "./components/Summarizer/Summarizer";
 
 

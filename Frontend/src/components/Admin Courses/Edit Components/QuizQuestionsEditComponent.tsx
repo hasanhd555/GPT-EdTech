@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, Button, Spinner, } from 'react-bootstrap';
 import axios from 'axios';
 import * as Yup from 'yup';
-import { question_type } from "../../constant";
-import { getCourseAllInfoAPI, updateQuestionAPI } from "../../constant";
+import { question_type } from "../../../constant";
+import { getCourseAllInfoAPI, updateQuestionAPI } from "../../../constant";
 import {
     Formik,
     Form,
@@ -81,25 +81,48 @@ const QuizQuestionsEditComponent: React.FC<Props> = ({ courseId }) => {
           {questions.map((question, index) => (
             <Card key={index} className="mt-2 mb-2">
               <Card.Body>
-                <Card.Title className="card-title text-primary text-center fw-bold fs-3">
-                  Question {index + 1}
-                </Card.Title>
-                <Card.Text className="card-title fw-bold">
-                  Question Statement: {question.question_text}
-                </Card.Text>
-                <hr />
-                {question.options.map((option, optionIndex) => (
-                  <Card.Text key={optionIndex}>
-                    Option {optionIndex + 1}: {option}
-                  </Card.Text>
-                ))}
-                <hr />
-                <Card.Text>
-                  Correct Answer: Option {question.correct_answer + 1}
-                </Card.Text>
-                <Card.Text>
-                  Concept: {question.concept}
-                </Card.Text>
+              <Card.Title className="card-title text-primary text-center fw-bold fs-3">
+                      Question {index + 1}
+                    </Card.Title>
+
+                    <Card.Text className="card-title  fw-bold">
+                      Question Statement
+                    </Card.Text>
+                    <Card.Text className="text-primary  fw-bold">
+                      {question.question_text}
+                    </Card.Text>
+                    <hr />
+
+                    {question.options.map((option, optionIndex) => (
+                      <Card.Text key={optionIndex}>
+                        <span className="card-title fw-bold">
+                          Option {optionIndex + 1} :{" "}
+                        </span>
+                        <span className="text-primary  fw-bold">{option}</span>
+                      </Card.Text>
+                    ))}
+                    <hr />
+
+                    <Card.Text>
+                      <span className="card-title   fw-bold">
+                        Correct Answer : {"  "}
+                      </span>
+                      <span className="text-primary  fw-bold">
+                        Option
+                        {question.correct_answer + 1}
+                      </span>
+                    </Card.Text>
+                    <hr />
+
+                    <Card.Text>
+                      <span className="card-title   fw-bold">
+                        Concept : {"  "}
+                      </span>
+                      <span className="text-primary  fw-bold">
+                        {question.concept}
+                      </span>
+                    </Card.Text>
+
               </Card.Body>
             </Card>
           ))}
@@ -121,11 +144,40 @@ const QuizQuestionsEditComponent: React.FC<Props> = ({ courseId }) => {
                 {() => (
                   editableQuestions.map((question, index) => (
                     <div key={index} className="mb-3">
-                      <Field name={`questions[${index}].question_text`} className="form-control mb-2 text-primary" />
+                      <h4 className="card-title text-primary text-center fw-bold fs-3">
+                              Question {index + 1}
+                            </h4>
+                            <h6 className="card-title  fw-bold">
+                              Question Statement
+                            </h6>
+                            <Field
+                              name={`questions[${index}].question_text`}
+                              placeholder="Question Text"
+                              className="form-control mb-2  text-primary"
+                            />
                       <ErrorMessage name={`questions[${index}].question_text`} component="div" className="text-danger" />
+                      <hr />
                       {question.options.map((_, optionIndex) => (
+                        <>
+                        <span className="card-title fw-bold">
+                        Option {optionIndex + 1}
+                      </span>
+
                         <Field name={`questions[${index}].options[${optionIndex}]`} className="form-control mb-2 text-primary" key={optionIndex} />
+                        <ErrorMessage
+                                  name={`questions[${index}].options[${optionIndex}]`}
+                                  component="div"
+                                  className="text-danger"
+                                />
+
+
+                        </>
                       ))}
+                       <hr />
+                            <span className="card-title   fw-bold">
+                              Correct Answer
+                            </span>
+
                       <Field as="select" name={`questions[${index}].correct_answer`} className="form-select mb-2 text-primary">
                         <option value="">Select Correct Answer</option>
                         {question.options.map((_, optionIndex) => (
@@ -135,6 +187,11 @@ const QuizQuestionsEditComponent: React.FC<Props> = ({ courseId }) => {
                         ))}
                       </Field>
                       <ErrorMessage name={`questions[${index}].correct_answer`} component="div" className="text-danger" />
+                      <hr />
+                            <span className="card-title   fw-bold">
+                              Concept
+                            </span>
+
                       <Field name={`questions[${index}].concept`} className="form-control mb-2 text-primary" />
                       <ErrorMessage name={`questions[${index}].concept`} component="div" className="text-danger" />
                     </div>

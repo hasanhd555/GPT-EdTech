@@ -3,8 +3,8 @@ import { Formik, Form, Field, ErrorMessage, FieldArray, FormikHelpers } from 'fo
 import { Card, Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import * as Yup from 'yup';
-import { lesson_type } from "../../constant";
-import { getCourseAllInfoAPI, updateLessonAPI } from "../../constant";
+import { lesson_type } from "../../../constant";
+import { getCourseAllInfoAPI, updateLessonAPI } from "../../../constant";
 
 interface LessonsEditProps {
   courseId: string;
@@ -86,9 +86,11 @@ const LessonsEditComponent: React.FC<LessonsEditProps> = ({ courseId }) => {
                   form.values.lessons.map((lesson: lesson_type, index: number) => (
                     <div key={index} className="card mb-3">
                       <div className="card-body">
-                        <Field name={`lessons.${index}.title`} className="form-control" />
+                        <h5 className=" fw-bold">Title</h5>
+                        <Field name={`lessons.${index}.title`} className="form-control text-primary" placeholder="Enter title" />
                         <ErrorMessage name={`lessons.${index}.title`} component="div" className="text-danger" />
-                        <Field as="textarea" name={`lessons.${index}.content`} className="form-control" />
+                        <h5 className="fw-bold mt-3">Content</h5>
+                        <Field as="textarea" name={`lessons.${index}.content`} className="form-control text-primary" placeholder="Enter content" />
                         <ErrorMessage name={`lessons.${index}.content`} component="div" className="text-danger" />
                       </div>
                     </div>
@@ -114,8 +116,20 @@ const LessonsEditComponent: React.FC<LessonsEditProps> = ({ courseId }) => {
                 <Card.Title className="text-primary text-center fw-bold fs-3">
                   Lesson {index + 1}
                 </Card.Title>
-                <Card.Text>{lesson.title}</Card.Text>
-                <Card.Text>{lesson.content}</Card.Text>
+                <Card.Text>
+                  <strong>Title: {" "}</strong> 
+                  <span className='text-primary'>
+
+                  {lesson.title}
+                  </span>
+                </Card.Text>
+                <Card.Text>
+                  <strong>Content: {" "}</strong> 
+                  <span className='text-primary'>
+
+                  {lesson.content}
+                  </span>
+                </Card.Text>
               </Card.Body>
             </Card>
           ))}
