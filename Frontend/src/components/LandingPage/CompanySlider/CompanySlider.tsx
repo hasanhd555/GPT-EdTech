@@ -21,6 +21,7 @@ const CompanySlider: React.FC = () => {
     infinite: true,
     slidesToShow: 4,
     slidesToScroll: 1,
+    arrows: false,
     autoplay: true,
     speed: 2000,
     autoplaySpeed: 2000,
@@ -30,7 +31,7 @@ const CompanySlider: React.FC = () => {
   return (
     <Container
   fluid
-  className={`${styles["bg_grad"]} px-6`}
+  className={`${styles["bg_grad"]} `}
   style={{
     backgroundImage: `linear-gradient(to bottom, rgba(8, 79, 199, 1) 0%, rgba(8, 79, 199, 0.2) 100%), url(${mask})`,
     backgroundSize: "cover",

@@ -37,7 +37,7 @@ const Testimonials: React.FC = () => {
       <Row className="justify-content-around">
         {testimonialData.map((testimonial, index) => (
           <Col md={4} className="mb-3" key={testimonial.id}>
-            <Card style={{ borderRadius: "30px", display: "flex", flexDirection: "column", height: "100%" }}>
+            <Card className={`${styles["hover-effect"]}`} style={{ borderRadius: "30px", display: "flex", flexDirection: "column", height: "100%" }}>
               <Card.Body className="d-flex flex-column justify-content-between" style={{ height: "100%" }}>
                 <div>
                   <img

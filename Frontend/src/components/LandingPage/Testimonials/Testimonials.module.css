@@ -5,3 +5,9 @@
 .background{
     background-color: #D9ECFF;
 }   
+
+.hover-effect:hover {
+    /* Define your hover effect styles here */
+    transition: transform 0.2s;
+    transform: scale(1.1); /* Example: move the element up by 5px on hover */
+  }
