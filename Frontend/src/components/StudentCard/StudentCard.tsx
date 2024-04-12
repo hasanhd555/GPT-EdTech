@@ -15,18 +15,18 @@ import {
   student_type,
   UpdateStudentAPI,
 } from "../../constant";
-import styles from "./StudentCard.module.css"; // Make sure this path is correct
+import styles from "./StudentCard.module.css"; 
 
 type StudentCardProps = {
   studentId: string | null;
 };
 
 const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
-  const [student, setStudent] = useState<student_type | null>(null);
-  const [editMode, setEditMode] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(true); // State to manage image loading
-  const [formData, setFormData] = useState({
+  const [student, setStudent] = useState<student_type | null>(null); // State to store student data or null
+  const [editMode, setEditMode] = useState(false); // State to toggle edit mode
+  const [isUploading, setIsUploading] = useState(false); // State to track if an image is currently uploading
+  const [imageLoaded, setImageLoaded] = useState(true); // State to track if an image has loaded
+  const [formData, setFormData] = useState({ // Form state to handle student data changes
     name: "",
     email: "",
     age: 0,
@@ -34,6 +34,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
     profile_picture: "",
   });
 
+  // Fetch student data on mount or when studentId changes
   useEffect(() => {
     const fetchStudentData = async () => {
       if (studentId) {
@@ -43,21 +44,22 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           const data: student_type = await response.json();
-          setStudent(data);
-          setImageLoaded(true); // Ensure imageLoaded is true when student data is fetched
+          setStudent(data); // Set student data
+          setImageLoaded(true); // Reset image loaded state
         } catch (error) {
           console.error("Fetching student data failed:", error);
-          setStudent(null);
+          setStudent(null); // Reset student data on error
         }
       }
     };
 
     fetchStudentData();
-  }, [studentId]);
+  }, [studentId]); // This effect runs whenever studentId changes
 
+  // Update form data whenever the student state changes
   useEffect(() => {
     if (student) {
-      setFormData({
+      setFormData({ // Update formData state with the latest student data
         name: student.name, 
         email: student.email,
         age: student.age,
@@ -65,24 +67,27 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
         profile_picture: student.profile_picture,
       });
     }
-  }, [student]);
+  }, [student]); // This effect runs whenever the student state changes
 
+  // Toggle editing state
   const handleEdit = () => {
-    setEditMode(!editMode);
+    setEditMode(!editMode); // Toggle the boolean state for editMode
   };
 
+  // Update form data as user types in form fields
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
-    const target = e.target;
-    setFormData({ ...formData, [target.name]: target.value });
+    const target = e.target; // Target input from form
+    setFormData({ ...formData, [target.name]: target.value }); // Spread existing formData and update the changed field
   };
 
+  // Submit updated data to server
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!student) return;
+    e.preventDefault(); // Prevent the default form submission behavior
+    if (!student) return; // Guard clause if no student is loaded
 
-    const updateData = {
+    const updateData = { // Prepare the updated data including the student's ID
       ...formData,
       id: studentId,
     };
@@ -100,21 +105,22 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const updatedStudent: student_type = await response.json();
-      setStudent(updatedStudent);
-      setEditMode(false);
+      setStudent(updatedStudent); // Update student state with the newly updated data
+      setEditMode(false); // Exit edit mode
     } catch (error) {
       console.error(error);
     }
   };
 
+  // Handle image upload and update student's profile picture
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
+      const file = e.target.files[0]; // Get the file from the file input
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", "gpt_edtech360");
+      formData.append("upload_preset", "gpt_edtech360"); // Preset for cloudinary upload
       setIsUploading(true);
-      setImageLoaded(false); // Start uploading and mark image as not loaded
+      setImageLoaded(false); // Set image loading state to false during upload
 
       try {
         const response = await fetch(CloudinaryUploadAPI, {
@@ -134,7 +140,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
           }),
         });
         const updatedStudent: student_type = await updateResponse.json();
-        setStudent(updatedStudent);
+        setStudent(updatedStudent); // Update student state with new image URL
         // Don't reset isUploading here; it will be reset when the new image is loaded
       } catch (error) {
         console.error("Error uploading image:", error);
