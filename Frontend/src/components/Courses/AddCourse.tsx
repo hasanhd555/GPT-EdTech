@@ -228,7 +228,7 @@ setTimeout(() => {
                     <Field
                       type="text"
                       name="courseName"
-                      className="form-control"
+                      className="form-control text-primary"
                       placeholder="Enter course name"
                     />
                     <ErrorMessage
@@ -240,14 +240,14 @@ setTimeout(() => {
                   <div className="mb-3">
                     <label
                       htmlFor="courseDescription"
-                      className="form-label fw-bold"
+                      className="form-label fw-bold "
                     >
                       Course Description
                     </label>
                     <Field
                       as="textarea"
                       name="courseDescription"
-                      className="form-control"
+                      className="form-control text-primary"
                       rows="3"
                       placeholder="Enter course description"
                     />
@@ -278,7 +278,7 @@ setTimeout(() => {
                   }}
                   disabled={isUploading}
                 />
-                {isUploading && <Spinner animation="border" />}
+                {isUploading && <Spinner animation="border" variant="primary" />}
                 {courseImage && (
                   <img
                     src={courseImage}
@@ -300,11 +300,11 @@ setTimeout(() => {
                         <div key={lesson.id}>
                           <Card className="mb-3">
                             <Card.Body>
-                              <h5 className="mb-3">Lesson {index + 1}</h5>
+                              <h3 className="text-primary text-center fw-bold mb-3">Lesson {index + 1}</h3>
                               <div className="mb-3">
-                                <label className="form-label">Title</label>
+                                <label className="form-label fw-bold">Title</label>
                                 <input
-                                  className="form-control"
+                                  className="form-control text-primary"
                                   name={`lessons[${index}].title`}
                                   value={lesson.title}
                                   onChange={handleChange}
@@ -317,9 +317,9 @@ setTimeout(() => {
                                 />
                               </div>
                               <div className="mb-3">
-                                <label className="form-label">Content</label>
+                                <label className="form-label fw-bold">Content</label>
                                 <textarea
-                                  className="form-control"
+                                  className="form-control text-primary"
                                   rows={3}
                                   name={`lessons[${index}].content`}
                                   value={lesson.content}
@@ -369,12 +369,15 @@ setTimeout(() => {
                       {values.quizQuestions.map((question, index) => (
                         <Card key={question.id} className="mb-3">
                           <Card.Body>
-                            <h5 className="mb-3">Question {index + 1}</h5>
+                            <h5 className="mb-3 text-primary text-center fw-bold fs-3">Question {index + 1}</h5>
                             <div className="mb-3">
+                            <Card.Text className="card-title  fw-bold">
+                      Question Statement
+                    </Card.Text>
                               <Field
                                 name={`quizQuestions[${index}].question`}
                                 as="textarea"
-                                className="form-control"
+                                className="form-control text-primary"
                                 placeholder="Enter quiz question"
                               />
                               <ErrorMessage
@@ -385,10 +388,13 @@ setTimeout(() => {
                             </div>
                             {question.options.map((_, optionIndex) => (
                               <div key={optionIndex} className="mb-3">
+                                <span className="card-title fw-bold">
+                          Option {optionIndex + 1} 
+                        </span>
                                 <Field
                                   name={`quizQuestions[${index}].options[${optionIndex}]`}
                                   as="input"
-                                  className="form-control"
+                                  className="form-control text-primary"
                                   placeholder={`Option ${optionIndex + 1}`}
                                 />
                                 <ErrorMessage
@@ -399,11 +405,15 @@ setTimeout(() => {
                               </div>
                             ))}
                             <div className="mb-3">
+                            <span className="card-title   fw-bold">
+                        Correct Answer 
+                      </span>
                               <Field
                                 name={`quizQuestions[${index}].correctOption`}
                                 as="select"
-                                className="form-select"
+                                className="form-select text-primary"
                               >
+                                
                                 <option value="">Select Correct Option</option>
                                 {question.options.map((option, optionIndex) => (
                                   <option
@@ -419,10 +429,13 @@ setTimeout(() => {
                               />
                             </div>
                             <div className="mb-3">
+                            <span className="card-title   fw-bold">
+                        Concept  
+                      </span>
                               <Field
                                 name={`quizQuestions[${index}].concept`}
                                 as="input"
-                                className="form-control"
+                                className="form-control text-primary"
                                 placeholder="Concept"
                               />
                               <ErrorMessage
