@@ -7,10 +7,7 @@
     
   }
 
-  .heading_txt{
-    font-size: 60px;
 
-  }
   .button-txt{
     font-family: "Saira", sans-serif;
     font-size: medium;
@@ -32,19 +29,11 @@
     font-family: "Rowdies", Arial;
     font-weight: 300;
     font-style: normal;
+    font-size: 60px;
+
   }
   
-  .rowdies-regular {
-    font-family: "Rowdies", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-  
-  .rowdies-bold {
-    font-family: "Rowdies", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-  }
+ 
   
   .custom-image {
     width: 350px;

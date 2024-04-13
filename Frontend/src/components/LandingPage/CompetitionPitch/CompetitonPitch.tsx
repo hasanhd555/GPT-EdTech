@@ -4,75 +4,37 @@ import {
   Container,
   Row,
   Col,
-  Button,
-  Form,
-  FormControl,
-  InputGroup,
 } from "react-bootstrap";
 import styles from "./CompetitionPitch.module.css";
-import { img1, img2, img3, img4, img5, img6 } from "./CompUrls";
+import cardData from "./CompetitionData";
 
-interface carddata{
-  url: string;
-  heading: string;
-  text: string;
-}
-
-let cardData: carddata[] = [
-  {
-    url: img1,
-    heading: "Digital Platform",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec odio ipsum. Suspendisse cursus malesuada facilisis."
-  },
-  {
-    url: img2,
-    heading: "Optimal Ideation",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec odio ipsum. Suspendisse cursus malesuada facilisis."
-  },
-  {
-    url: img3,
-    heading: "Favorable Setting",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec odio ipsum. Suspendisse cursus malesuada facilisis."
-  },
-  {
-    url: img4,
-    heading: "Effective Interaction",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec odio ipsum. Suspendisse cursus malesuada facilisis."
-  },
-  {
-    url: img5,
-    heading: "Flexible Time",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec odio ipsum. Suspendisse cursus malesuada facilisis."
-  },
-  {
-    url: img6,
-    heading: "Reliable",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec odio ipsum. Suspendisse cursus malesuada facilisis."
-  }
-
-]
 
 const CompetitionPitch: React.FC = () => {
   return (
+    
     <Container fluid className="bg-light pd-5 px-5">
       <h2 className={`${styles["rowdies-light"]} text-center py-5`}>
         <span className={`${styles["blue-text"]} text-center`}>Why we are </span>
         better than others?
       </h2>
       <p className={`${styles["saira-txt"]} text-center`}>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.....
+        Dive into a unique learning experience with our expert-curated courses. Gain practical skills, connect with a supportive community, and unlock endless opportunities. Join us now and discover the difference!
       </p>
+      {/* Row to display cards containing information */}
       <Row className="justify-content-center py-5">
-        {cardData.map((index) => (
-          <Col  xs={12} md={4} className="mb-4">
-            <Card className={`${styles["hover-effect"]} text-center`}>
+        {/* Mapping through cardData to render individual cards */}
+        {cardData.map((index, idx) => (
+          <Col key={idx} xs={12} md={4} className="mb-4">
+            {/* Card component with hover effect */}
+            <Card className={`${styles["hover-effect"]} text-center`} style={{ height: "100%" }}>
+              {/* Card body containing image, title, and text */}
               <Card.Body>
-                <img src={index["url"]} alt={``} className="mb-3" />
-                {/* Assuming img1, img2, etc. are the correct variables containing image URLs */}
-                <Card.Title>{index["heading"]} </Card.Title>
-                <Card.Text>
-                  {index["text"]}
-                </Card.Text>
+               
+                <img src={index.url} alt={``} className="mb-3" />
+                
+                <Card.Title>{index.heading}</Card.Title>
+             
+                <Card.Text>{index.text}</Card.Text>
               </Card.Body>
             </Card>
           </Col>
@@ -83,5 +45,3 @@ const CompetitionPitch: React.FC = () => {
 };
 
 export default CompetitionPitch;
-
-

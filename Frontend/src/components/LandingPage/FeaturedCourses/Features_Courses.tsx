@@ -8,31 +8,29 @@ import Styles from "./FeaturesCourses.module.css";
 import ChatBot from "../../ChatBot/ChatBot";
 import { useAppSelector } from "../../../redux/hooks";
 import { getAllCoursesAPI } from "../../../constant";
+import {Course} from "../../../constant"
 
+// Define the Course interface
 
-interface Course {
-  _id: string;
-  title: string;
-  description: string;
-  image_url: string;
-}
 
 function FeaturedCourses() {
   const [courses, setCourses] = useState<Course[]>([]);
   const navigate: NavigateFunction = useNavigate();
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
-
   const [chatbotActive, setChatbotActive] = useState(false);
+
+
   const toggleChatbot = () => {
     setChatbotActive((prevChatbotActive) => !prevChatbotActive);
   };
 
+  
   useEffect(() => {
     const fetchResults = async () => {
       try {
         const response = await axios.post(getAllCoursesAPI);
+        // Slice the response to get only the first 6 courses
         setCourses((response?.data).slice(0, 6));
-        
         console.log(response?.data);
       } catch (error) {
         console.error("Error fetching courses", error);
@@ -44,7 +42,8 @@ function FeaturedCourses() {
 
   return (
     <Container fluid className="text-center" 
-    style={{  backgroundColor: "#D9ECFF",paddingBottom: "50px",paddingTop: "50px" }}>
+    style={{  backgroundColor: "#D9ECFF",paddingBottom: "50px",paddingTop: "50px" ,overflowX:"hidden"}}>
+      {/* Display a spinner while courses are being loaded */}
       {courses.length === 0 ? (
         <div className="d-flex justify-content-center align-items-center pt-5">
           <Spinner animation="grow" variant="primary" />
@@ -53,15 +52,17 @@ function FeaturedCourses() {
         </div>
       ) : (
         <>
+          {/* Display heading and description */}
           <h2 className={`${Styles["rowdies-light"]} `}>
             Featured&nbsp;  
             <span className={`${Styles["blue-text"]} `}>
               Courses
-              </span>
-            </h2>
+            </span>
+          </h2>
           <p className={`${Styles["saira-txt"]} `}>
-            lorem ipsum bing bong ting
-            </p>
+            Unlock Your Potential with Our Courses!
+          </p>
+          {/* Display course cards */}
           <Row xs={1} md={2} lg={3} className="my-5">
             {courses.map((course: Course) => (
               <Col
@@ -82,15 +83,18 @@ function FeaturedCourses() {
               </Col>
             ))}
           </Row>
+          {/* Display the chatbot if the user is logged in */}
           {_id !== null ? (
             <ChatBot
               toggleChatbot={toggleChatbot}
               chatbotActive={chatbotActive}
             />
           ) : null}
+          {/* Button to explore more courses */}
           <Button className={`${Styles["button"]} mt-4 text-center mb-2 ${Styles["saira-txt"]}`}
           onClick={()=>{navigate("/explore-courses")}}>
-            Explore Courses</Button>
+            Explore Courses
+          </Button>
         </>
       )}
     </Container>
@@ -98,5 +102,3 @@ function FeaturedCourses() {
 }
 
 export default FeaturedCourses;
-
-
