@@ -29,6 +29,7 @@ function QuizPage() {
   const [incorrectConcepts, setIncorrectConcepts] = useState<string[]>([]); // concepts of incorrect questions
   const [rating, setRating] = useState(2); // Course Rating State, by default 2 if user does not rate (False Advertising)
   const [submitted, setSubmitted] = useState(false); // submittion state
+  const [emtpyQuiz,setEmptyQuiz] = useState(false);
 
 
   //Handle Change in Rating
@@ -101,6 +102,14 @@ function QuizPage() {
         .then((response) => {
           // Set Questions array
           setQuestions(response?.data);
+          if(response.data.length === 0)
+          {
+            setEmptyQuiz(true);
+            setTimeout(() => {
+              navigate(`/course-content?id=${id}`); // Redirect to other page after 5 seconds
+            }, 3000);
+
+          }
           // Set Correct answers array
           setCorrectAnswers(
             response?.data.map(
@@ -214,7 +223,15 @@ function QuizPage() {
       {submitted ? (
         <ChatBot toggleChatbot={toggleChatbot} chatbotActive={chatbotActive} />
       ) : null}
-      <h1 className="text-center" style={{ textDecoration: "underline" }}>
+      {emtpyQuiz ? (
+        <>
+        <h1>This course does not have a quiz yet</h1>
+        <h1>Please Come back Later :(</h1>
+        <h1>You will be redirected shortly</h1>
+        </>
+      ):(
+      <>
+        <h1 className="text-center" style={{ textDecoration: "underline" }}>
         UI/UX Quiz
       </h1>
       <h4 className="text-center">Your Time has Begun</h4>
@@ -320,6 +337,8 @@ function QuizPage() {
         </Modal.Footer>
         {/* Need to add back to dashboard navigate along with enrollment point updation */}
       </Modal>
+      </>)}
+      
     </Container>
   );
 }
