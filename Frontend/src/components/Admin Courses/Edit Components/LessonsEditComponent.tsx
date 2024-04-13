@@ -21,6 +21,7 @@ const LessonsEditComponent: React.FC<LessonsEditProps> = ({ courseId }) => {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
+    setIsSaving(true);
     axios.get(`${getCourseAllInfoAPI}?courseId=${courseId}`)
       .then(response => {
         setLessons(response.data.lessons);
@@ -28,7 +29,8 @@ const LessonsEditComponent: React.FC<LessonsEditProps> = ({ courseId }) => {
       })
       .catch(error => {
         console.error("Error fetching lessons", error);
-      });
+      })
+      .finally(() => setIsSaving(false));
   }, [courseId]);
 
   const validationSchema = Yup.object().shape({

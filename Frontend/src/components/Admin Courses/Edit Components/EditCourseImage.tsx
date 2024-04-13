@@ -12,12 +12,14 @@ function EditCourseImage({ courseId }: Props) {
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   useEffect(() => {
+    setIsUploading(true);
     axios.get(`${getCourseAllInfoAPI}?courseId=${courseId}`)
       .then(response => {
         const { imageUrl } = response.data;
         setCourseImage(imageUrl);
       })
-      .catch(error => console.error("Failed to fetch course", error));
+      .catch(error => console.error("Failed to fetch course", error))
+      .finally(() => setIsUploading(false));
   }, [courseId]);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {

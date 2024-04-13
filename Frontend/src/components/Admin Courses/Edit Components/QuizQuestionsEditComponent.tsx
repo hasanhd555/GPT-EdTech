@@ -25,12 +25,14 @@ const QuizQuestionsEditComponent: React.FC<Props> = ({ courseId }) => {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
+    setIsSaving(true);
     axios.get(`${getCourseAllInfoAPI}?courseId=${courseId}`)
       .then(response => {
         setQuestions(response.data.questions);
         setEditableQuestions(response.data.questions);
       })
-      .catch(error => console.error("Error fetching questions", error));
+      .catch(error => console.error("Error fetching questions", error))
+      .finally(() => setIsSaving(false));
   }, [courseId]);
 
   const questionSchema = Yup.object({

@@ -34,13 +34,15 @@ function EditCourseDetails({ courseId }: CourseDetailsProps) {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    setSaving(true);
     axios
       .get(`${getCourseAllInfoAPI}?courseId=${courseId}`)
       .then((response) => {
         const { course, lessons, questions, imageUrl } = response.data;
         setCourse(course);
       })
-      .catch((error) => console.error("Failed to fetch course", error));
+      .catch((error) => console.error("Failed to fetch course", error))
+      .finally(() => setSaving(false));
   }, [courseId]);
 
   const handleSaveChanges = (values: Course, actions: any) => {
