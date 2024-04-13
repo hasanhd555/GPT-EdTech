@@ -108,7 +108,7 @@ function QuizPage() {
               (question: question_type) => question?.correct_answer
             )
           );
-          setSelectedOptions(Array(response?.data.length).fill(-1)); // Initialize selectedOptions array
+          setSelectedOptions(Array(response?.data.length).fill(-1)); // Initialize selectedOptions array with -1 for unattempted options
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -170,6 +170,8 @@ function QuizPage() {
     setSubmitted(true);
   };
   const [chatbotActive, setChatbotActive] = useState(false);
+
+  // chatbot display state
   const toggleChatbot = () => {
     setChatbotActive((prevChatbotActive) => !prevChatbotActive);
   };
