@@ -66,6 +66,38 @@ export interface SignUpData {
   gender?: string;
 }
 
+export interface Logo {
+  url: string;
+}
+
+export interface Course {
+  _id: string;
+  title: string;
+  description: string;
+  image_url: string;
+}
+
+export interface carddata{
+  url: string;
+  heading: string;
+  text: string;
+}
+
+export interface ColumnData {
+  logo: string;
+  title: string;
+  description: string;
+}
+
+
+export interface TestimonialData {
+  id: number;
+  name: string;
+  image: string;
+  text: string;
+}
+
+
 export const getAllCoursesAPI: string = "http://localhost:5001/api/course";
 export const getEditableCoursesAPI: string = "http://localhost:5001/api/course/editable";
 export const getCourseAllInfoAPI: string = "http://localhost:5001/api/course/get-all-info";

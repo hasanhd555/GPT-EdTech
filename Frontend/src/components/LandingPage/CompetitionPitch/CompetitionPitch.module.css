@@ -14,11 +14,11 @@
   }
 
   .blue-text {
-    color: #525FE1; /* Example color (red) */
+    color: #525FE1; 
   }
 
   .hover-effect:hover {
     /* Define your hover effect styles here */
     transition: transform 0.2s;
-    transform: scale(1.1); /* Example: move the element up by 5px on hover */
+    transform: scale(1.1); 
   }

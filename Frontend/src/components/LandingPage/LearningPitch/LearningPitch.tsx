@@ -1,8 +1,10 @@
 import { Row, Col } from "react-bootstrap";
 import styles from "./LearningPitch.module.css";
-import { logo1, logo2, logo3 } from "./LogoUrls";
+import columnsData from "./LearningData";
 
 const LearningPitch: React.FC = () => {
+  
+
   return (
     <div className={`${styles["custom-purple-blue-gradient"]} text-center p-4`}>
       <h2 className={`${styles["rowdies-light"]} text-white mt-4`}>
@@ -10,40 +12,26 @@ const LearningPitch: React.FC = () => {
         courses?
       </h2>
       <p className={`${styles["saira-txt"]} text-white`}>
-      Explore Boundless Learning Opportunities 
+        Explore Boundless Learning Opportunities 
       </p>
 
       <Row className="mt-4 text-white pt-4 pb-4">
-        <Col className={`text-center  ${styles["border-right"]} py-4 px-4 pd-4`} xs={4}>
-          <img src={logo1} alt="Logo 1" className="mb-3" />
-          <h3 className={`${styles["rowdies-light"]} text-white mt-4`}>
-            01. Learn
-          </h3>
-          <p className={`${styles["saira-txt"]} text-white`}>
-          Begin your educational journey and expand your knowledge with our diverse learning opportunities
-          </p>
-        </Col>
-        <Col className={`text-center  ${styles["border-right"]} py-4 px-4 pd-4`} xs={4}>
-          <img src={logo2} alt="Logo 2" className="mb-3" />
-          <h3 className={`${styles["rowdies-light"]} text-white mt-4`}>
-            02. Graduate
-          </h3>
-          <p className={`${styles["saira-txt"]} text-white`}>
-          Achieve your academic goals and advance to the next level with our comprehensive graduation programs
-          </p>
-        </Col>
-        <Col className={`text-center  py-4 px-4 pd-4`} xs={4}>
-          <img src={logo3} alt="Logo 3" className="mb-3" />
-          <h3 className={`${styles["rowdies-light"]} text-white mt-4`}>
-            03. Work
-          </h3>
-          <p className={`${styles["saira-txt"]} text-white`}>
-          Unlock career opportunities and practical skills through our specialized professional development courses
-          </p>
-        </Col>
+        {/* Map over the columnsData array and render each column dynamically */}
+        {columnsData.map((column, index) => (
+          <Col key={index} className={`text-center ${index !== columnsData.length - 1 ? styles["border-right"] : ""} py-4 px-4 pd-4`} xs={4}>
+            <img src={column.logo} alt={`Logo ${index + 1}`} className="mb-3" />
+            <h3 className={`${styles["rowdies-light"]} text-white mt-4`}>
+              {column.title}
+            </h3>
+            <p className={`${styles["saira-txt"]} text-white`}>
+              {column.description}
+            </p>
+          </Col>
+        ))}
       </Row>
     </div>
   );
 };
 
 export default LearningPitch;
+

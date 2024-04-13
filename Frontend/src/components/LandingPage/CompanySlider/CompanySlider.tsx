@@ -1,21 +1,15 @@
-import { Container } from "react-bootstrap";
-import {
-  cisco,
-  facebook,
-  google,
-  spotify,
-  amazon,
-  microsoft,
-  visa,
-  netflix,
-  mask,
-} from "./ImgURL";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import styles from "./CompanySlider.module.css";
-import Slider from "react-slick";
+
+import { Container } from "react-bootstrap"; 
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css"; 
+import styles from "./CompanySlider.module.css"; 
+import Slider from "react-slick"; 
+import { Logo } from "../../../constant"; 
+import { logos, mask } from "./ImgURL"; 
+
 
 const CompanySlider: React.FC = () => {
+  
   const settings = {
     dots: false,
     infinite: true,
@@ -28,55 +22,34 @@ const CompanySlider: React.FC = () => {
     cssEase: "linear",
   };
 
+  
   return (
     <Container
-  fluid
-  className={`${styles["bg_grad"]} `}
-  style={{
-    backgroundImage: `linear-gradient(to bottom, rgba(8, 79, 199, 1) 0%, rgba(8, 79, 199, 0.2) 100%), url(${mask})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  }}
->
-
+      fluid
+      className={`${styles["bg_grad"]} `}
+      style={{
+        
+        backgroundImage: `linear-gradient(to bottom, rgba(8, 79, 199, 1) 0%, rgba(8, 79, 199, 0.2) 100%), url(${mask})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Slider container */}
       <div className="slider-container">
         <Slider {...settings}>
-          <div className={`${styles["img_container"]} `}>
-            <img src={amazon} alt="" className={`${styles["img_normal"]} `} />
-          </div>
-          <div className={`${styles["img_container"]} `}>
-            <img src={cisco} alt="" className={`${styles["img_normal"]} `} />
-          </div>
-          <div className={`${styles["img_container"]} `}>
-            <img src={facebook} alt="" className={`${styles["img_normal"]} `} />
-          </div>
-          <div className={`${styles["img_container"]} `}>
-            <img
-              src={spotify}
-              alt=""
-              className={`${styles["img_normal"]} ${styles["white-svg "]}`}
-            />
-          </div>
-          <div className={`${styles["img_container"]} `}>
-            <img src={visa} alt="" className={`${styles["img_normal"]} `} />
-          </div>
-          <div className={`${styles["img_container"]} `}>
-            <img src={netflix} alt="" className={`${styles["img_normal"]} `} />
-          </div>
-          <div className={`${styles["img_container"]} `}>
-            <img src={google} alt="" className={`${styles["img_normal"]} `} />
-          </div>
-          <div className={`${styles["img_container"]} `}>
-            <img
-              src={microsoft}
-              alt=""
-              className={`${styles["img_normal"]} `}
-            />
-          </div>
+          {/* Mapping over logos array to display images */}
+          {logos.map((logo: Logo, index: number) => (
+            <div key={index} className={`${styles["img_container"]} `}>
+              <img src={logo.url} className={`${styles["img_normal"]}`} />
+            </div>
+          ))}
         </Slider>
       </div>
     </Container>
   );
 };
 
+
 export default CompanySlider;
+
+
