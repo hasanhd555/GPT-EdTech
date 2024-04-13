@@ -15,25 +15,28 @@ import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import ChatBot from "../ChatBot/ChatBot";
 
 function QuizPage() {
-  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
-  const [courseID, setCourseID] = useState("");
-  const navigate = useNavigate();
-  const [questions, setQuestions] = useState<question_type[]>([]);
-  const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
-  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [totalPoints, setTotalPoints] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [incorrectCount, setIncorrectCount] = useState(0);
-  const [incorrectIndices, setIncorrectIndices] = useState<number[]>([]);
-  const [incorrectConcepts, setIncorrectConcepts] = useState<string[]>([]);
-  const [rating, setRating] = useState(2);
-  const [submitted, setSubmitted] = useState(false);
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User); // redux user state
+  const [courseID, setCourseID] = useState(""); // Course ID state
+  const navigate = useNavigate();// Navigator Function
+  const [questions, setQuestions] = useState<question_type[]>([]); // Array of Quiz Questions
+  const [correctAnswers, setCorrectAnswers] = useState<number[]>([]); // Array of correct answer options. Where index is the question number
+  const [selectedOptions, setSelectedOptions] = useState<number[]>([]); // Array of use choices for each question
+  const [showModal, setShowModal] = useState(false); // modal display control state
+  const [totalPoints, setTotalPoints] = useState(0); // total points scored by user
+  const [correctCount, setCorrectCount] = useState(0); // total number of correct answers by user
+  const [incorrectCount, setIncorrectCount] = useState(0); // total number of incorrect answers by user
+  const [incorrectIndices, setIncorrectIndices] = useState<number[]>([]); // indices of incorrect answers
+  const [incorrectConcepts, setIncorrectConcepts] = useState<string[]>([]); // concepts of incorrect questions
+  const [rating, setRating] = useState(2); // Course Rating State, by default 2 if user does not rate (False Advertising)
+  const [submitted, setSubmitted] = useState(false); // submittion state
 
+
+  //Handle Change in Rating
   const handleRating = (rate: number) => {
     setRating(rate);
   };
-
+  console.log(selectedOptions);
+  // Handle Quiz Result
   const handleQuizResult = () => {
     axios
       .post(GiveRatingAPI, {
@@ -97,13 +100,15 @@ function QuizPage() {
           course_id: id,
         })
         .then((response) => {
+          // Set Questions array
           setQuestions(response?.data);
+          // Set Correct answers array
           setCorrectAnswers(
             response?.data.map(
               (question: question_type) => question?.correct_answer
             )
           );
-          setSelectedOptions(Array(response?.data.length).fill(0)); // Initialize selectedOptions array
+          setSelectedOptions(Array(response?.data.length).fill(-1)); // Initialize selectedOptions array
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -111,6 +116,7 @@ function QuizPage() {
     }
   }, []);
 
+  // Handle User MCQ option select event
   const handleOptionSelect = (questionIndex: number, optionIndex: number) => {
     setSelectedOptions((prevSelectedOptions) => {
       const updatedOptions = [...prevSelectedOptions];
@@ -119,10 +125,13 @@ function QuizPage() {
     });
   };
 
+  /// Handle User MCQ option select event
   const isOptionSelected = (questionIndex: number, optionIndex: number) => {
     return selectedOptions[questionIndex] === optionIndex + 1;
   };
 
+
+  // Handle Submittion Logic
   const handleSubmit = () => {
     // Calculate statistics
     const totalPointsCalc = questions.length * 10;
@@ -179,7 +188,7 @@ function QuizPage() {
       <div className="d-flex justify-content-center my-5">
         <CountdownCircleTimer
           isPlaying={!submitted}
-          duration={questions?.length * 300}
+          duration={questions?.length * 60}
           colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
           colorsTime={[7, 5, 2, 0]}
           onComplete={handleSubmit}
@@ -226,7 +235,7 @@ function QuizPage() {
       ))}
 
       <div className="d-grid gap-2 my-5 ">
-        <Button variant="primary" size="lg" onClick={handleSubmit}>
+        <Button variant={selectedOptions.includes(-1) ? ("primary disabled"):("primary")} size="lg" onClick={handleSubmit}>
           Submit
         </Button>
       </div>
@@ -241,6 +250,11 @@ function QuizPage() {
           <h4 className="text-center">
             Score: {correctCount * 10}/{totalPoints}
           </h4>
+          <h5>Answer Key:</h5>
+          {correctAnswers.map((question,index)=>(
+            <p key={index}>Question {index+1} = option {question}</p>
+          ))}
+          <h5>You Statistics:</h5>
           <p>Total Correct Answers: {correctCount}</p>
           <p>Total Incorrect Answers: {incorrectCount}</p>
           <p>Incorrect Questions: {incorrectIndices.join(", ") || "None"}</p>

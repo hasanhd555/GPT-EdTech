@@ -1,9 +1,11 @@
 import { Container, Row, Col, Nav } from "react-bootstrap";
 import Styles from "./Navbar.module.css";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../redux/hooks";
 
 function Footer() {
-  const navigate = useNavigate();
+  const navigate = useNavigate();// navigation function
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User); // redux user
   return (
     <footer className={`bg-white text-dark py-5 ${Styles.footer}`}>
       <Container fluid>
@@ -52,16 +54,17 @@ function Footer() {
                   Explore
                 </Nav.Link>
               </li>
-              <li>
+              {/* Only Show summarizer if Logged In user */}
+              {_id ? (<li>
                 <Nav.Link
                   onClick={() => {
-                    navigate("/");
+                    navigate("/summarizer");
                   }}
                   className="text-decoration-none text-dark"
                 >
                   Summarizer
                 </Nav.Link>
-              </li>
+              </li>):(null)}
             </ul>
           </Col>
           <Col md={2}>
@@ -70,17 +73,7 @@ function Footer() {
               <li>
                 <Nav.Link
                   onClick={() => {
-                    navigate("/");
-                  }}
-                  className="text-decoration-none text-dark"
-                >
-                  Contact Us
-                </Nav.Link>
-              </li>
-              <li>
-                <Nav.Link
-                  onClick={() => {
-                    navigate("/");
+                    navigate("/about-us");
                   }}
                   className="text-decoration-none text-dark"
                 >

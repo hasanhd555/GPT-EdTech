@@ -15,20 +15,20 @@ import { useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { clearUserData } from "../../redux/slices/User_Slice";
 import { useDispatch } from "react-redux";
-import Leaderboard from "../LeaderBoard/LeaderBoard";
 
 function NavbarComp() {
-  const dispatch = useDispatch();
-  const navigate: NavigateFunction = useNavigate();
-  const [searchValue, setSearchValue] = useState("");
-  const { isAdmin, email, _id } = useAppSelector((state) => state.User);
+  const dispatch = useDispatch(); // redux dispatch function
+  const navigate: NavigateFunction = useNavigate(); // navigation function
+  const [searchValue, setSearchValue] = useState(""); // State to control search text
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User); // redux user
   const [showTooltip, setShowTooltip] = useState(false); // State to control tooltip visibility
 
-
+  //  Updates the value of the searchValue State when ever a change event occurs
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value); // Update the searchValue
   };
 
+  // Handles Submit behavior, prevents default form behavior to navigate elsewhwere, and then navigates to the required query page
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -41,6 +41,7 @@ function NavbarComp() {
     }
   };
 
+  // Clear Redux Saved User Data if user presses logout button
   const handleClearUserData = () => {
     dispatch(clearUserData());
     navigate("/");
