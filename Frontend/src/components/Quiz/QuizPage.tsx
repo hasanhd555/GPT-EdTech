@@ -35,7 +35,6 @@ function QuizPage() {
   const handleRating = (rate: number) => {
     setRating(rate);
   };
-  console.log(selectedOptions);
   // Handle Quiz Result
   const handleQuizResult = () => {
     axios
@@ -133,41 +132,75 @@ function QuizPage() {
 
   // Handle Submittion Logic
   const handleSubmit = () => {
-    // Calculate statistics
-    const totalPointsCalc = questions.length * 10;
-    const correctCountCalc = selectedOptions.reduce(
-      (acc, selectedOption, index) =>
-        selectedOption === correctAnswers[index] ? acc + 1 : acc,
-      0
-    );
-    const incorrectCountCalc = questions.length - correctCountCalc;
-    const incorrectIndicesCalc = selectedOptions.reduce(
-      (acc: number[], selectedOption, index) => {
-        if (selectedOption !== correctAnswers[index]) {
-          acc.push(index);
-        }
-        return acc;
-      },
-      []
-    );
+    if (selectedOptions.includes(-1)) {
+      const totalPointsCalc = questions.length * 10;
+      const correctCountCalc = 0;
+      const incorrectCountCalc = questions.length;
 
-    // Set statistics
-    setTotalPoints(totalPointsCalc);
-    setCorrectCount(correctCountCalc);
-    setIncorrectCount(incorrectCountCalc);
-    setIncorrectIndices(incorrectIndicesCalc);
+      const incorrectIndicesCalc = selectedOptions.reduce(
+        (acc: number[], selectedOption, index) => {
+          if (selectedOption !== correctAnswers[index]) {
+            acc.push(index);
+          }
+          return acc;
+        },
+        []
+      );
 
-    const incorrectConcepts = incorrectIndicesCalc.map(
-      (index) => questions[index].concept
-    );
-    setIncorrectConcepts(incorrectConcepts);
+      // Set statistics
+      setTotalPoints(totalPointsCalc);
+      setCorrectCount(correctCountCalc);
+      setIncorrectCount(incorrectCountCalc);
+      setIncorrectIndices(incorrectIndicesCalc);
 
-    if (incorrectConcepts) {
-      setIncorrectIndices(incorrectIndicesCalc.map((value) => value + 1));
+      const incorrectConcepts = incorrectIndicesCalc.map(
+        (index) => questions[index].concept
+      );
+      setIncorrectConcepts(incorrectConcepts);
+
+      if (incorrectConcepts) {
+        setIncorrectIndices(incorrectIndicesCalc.map((value) => value + 1));
+      }
+      // Show modal
+      setShowModal(true);
+      setSubmitted(true);
+    } else {
+      // Calculate statistics
+      const totalPointsCalc = questions.length * 10;
+      const correctCountCalc = selectedOptions.reduce(
+        (acc, selectedOption, index) =>
+          selectedOption === correctAnswers[index] ? acc + 1 : acc,
+        0
+      );
+      const incorrectCountCalc = questions.length - correctCountCalc;
+      const incorrectIndicesCalc = selectedOptions.reduce(
+        (acc: number[], selectedOption, index) => {
+          if (selectedOption !== correctAnswers[index]) {
+            acc.push(index);
+          }
+          return acc;
+        },
+        []
+      );
+
+      // Set statistics
+      setTotalPoints(totalPointsCalc);
+      setCorrectCount(correctCountCalc);
+      setIncorrectCount(incorrectCountCalc);
+      setIncorrectIndices(incorrectIndicesCalc);
+
+      const incorrectConcepts = incorrectIndicesCalc.map(
+        (index) => questions[index].concept
+      );
+      setIncorrectConcepts(incorrectConcepts);
+
+      if (incorrectConcepts) {
+        setIncorrectIndices(incorrectIndicesCalc.map((value) => value + 1));
+      }
+      // Show modal
+      setShowModal(true);
+      setSubmitted(true);
     }
-    // Show modal
-    setShowModal(true);
-    setSubmitted(true);
   };
   const [chatbotActive, setChatbotActive] = useState(false);
 
