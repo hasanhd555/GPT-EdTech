@@ -13,7 +13,7 @@ function AboutUs() {
           <div className="row g-4 align-items-center">
             <div className="col-lg-12">
               <div className="text-center">
-                <h1 className="display-3 text-white mb-4">Our Mission</h1>
+                <h2 className="display-3 text-white mb-4">Our <span style={{ color: "#4BE5CA" }}>Mission</span></h2>
                 <p className="text-white fs-4">
                   At IntelliLearn, our mission is to revolutionize education by
                   leveraging cutting-edge technology to empower learners
