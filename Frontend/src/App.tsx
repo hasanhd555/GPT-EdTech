@@ -23,6 +23,8 @@ import AllCourseAnalytics from "./components/Admin Courses/AllCourseAnalytics";
 import CourseAnalytics from "./components/Admin Courses/CourseAnalytics";
 import Summarizer from "./components/Summarizer/Summarizer";
 import AboutUs from "./components/About Us/AboutUs";
+import "./custom.scss";
+
 
 
 function App() {

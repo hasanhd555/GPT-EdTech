@@ -1,0 +1,45 @@
+// custom.scss
+
+// Import Bootstrap SCSS
+@import "~bootstrap/scss/bootstrap";
+
+// Override Bootstrap variables
+$font-family-base: 'Saira', sans-serif; // Replace 'Your Font Family' with your custom font
+
+// Apply custom font styles to Bootstrap headings
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: 'Rowdies', sans-serif !important; // Replace 'Your Heading Font' with the font for headings
+}
+
+// Apply custom font styles to Bootstrap lead paragraphs
+.lead {
+  font-family: 'Saira', sans-serif !important; // Replace 'Your Paragraph Font' with the font for paragraphs
+}
+
+.btn {
+  font-family: 'Saira', sans-serif !important; // Replace 'Your Button Font' with the font for buttons
+}
+
+.card-title {
+  font-family: 'Rowdies', sans-serif !important; // Replace 'Your Card Title Font' with the font for card titles
+}
+
+.card-text {
+  font-family: 'Saira', sans-serif !important; // Replace 'Your Card Text Font' with the font for card text
+}
+
+//form
+
+.form-control {
+  font-family: 'Saira', sans-serif !important; // Replace 'Your Form Font' with the font for form elements
+}
+
+.form-label {
+  font-family: 'Saira', sans-serif !important; // Replace 'Your Form Label Font' with the font for form labels
+}
+
+.nav-link {
+  font-family: 'Saira', sans-serif !important; // Replace 'Your Nav Link Font' with the font for nav links
+}
+
+
