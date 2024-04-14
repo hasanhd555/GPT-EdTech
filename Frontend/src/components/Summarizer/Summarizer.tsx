@@ -10,12 +10,13 @@ import {
 } from "react-bootstrap";
 import OpenAI from "openai"; // Import OpenAI library for API access
 import Spinner from "react-bootstrap/Spinner"; // Spinner component for loading indication
-// import { NavigateFunction, useNavigate } from "react-router-dom";
-// import { useAppSelector } from "../../redux/hooks";
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../redux/hooks";
 
 // Define the Summarizer functional component
 const Summarizer = () => {
-  // const navigate: NavigateFunction = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
+  const { isAdmin, email, _id } = useAppSelector((state) => state.User); // redux user
   // Initialize OpenAI with API key and configuration
   const openai = new OpenAI({
     apiKey: process.env.REACT_APP_OPEN_AI_KEY, // API key from environment variable for security
@@ -37,6 +38,13 @@ const Summarizer = () => {
 
   // Function to update the role mode (summarizer and notes maker)
   const handleRoleChange = (val: String) => setRole(val);
+
+  useEffect(() => {
+    // Error Handling User Not Logged In
+    if (_id == null || isAdmin==true) {
+      navigate("/");
+    }
+})
 
   // Effect hook to update textWordCount when inputText changes
   useEffect(() => {
