@@ -83,13 +83,15 @@ function NavbarComp() {
             >
               About Us
             </Nav.Link>
-            <Nav.Link
+
+            {_id && (<Nav.Link
               onClick={() => {
                 navigate("/summarizer");
               }}
             >
               Summarizer
-            </Nav.Link>
+            </Nav.Link>)}
+
             <Nav.Link
               onClick={() => {
                 navigate("/leaderboard");

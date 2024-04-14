@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik"; // Import Formik components for form management
 import * as yup from "yup"; // Import yup for validation
 import {
   Container,
@@ -12,54 +12,57 @@ import {
   Form as BootstrapForm,
   InputGroup,
 } from "react-bootstrap"; // Import React Bootstrap components
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks/index";
-import { setUserData, clearUserData } from "../../../redux/slices/User_Slice";
-import { NavigateFunction, useNavigate } from "react-router-dom";
-import {handleLogin } from '../Auth_APIs';
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/index"; // Import custom Redux hooks
+import { setUserData, clearUserData } from "../../../redux/slices/User_Slice"; // Import Redux actions
+import { NavigateFunction, useNavigate } from "react-router-dom"; // Import React Router DOM hooks for navigation
+import { handleLogin } from '../Auth_APIs'; // Import login API function
+
 // Define validation schema using yup
 const validationSchema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
   password: yup.string().required("Password is required"),
   role: yup
-  .mixed()
-  .oneOf(['admin', 'student'], "Role is required")
-  .required("Role is required")
+    .mixed()
+    .oneOf(['admin', 'student'], "Role is required")
+    .required("Role is required")
 });
 
+// Define props interface for LoginForm component
 interface LoginFormProps {
   // Define any props you might need here
 }
 
+// Define LoginForm functional component
 const LoginForm: React.FC<LoginFormProps> = (props) => {
-  const [passwordShown, setPasswordShown] = useState(false);
-  const [Role,setRole] =useState("")
-  const [Inval_cred,setInval_cred]=useState(false)
-  const dispatch = useAppDispatch();
-  const navigate: NavigateFunction = useNavigate();
+  // State variables
+  const [passwordShown, setPasswordShown] = useState(false); // State to toggle password visibility
+  const [Role, setRole] = useState(""); // State to manage selected role
+  const [Inval_cred, setInval_cred] = useState(false); // State to manage invalid credentials error
+  const dispatch = useAppDispatch(); // Redux dispatch hook
+  const navigate: NavigateFunction = useNavigate(); // React Router DOM navigation hook
 
+  // Function to toggle password visibility
   const togglePasswordVisibility = () => {
     setPasswordShown((passwordShown: boolean) => !passwordShown);
   };
 
+  // Function to handle role change
   const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedRole = event.target.value;
     setRole(selectedRole);
-    
   };
 
-
- 
+  // Function to handle server error
   const handleServerError = async (response: any, actions: any) => {
-
-    console.log("response",response)
+    console.log("response", response);
     const errorData = await response.json();
     console.error("Login failed:", errorData);
 
-    // You can also handle specific error cases here
+    // Handle specific error cases
     if (response.status === 401) {
       // Unauthorized - Invalid credentials
       console.log("401 error");
-      setInval_cred(true)
+      setInval_cred(true);
     } else {
       console.log("Error");
     }
@@ -68,20 +71,23 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
     actions.setSubmitting(false);
   };
 
+  // Function to handle form submission
   const handleSubmit = async (values: any, actions: any) => {
     try {
       const { email, password } = values;
       const role = Role;
 
-      let loginResponse= await handleLogin(email,password,role)
-  
+      let loginResponse = await handleLogin(email, password, role);
+
       if (loginResponse && loginResponse.ok) {
         const userData = await loginResponse.json();
         const _id = userData["_id"];
         const userEmail = userData["email"];
-        dispatch(setUserData({ isAdmin: role === "admin", email: userEmail, _id: _id }));
+        dispatch(
+          setUserData({ isAdmin: role === "admin", email: userEmail, _id: _id })
+        );
         actions.setSubmitting(false);
-        navigate("/")
+        navigate("/");
         console.log("navigated");
       } else {
         await handleServerError(loginResponse, actions);
@@ -92,13 +98,16 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
       actions.setSubmitting(false);
     }
   };
-  
 
+  // Render the LoginForm component
   return (
     <Container fluid className="mt-5 mb-5 w-100">
-      {Inval_cred && <div className="alert alert-danger text-center" role="alert">
-      Login failed. Invalid Credentials!
-      </div>}
+      {/* Display error message for invalid credentials */}
+      {Inval_cred && (
+        <div className="alert alert-danger text-center" role="alert">
+          Login failed. Invalid Credentials!
+        </div>
+      )}
       <Row>
         <Col md={{ span: 8, offset: 2 }}>
           <Card>
@@ -118,8 +127,11 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
               >
                 {({ isSubmitting }) => (
                   <Form>
+                    {/* Email field */}
                     <div className="mb-3">
-                      <BootstrapForm.Label>Email <span className="text-danger">*</span></BootstrapForm.Label>
+                      <BootstrapForm.Label>
+                        Email <span className="text-danger">*</span>
+                      </BootstrapForm.Label>
                       <Field
                         name="email"
                         type="email"
@@ -133,8 +145,11 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                         className="text-danger"
                       />
                     </div>
+                    {/* Password field */}
                     <div className="mb-3">
-                      <BootstrapForm.Label>Password <span className="text-danger">*</span></BootstrapForm.Label>
+                      <BootstrapForm.Label>
+                        Password <span className="text-danger">*</span>
+                      </BootstrapForm.Label>
                       <InputGroup>
                         <Field
                           name="password"
@@ -156,6 +171,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                         className="text-danger"
                       />
                     </div>
+                    {/* Role selection */}
                     <div
                       role="group"
                       className="mb-3"
@@ -165,8 +181,8 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                         Role <span className="text-danger">*</span>
                       </BootstrapForm.Label>
                       <div className="d-flex">
-                        {" "}
                         <div>
+                          {/* Admin role */}
                           <Field
                             name="role"
                             type="radio"
@@ -174,10 +190,11 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                             as={BootstrapForm.Check}
                             id="admin"
                             label="admin"
-                             onClick={handleRoleChange}
+                            onClick={handleRoleChange}
                           />
                         </div>
                         <div className="mx-3">
+                          {/* Student role */}
                           <Field
                             name="role"
                             type="radio"
@@ -185,7 +202,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                             as={BootstrapForm.Check}
                             id="student"
                             label="student"
-                             onClick={handleRoleChange}
+                            onClick={handleRoleChange}
                           />
                         </div>
                       </div>
@@ -195,6 +212,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                         className="text-danger"
                       />
                     </div>
+                    {/* Submit button */}
                     <div className="d-grid">
                       <Button
                         type="submit"
@@ -207,6 +225,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                   </Form>
                 )}
               </Formik>
+              {/* Sign up link */}
               <div className="mt-3 text-center">
                 Don't have an account? <a href="/signup">Sign Up</a>
               </div>
