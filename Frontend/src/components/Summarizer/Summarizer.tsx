@@ -10,9 +10,12 @@ import {
 } from "react-bootstrap";
 import OpenAI from "openai"; // Import OpenAI library for API access
 import Spinner from "react-bootstrap/Spinner"; // Spinner component for loading indication
+// import { NavigateFunction, useNavigate } from "react-router-dom";
+// import { useAppSelector } from "../../redux/hooks";
 
 // Define the Summarizer functional component
 const Summarizer = () => {
+  // const navigate: NavigateFunction = useNavigate();
   // Initialize OpenAI with API key and configuration
   const openai = new OpenAI({
     apiKey: process.env.REACT_APP_OPEN_AI_KEY, // API key from environment variable for security
