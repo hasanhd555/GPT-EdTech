@@ -20,6 +20,7 @@ function SearchCourse() {
   const [courses, setCourses] = useState<Course[]>([]);
   const navigate: NavigateFunction = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [sorting,setSorting] = useState("");
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -29,6 +30,22 @@ function SearchCourse() {
       setQuery(queryParam);
     }
   }, [location.search]);
+
+  useEffect(() => {
+    if (sorting !== "") {
+      let sortedCourses: Course[] = [];
+      if (sorting === "ascending") {
+        sortedCourses = [...courses].sort((a, b) =>
+          a.title.localeCompare(b.title)
+        );
+      } else if (sorting === "descending") {
+        sortedCourses = [...courses].sort((a, b) =>
+          b.title.localeCompare(a.title)
+        );
+      }
+      setCourses(sortedCourses);
+    }
+  }, [sorting]);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -70,6 +87,15 @@ function SearchCourse() {
           <h2>
             Search Results for:<br></br> {query}
           </h2>
+          <div className="btn-group mt-4">
+            
+            <a className={`btn btn-primary ${sorting == "ascending" ? ("active"):(null)}`} onClick={()=>{setSorting("ascending")}} aria-current="page">
+              Ascending
+            </a>
+            <a className={`btn btn-primary ${sorting == "descending" ? ("active"):(null)}`} onClick={()=>{setSorting("descending")}}>
+              Descending
+            </a>
+          </div>
           <Row xs={1} md={2} lg={3} className="my-5">
             {courses.map((course: Course) => (
               <Col
@@ -77,7 +103,7 @@ function SearchCourse() {
                 className={`my-4 ${Styles.coursecardcontainer}`}
               >
                 <div
-                 style={{ width: "90%",height:'100%' }}
+                  style={{ width: "90%", height: "100%" }}
                   onClick={() => navigate(`/course-overview?id=${course?._id}`)}
                 >
                   <CourseCard
@@ -85,7 +111,6 @@ function SearchCourse() {
                     title={course.title}
                     description={course.description}
                     imageUrl={course.image_url}
-                    
                   />
                 </div>
               </Col>
