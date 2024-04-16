@@ -232,7 +232,7 @@ function QuizPage() {
       ):(
       <>
         <h1 className="text-center" style={{ textDecoration: "underline" }}>
-        UI/UX Quiz
+         Quiz
       </h1>
       <h4 className="text-center">Your Time has Begun</h4>
       <h4 className="text-center">Good Luck</h4>
