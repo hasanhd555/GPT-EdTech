@@ -11,6 +11,7 @@ import * as yup from "yup";
 import { FormikHelpers } from "formik";
 import { v4 as uuidv4 } from "uuid";
 
+// Schema for validating course form data
 const courseSchema = yup.object().shape({
   courseName: yup.string().required("Course Name is required"),
   courseDescription: yup.string().required("Course Description is required"),
@@ -44,6 +45,7 @@ const courseSchema = yup.object().shape({
     .min(1, "At least one quiz question is required"),
 });
 
+// Interfaces for lessons and quiz questions
 interface Lesson {
   id: string;
   title: string;
@@ -76,12 +78,14 @@ const AddCourse: React.FC = () => {
   const { isAdmin, email, _id } = useAppSelector((state) => state.User);
   // Redirect non-admin users to the homepage immediately after component mounts
 
+  // Ensure only admins can access this route
   useEffect(() => {
     if (!isAdmin) {
       navigate("/");
     }
   }, [isAdmin, navigate]);
 
+  // Handles course image upload to Cloudinary
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -108,6 +112,7 @@ const AddCourse: React.FC = () => {
     }
   };
 
+  // Submit handler for course form
   const handleSubmit = async (
     values: FormValues,
     { setSubmitting, setErrors }: FormikHelpers<FormValues>
@@ -115,7 +120,7 @@ const AddCourse: React.FC = () => {
     setIsUploading(true);
 
     try {
-      // Custom validation for lessons
+      // Validations for lessons and quiz questionss
       if (
         values.lessons.length === 0 ||
         values.lessons.every((lesson) => !lesson.title || !lesson.content)
@@ -151,6 +156,7 @@ const AddCourse: React.FC = () => {
         return;
       }
 
+      // Construct course data object to be sent to backend
       const { courseName, courseDescription, lessons, quizQuestions } = values;
       const courseData = {
         adminId: _id,
@@ -194,6 +200,7 @@ const AddCourse: React.FC = () => {
         style={{ width: "70%" }}
         className="mx-auto shadow p-3 border rounded"
       >
+         {/* Formik setup for course creation form */}
         <Formik
           initialValues={{
             courseName: "",
@@ -516,6 +523,7 @@ const AddCourse: React.FC = () => {
             </Form>
           )}
         </Formik>
+        {/* Success toast notification */}
         <Toast
           onClose={() => setShowSuccessToast(false)}
           show={showSuccessToast}
