@@ -58,7 +58,7 @@ function ExploreCourses({ title }: ExploreCoursesProps) {
               >
                 <div
                   onClick={() => navigate(`/course-overview?id=${course?._id}`)}
-                  style={{ width: "90%" }}
+                  style={{ width: "90%" } }
                 >
                   <CourseCard
                     key={course._id}

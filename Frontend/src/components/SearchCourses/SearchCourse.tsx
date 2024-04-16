@@ -77,6 +77,7 @@ function SearchCourse() {
                 className={`my-4 ${Styles.coursecardcontainer}`}
               >
                 <div
+                 style={{ width: "90%",height:'100%' }}
                   onClick={() => navigate(`/course-overview?id=${course?._id}`)}
                 >
                   <CourseCard
@@ -84,6 +85,7 @@ function SearchCourse() {
                     title={course.title}
                     description={course.description}
                     imageUrl={course.image_url}
+                    
                   />
                 </div>
               </Col>
