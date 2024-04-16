@@ -16,6 +16,13 @@ interface CourseCardProps {
 // Receives title, description, and imageUrl as props from its parent component
 const CourseCard: React.FC<CourseCardProps> = ({ title, description, imageUrl,course_id }) => {
     const navigate: NavigateFunction = useNavigate(); // Hook for programmatic navigation
+    const truncateDescription = (text: string, maxLength: number) => {
+      const words = text.split(" ");
+      if (words.length > maxLength) {
+        return words.slice(0, maxLength).join(" ") + "...";
+      }
+      return text;
+    };
   return (
     // React-Bootstrap Card component styled with custom CSS classes and inline styles
     <Card className={`${styles.courseCard} shadow ${styles.cardWidth}`} style={{ height: '100%' }}>
@@ -26,7 +33,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, description, imageUrl,co
         {/* Card.Title displays the course title. Styled to define how the title looks */}
         <Card.Title className={styles.courseHeading}>{title}</Card.Title>
         {/* Card.Text displays the course description and is styled for subheading appearance */}
-        <Card.Text className={styles.courseSubHeading}>{description}</Card.Text>
+        <Card.Text className={styles.courseSubHeading}>{truncateDescription(description, 10)}</Card.Text>
         <div className="d-flex justify-content-around">
     <Button variant="outline-primary" onClick={() => navigate(`/edit-course?id=${course_id}`)}>Edit</Button>
     <Button variant="outline-success" onClick={() => navigate(`/course-analytics?id=${course_id}`)}>View Analytic</Button>
