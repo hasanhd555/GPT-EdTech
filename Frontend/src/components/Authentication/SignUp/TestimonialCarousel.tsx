@@ -53,18 +53,18 @@ const TestimonialCarousel = () => {
     return () => clearInterval(interval);
   }, [isTransitioning]); // Include isTransitioning in the dependency array
 
-  const handlePrevNextClick = (direction: 'prev' | 'next') => {
-    if (isTransitioning) return; // Prevent action if already transitioning
+//   const handlePrevNextClick = (direction: 'prev' | 'next') => {
+//     if (isTransitioning) return; // Prevent action if already transitioning
 
-    setIsTransitioning(true); // Set transitioning state to true
-    setActiveIndex((current) => {
-      if (direction === 'prev') {
-        return current === 0 ? testimonialsData.length - 1 : current - 1;
-      } else { // 'next'
-        return (current + 1) % testimonialsData.length;
-      }
-    });
-};
+//     setIsTransitioning(true); // Set transitioning state to true
+//     setActiveIndex((current) => {
+//       if (direction === 'prev') {
+//         return current === 0 ? testimonialsData.length - 1 : current - 1;
+//       } else { // 'next'
+//         return (current + 1) % testimonialsData.length;
+//       }
+//     });
+// };
 
   // Function to call after a transition ends, setting isTransitioning back to false
   const handleTransitionEnd = () => {
@@ -94,7 +94,7 @@ const TestimonialCarousel = () => {
             </div>
           ))}
         </div>
-        <button
+        {/* <button
           className="carousel-control-prev"
           type="button"
           data-bs-target="#testimonialCarousel"
@@ -115,7 +115,7 @@ const TestimonialCarousel = () => {
         >
           <span className="carousel-control-next-icon" aria-hidden="true"></span>
           <span className="visually-hidden">Next</span>
-        </button>
+        </button> */}
       </div>
     </div>
   );
