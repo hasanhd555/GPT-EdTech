@@ -91,7 +91,7 @@ function FeaturedCourses() {
             />
           ) : null}
           {/* Button to explore more courses */}
-          <Button className={`${Styles["button"]} mt-4 text-center mb-2 ${Styles["saira-txt"]}`}
+          <Button className={`${Styles["button"]} px-md-4 py-md-2 align-self-start ${Styles["saira-txt"]}`}
           onClick={()=>{navigate("/explore-courses")}}>
             Explore Courses
           </Button>

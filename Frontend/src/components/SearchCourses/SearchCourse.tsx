@@ -49,7 +49,7 @@ function SearchCourse() {
   }, [query]);
 
   return (
-    <Container className="text-center mt-5" style={{ minHeight: "50vh" }}>
+    <Container fluid className="text-center " style={{ minHeight: "50vh" ,backgroundColor: "#D9ECFF",paddingTop:"20px"}}>
       {courses.length === 0 ? (
         <>
           {loading ? (
@@ -70,7 +70,7 @@ function SearchCourse() {
           <h2>
             Search Results for:<br></br> {query}
           </h2>
-          <Row xs={1} md={2} lg={3} className="my-5">
+          <Row xs={1} md={2} lg={3} style={{paddingBottom:"40px"}}>
             {courses.map((course: Course) => (
               <Col
                 key={course._id}
