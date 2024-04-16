@@ -84,7 +84,7 @@ function NavbarComp() {
               About Us
             </Nav.Link>
 
-            {_id && (<Nav.Link
+            {(_id && !isAdmin) && (<Nav.Link
               onClick={() => {
                 navigate("/summarizer");
               }}
