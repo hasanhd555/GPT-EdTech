@@ -168,11 +168,11 @@ const Summarizer = () => {
       <Container
         className=""
         fluid
-        style={{ backgroundColor: "#d1d5db", border: "2px solid #d1d5db" }}
+        style={{ backgroundColor: "#4A16BD", border: "2px solid #d1d5db",paddingBottom:"50px"}}
       >
         <div className="d-flex justify-content-center align-items-center">
-          <h1 className="m-4" style={{ textAlign: "center" }}>
-            Content Summarizer
+          <h1 className="m-4 text-white" style={{ textAlign: "center" ,paddingBottom:"10px"}}>
+            Content <span style={{ color: "#4BE5CA" }}>Summarizer</span>
           </h1>
         </div>
         <div className="container mb-4" style={{ backgroundColor: "white" }}>

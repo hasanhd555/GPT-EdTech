@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 } */
+
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Rowdies", sans-serif; /* Replace 'Your Heading Font Name' with the actual font name */
+  /* Add any other styles you want for headings */
+}
+
+p {
+  font-family: "Saira", sans-serif; /* Replace 'Your Paragraph Font Name' with the actual font name */
+  /* Add any other styles you want for paragraphs */
+}
+
+div {
+  font-family: "Saira", sans-serif; 
+}

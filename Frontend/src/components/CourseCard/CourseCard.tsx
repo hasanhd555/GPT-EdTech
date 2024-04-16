@@ -2,6 +2,8 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import styles from "./CourseCard.module.css";
 
+
+
 // Props interface declaration for the CourseCard component
 // Defines the types for props that the component expects
 interface CourseCardProps {

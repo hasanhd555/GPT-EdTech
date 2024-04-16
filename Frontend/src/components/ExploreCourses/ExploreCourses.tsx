@@ -39,7 +39,7 @@ function ExploreCourses({ title }: ExploreCoursesProps) {
   }, []);
 
   return (
-    <Container className="text-center mt-5" style={{ minHeight: "50vh" }}>
+    <Container fluid className={`${Styles.background} text-center`} style={{ backgroundColor: "#D9ECFF",paddingBottom: "50px",paddingTop: "50px" ,overflowX:"hidden"}}>
       {courses.length === 0 ? (
         <div className="d-flex justify-content-center align-items-center pt-5">
           <Spinner animation="grow" variant="primary" />
@@ -49,7 +49,7 @@ function ExploreCourses({ title }: ExploreCoursesProps) {
       ) : (
         <>
         
-          <h2 className="fw-bold">{title}</h2>
+          <h2 >{title}</h2>
           <Row xs={1} md={2} lg={3} className="my-5">
             {courses.map((course: course_type) => (
               <Col

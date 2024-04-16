@@ -51,7 +51,7 @@ function AdminDashboardCourses() {
         </div>
       ) : courses.length > 0 ? (
         <>
-          <h2 className="display-6 text-center fw-bold text-primary">Your Courses</h2>
+          <h2 className="display-6 text-center fw-bold ">Your Courses</h2>
           <Row xs={1} md={2} lg={3} className="my-5">
             {courses.map((course) => (
               <Col key={course._id} className={`my-4 ${Styles.coursecardcontainer} d-flex justify-content-center`}>

@@ -26,8 +26,8 @@ const AdminDashboard = () => {
     <div>
       <div>
         {/* Dashboard heading */}
-        <h2 className="display-5 text-center fw-bold">
-          Welcome to your Dashboard
+        <h2 className="display-5 text-center fw-bold my-5">
+          Admin Dashboard
         </h2>
       </div>
       <div className="d-flex justify-content-center mt-3 mb-3">

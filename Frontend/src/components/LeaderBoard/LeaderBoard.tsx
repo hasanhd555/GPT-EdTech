@@ -46,7 +46,7 @@ const Leaderboard: React.FC = () => {
   };
 
   return (
-    <Container fluid style={{ backgroundColor: "#f7f7f8" }}>
+    <Container fluid style={{ backgroundColor: "#D9ECFF" }}>
       <Row className="pt-5">
         <Col className="text-center">
           <h1>Student</h1>

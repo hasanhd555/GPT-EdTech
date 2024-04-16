@@ -66,7 +66,7 @@ function SearchCourse() {
   }, [query]);
 
   return (
-    <Container className="text-center mt-5" style={{ minHeight: "50vh" }}>
+    <Container fluid className="text-center " style={{ minHeight: "50vh" ,backgroundColor: "#D9ECFF",paddingTop:"20px"}}>
       {courses.length === 0 ? (
         <>
           {loading ? (

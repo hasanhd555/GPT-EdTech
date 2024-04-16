@@ -34,12 +34,14 @@ const UserDashboard = () => {
 
   return (
     <div className={styles.userDashboardPage}>
+      <div className={`${styles["custom-purple-blue-gradient"]} `} style={{paddingBottom:"100px",paddingTop:"30px"}}>
       <div className={styles.heading}>
-        <h2 className={styles.welcome}>Welcome to your Dashboard</h2>
-        <h2 className={styles.userProfile}>User Profile</h2>
+        <h1 className={styles.welcome}>Student <span style={{ color: "#4BE5CA" }}>Dashboard</span></h1>
+        <h2 className={styles.userProfile}><span style={{ color: "#ffffffff" }}>User Profile</span></h2>
       </div>
       <StudentCard studentId={_id} />
-
+      </div>
+      <div style={{backgroundColor: "#D9ECFF",paddingBottom:"100px",paddingTop:"30px"}}>
       <div className={styles.heading}>
         <h2 className={styles.userProfile}>Enrolled Courses</h2>
       </div>
@@ -53,6 +55,7 @@ const UserDashboard = () => {
           </Col>
         ))}
       </Row>
+      </div>
     </div>
   );
 };
