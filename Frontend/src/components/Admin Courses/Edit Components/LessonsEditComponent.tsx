@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage, FieldArray, FormikHelpers } from 'fo
 import { Card, Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import * as Yup from 'yup';
-import { lesson_type } from "../../../constant";
+import { lesson_type } from '../../../constant';
 import { getCourseAllInfoAPI, updateLessonAPI } from "../../../constant";
 
 interface LessonsEditProps {
@@ -24,8 +24,10 @@ const LessonsEditComponent: React.FC<LessonsEditProps> = ({ courseId }) => {
     setIsSaving(true);
     axios.get(`${getCourseAllInfoAPI}?courseId=${courseId}`)
       .then(response => {
-        setLessons(response.data.lessons);
-        setEditableLessons(response.data.lessons);
+        const chapters: lesson_type[] = response.data.lessons;
+        chapters.sort((a,b) => a.lesson_num - b.lesson_num);
+        setLessons(chapters);
+        setEditableLessons(chapters);
       })
       .catch(error => {
         console.error("Error fetching lessons", error);

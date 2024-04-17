@@ -85,7 +85,7 @@ export const createCourse = async (req: Request, res: Response) => {
         lessons.map((lesson: any, index: number) => 
           new Lesson({
             ...lesson,
-            lesson_num: index + 1, // Assign lesson_num starting from 1
+            lesson_num: Number(index) + Number(1), // Assign lesson_num starting from 1
             course_id: savedCourse._id // Now we have the saved course ID to associate
           }).save())
       );
@@ -97,7 +97,7 @@ export const createCourse = async (req: Request, res: Response) => {
         quizQuestions.map((question: any) =>
           new Question({
             question_text: question.question,
-            correct_answer: question.correctOption + 1,
+            correct_answer: Number(question.correctOption) + Number(1),
             options: question.options,
             course_id: savedCourse._id,
             concept: question.concept, // Assuming 'concept' is required; adjust as necessary

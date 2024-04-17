@@ -90,14 +90,14 @@ const createCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const savedCourse = yield course.save();
         // Step 1: Create and store lessons with the course_id
         if (lessons && lessons.length) {
-            const createdLessons = yield Promise.all(lessons.map((lesson, index) => new lesson_1.default(Object.assign(Object.assign({}, lesson), { lesson_num: index + 1, course_id: savedCourse._id // Now we have the saved course ID to associate
+            const createdLessons = yield Promise.all(lessons.map((lesson, index) => new lesson_1.default(Object.assign(Object.assign({}, lesson), { lesson_num: Number(index) + Number(1), course_id: savedCourse._id // Now we have the saved course ID to associate
              })).save()));
         }
         // Step 2: Create and store questions with the course_id
         if (quizQuestions && quizQuestions.length) {
             const createdQuestions = yield Promise.all(quizQuestions.map((question) => new question_1.default({
                 question_text: question.question,
-                correct_answer: question.correctOption + 1,
+                correct_answer: Number(question.correctOption) + Number(1),
                 options: question.options,
                 course_id: savedCourse._id,
                 concept: question.concept, // Assuming 'concept' is required; adjust as necessary

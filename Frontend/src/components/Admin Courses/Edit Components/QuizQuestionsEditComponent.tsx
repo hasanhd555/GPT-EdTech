@@ -37,8 +37,8 @@ const QuizQuestionsEditComponent: React.FC<Props> = ({ courseId }) => {
 
   const questionSchema = Yup.object({
     question_text: Yup.string().required("Question text is required"),
-    options: Yup.array().of(Yup.string().required("Option text is required")).min(2, "At least two options are required"),
-    correct_answer: Yup.number().required("A correct answer is required").min(0, "Invalid answer selected").max(3, "Invalid answer selected"),
+    options: Yup.array().of(Yup.string().required("Option text is required")).min(4, "At least two options are required"),
+    correct_answer: Yup.number().required("A correct answer is required").min(1, "Invalid answer selected").max(4, "Invalid answer selected"),
     concept: Yup.string().required("Concept is required"),
   });
 
@@ -111,7 +111,7 @@ const QuizQuestionsEditComponent: React.FC<Props> = ({ courseId }) => {
                       </span>
                       <span className="text-primary  fw-bold">
                         Option
-                        {question.correct_answer + 1}
+                        {question.correct_answer}
                       </span>
                     </Card.Text>
                     <hr />
@@ -183,7 +183,7 @@ const QuizQuestionsEditComponent: React.FC<Props> = ({ courseId }) => {
                       <Field as="select" name={`questions[${index}].correct_answer`} className="form-select mb-2 text-primary">
                         <option value="">Select Correct Answer</option>
                         {question.options.map((_, optionIndex) => (
-                          <option key={optionIndex} value={optionIndex}>
+                          <option key={optionIndex} value={optionIndex+1}>
                             Option {optionIndex + 1}
                           </option>
                         ))}

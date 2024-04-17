@@ -39,6 +39,7 @@ export const updateQuestionById = async (req:any, res:any) => {
   try {
     const { questionId } = req.params;
     const { question_text, correct_answer, options,concept } = req.body;
+    console.log("Update QUestion Body",req.body);
     const updatedQuestion = await question.findByIdAndUpdate(
       questionId,
       { question_text, correct_answer, options,concept },
