@@ -16,6 +16,7 @@ const hoverEffectStyle = {
   cursor: "pointer",
 };
 
+
 const CourseContentPage = () => {
   const [selectedItem, setSelectedItem] = useState<HTMLLIElement | null>(null);
   const [lessons, setLessons] = useState<lesson_type[]>([]);
@@ -49,7 +50,9 @@ const CourseContentPage = () => {
         .post(GetLessonsById, { id })
         .then((response) => {
           // Handle response
-          setLessons(response.data);
+          let chapters: lesson_type[] = response.data;
+          chapters.sort((a, b) => a.lesson_num - b.lesson_num);
+          setLessons(chapters);
           if (response.data) {
             setActiveLesson(response.data[0]);
           }

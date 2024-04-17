@@ -156,7 +156,8 @@ const CourseOverviewPage = () => {
         .then((response) => {
           // Handle response
           //   console.log(response.data);
-          const chapters: Lesson[] = response.data;
+          let chapters: Lesson[] = response.data;
+          chapters.sort((a, b) => a.lesson_num - b.lesson_num);
           //   console.log("Chapters: ", chapters);
           setLessons(chapters);
           //   console.log(lessons);
