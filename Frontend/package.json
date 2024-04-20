@@ -71,6 +71,7 @@
     "@types/react-chartjs-2": "^2.5.7",
     "@types/react-slick": "^0.23.13",
     "@types/uuid": "^9.0.8",
+    "cypress": "^13.8.0",
     "sass": "^1.71.1"
   }
 }
