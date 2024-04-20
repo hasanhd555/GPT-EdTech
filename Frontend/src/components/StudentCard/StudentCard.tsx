@@ -294,7 +294,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                         <Button variant="danger" onClick={handleEdit} className="me-2">
                           Cancel
                         </Button>
-                        <Button variant="success" type="submit">
+                        <Button variant="success" type="submit" data-testid="save-button">
                           Save Changes
                         </Button>
                       </Form>
@@ -304,16 +304,16 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                       <div style={{ display: 'grid', gridTemplateColumns: '100px auto', alignItems: 'center', columnGap: '8px' }}>
                         
                         <div style={{ textAlign: 'left' }}>Name:</div>
-                        <div>{student.gender === "Male" ? "Mr. " : student.gender === "Female" ? "Mrs. " : ""}{student.name}</div>
+                        <div data-testid="shown_name">{student.gender === "Male" ? "Mr. " : student.gender === "Female" ? "Mrs. " : ""}{student.name}</div>
 
 
                         <div style={{ textAlign: 'left' }}>Age:</div>
-                        <div>{student.age}</div>
+                        <div data-testid="shown_age">{student.age}</div>
 
                         <div style={{ textAlign: 'left' }}>Gender:</div>
-                        <div>{student.gender}</div>
+                        <div data-testid="shown_gender">{student.gender}</div>
 <div></div>
-<div style={{ textAlign: 'right' }}><Button variant="primary" onClick={handleEdit} style={{ width: "25%" }}>
+<div style={{ textAlign: 'right' }}><Button variant="primary" onClick={handleEdit} style={{ width: "25%" }} data-testid="edit-button">
                           Edit
                         </Button></div>
                         

@@ -88,6 +88,7 @@ function FeaturedCourses() {
             <ChatBot
               toggleChatbot={toggleChatbot}
               chatbotActive={chatbotActive}
+              
             />
           ) : null}
           {/* Button to explore more courses */}

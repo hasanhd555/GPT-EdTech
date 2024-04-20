@@ -17,6 +17,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ chatbotActive, toggleChatbot }) => {
         right: "1rem",
         zIndex: "2",
       }}
+      data-testid="chatbot"
     >
       <Draggable>
         <div className="rounded-circle text-end">
@@ -132,6 +133,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ chatbotActive, toggleChatbot }) => {
                 text: "Hi I am your AI Tutor, ask me anything!",
               }}
               stream={true}
+              
             />
           )}
 

@@ -234,6 +234,7 @@ const Summarizer = () => {
                   <Form.Control
                     className="h-100"
                     as="textarea"
+                    name="summarizer-input"
                     rows={5}
                     value={inputText}
                     placeholder="Enter or paste your text"
@@ -253,6 +254,7 @@ const Summarizer = () => {
                       : "btn btn-primary me-3"
                   }
                   onClick={summarizeText} // Call summarizeText function on click
+                  data-testid="generate-button"
                 >
                   Generate
                 </button>
@@ -263,7 +265,7 @@ const Summarizer = () => {
               className="w-50 d-flex flex-column align-items-center justify-content-between"
               style={{ minHeight: "60vh" }}
             >
-              <div style={{ minHeight: "40vh" }}>
+              <div style={{ minHeight: "40vh" }} data-testid="summarizer-text">
                 {loading ? ( // Show loading spinners when loading
                   <div className="d-flex justify-content-center align-items-center pt-5">
                     <Spinner animation="grow" variant="primary" />
