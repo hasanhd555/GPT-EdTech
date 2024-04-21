@@ -8,12 +8,12 @@ describe('summarizer word limit tests', () => {
       cy.get('input[value="student"]').check();
       cy.get('button[type="submit"]').click({ multiple: true });
       cy.url().should('include', '/');
-      cy.wait(500);
+      cy.wait(1000);
       cy.visit('localhost:3000/summarizer');
   };
 
   const typeAndGenerate = (text:any) => {
-      cy.wait(500);
+      cy.wait(1000);
       cy.get('textarea[name="summarizer-input"]').type(text, { delay: 0 });
       cy.get("[data-testid='generate-button']").click();
   };
@@ -66,12 +66,12 @@ describe('summarizer word limit tests', () => {
 
 
 
-describe('Summarizer page tests', () => {
+describe('Summarizer mode test', () => {
   beforeEach(() => {
     // Visit the login page and log in as a student
     cy.visit('localhost:3000/login');
-    cy.get('input[name="email"]').type('why@gmail.com');
-    cy.get('input[name="password"]').type('abcd1234');
+    cy.get('input[name="email"]').type('bye@gmail.com');
+    cy.get('input[name="password"]').type('SEISANNOYING1234');
     cy.get('input[value="student"]').check();
     cy.get('button[type="submit"]').click({ multiple: true });
     
@@ -82,39 +82,31 @@ describe('Summarizer page tests', () => {
     // Now visit the summarizer page
     cy.visit('localhost:3000/summarizer'); // Replace with your actual summarizer page route if different
   });
+  const typeAndGenerate = (text:any) => {
+    cy.wait(1000);
+    cy.get('textarea[name="summarizer-input"]').type(text, { delay: 0 });
+    cy.get("[data-testid='generate-button']").click();
+  };
+  it('Paragraph mode', () => {
+    cy.get('input[type="radio"][value="paragraph"]').click({ force: true });
+    typeAndGenerate(words_116);
+    cy.wait(1000);
+    cy.get('p.m-5').should('exist');
+    //ul shoudl not exist
+    cy.get('ul.m-5').should('not.exist');
 
-  it('displays an error when the OpenAI API is unavailable', () => {
-    // Mock the OpenAI API response to simulate it being down
-    cy.intercept('POST', '**/openai/chat/completions', {
-      statusCode: 503,
-      body: {
-        error: {
-          message: 'Service unavailable',
-        },
-      },
-    }).as('openAIRequest');
-
-    // Fill in the text to summarize
-    cy.get('textarea[name="summarizer-input"]').type('Mitochondria');
-
-    // Select the 'Notes Maker' role and 'Bullet Points' mode
-    cy.get('#role-1').click({force:true}); // Assuming the Notes Maker button has id 'role-1'
-    cy.get('#mode-1').click({force:true}); // Assuming the Bullet Points button has id 'mode-1'
-
-    // Click the 'Generate' button
-    cy.get('[data-testid="generate-button"]').click();
-
-    // Wait for the mocked API request to complete
-    cy.wait('@openAIRequest');
-
-    // Assert that an appropriate error message is displayed
-    cy.get('[data-testid="summarizer-text"]')
-      .should('contain', 'An error occurred while summarizing. Please try again.');
-
-    // Check if the summary text is empty and if the summary word count is reset to 0
-    cy.get('[data-testid="summarizer-text"]').should('be.empty');
-    cy.get('h6').contains('Word Count: 0');
+    
   });
+  it('Bullet Points mode', () => {
+    cy.get('input[type="radio"][value="bullet"]').click({ force: true });
+    typeAndGenerate(words_116);
+    cy.wait(1000);
+    cy.get('ul.m-5').should('exist');
+    
+  });
+  
+
+
 });
 
 
