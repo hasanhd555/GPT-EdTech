@@ -1,4 +1,4 @@
-describe('Student Dashboard Testcase 11 - Access Without Login', () => {
+describe('Student Dashboard Testcase 11 - Access Student Dashboard Without Login', () => {
   it('should redirect to the landing page if not logged in', () => {
     cy.visit('localhost:3000/dash-student');
     cy.url().should('eq', 'http://localhost:3000/');
@@ -96,7 +96,7 @@ describe('Student Dashboard Testcase 12 - Profile Edit and Save General Case', (
 });
 
 
-describe('Student Dashboard Testcase 14 - Profile Edit and Save Name Null Case', () => {
+describe('Student Dashboard Testcase 13 - Profile Edit and Save Name Null Case', () => {
   beforeEach(() => {
     // Visit the login page and log in as a student
     cy.visit('localhost:3000/login');
@@ -122,7 +122,7 @@ describe('Student Dashboard Testcase 14 - Profile Edit and Save Name Null Case',
 });
 
 
-describe('Student Dashboard Testcase 15 - Enrolled Courses Display', () => {
+describe('Student Dashboard Testcase 14 - Enrolled Courses Display', () => {
   beforeEach(() => {
     // Visit the login page and log in as a student
     cy.visit('localhost:3000/login');
@@ -144,7 +144,7 @@ describe('Student Dashboard Testcase 15 - Enrolled Courses Display', () => {
   });
 });
 
-describe('Student Dashboard Testcase 16 - No Courses Display', () => {
+describe('Student Dashboard Testcase 15 - No Courses Display', () => {
   beforeEach(() => {
     // Visit the login page and log in as a student
     cy.visit('localhost:3000/login');
