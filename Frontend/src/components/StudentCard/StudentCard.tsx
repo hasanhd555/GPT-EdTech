@@ -291,7 +291,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ studentId }) => {
                             </Form.Control>
                           </Col>
                         </Form.Group>
-                        <Button variant="danger" onClick={handleEdit} className="me-2">
+                        <Button variant="danger" onClick={handleEdit} className="me-2" data-testid="cancel-button">
                           Cancel
                         </Button>
                         <Button variant="success" type="submit" data-testid="save-button">
