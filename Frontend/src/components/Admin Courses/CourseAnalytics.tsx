@@ -165,7 +165,7 @@ function CourseAnalytics() {
         </>
       ) : (
         
-        <Card className="text-center">
+        <Card className="text-center" data-testid="no-enrollments-message">
           <Card.Body>
             <Card.Text>
               No data available for this course. No enrollments.

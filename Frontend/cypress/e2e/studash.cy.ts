@@ -6,26 +6,17 @@ describe('Student Dashboard Testcase 11 - Access Student Dashboard Without Login
 });
 
 describe('Student Dashboard Testcase 12 - Profile Edit and Save General Case', () => {
-
-  
-
   beforeEach(() => {
-    // Visit the login page and log in as a student
     cy.visit('localhost:3000/login');
     cy.get('input[name="email"]').type('bye@gmail.com');
     cy.get('input[name="password"]').type('SEISANNOYING1234');
     cy.get('input[value="student"]').check();
     cy.get('button[type="submit"]').click({ multiple: true });
-    
-    // Verify that the user is redirected to the home page after logging in
     cy.url().should('include', '/');
     cy.wait(500);
-
-    // Now visit the summarizer page
-    cy.visit('localhost:3000/dash-student'); // Replace with your actual summarizer page route if different
+    cy.visit('localhost:3000/dash-student');
   });
   it('all three changed', () => {
-    
     cy.get("[data-testid='edit-button']").click();
     cy.get('input[name="name"]').clear()
     cy.get('input[name="age"]').clear()
@@ -36,7 +27,6 @@ describe('Student Dashboard Testcase 12 - Profile Edit and Save General Case', (
     cy.get("[data-testid='shown_name']").should('contain', 'Mrs. Zaeem');
     cy.get("[data-testid='shown_age']").should('contain', '21');
     cy.get("[data-testid='shown_gender']").should('contain', 'Female');
-
   });
 
   it('name changed', () => {
@@ -45,7 +35,6 @@ describe('Student Dashboard Testcase 12 - Profile Edit and Save General Case', (
     cy.get('input[name="name"]').type('Ali');
     cy.get("[data-testid='save-button']").click();
     cy.get("[data-testid='shown_name']").should('contain', 'Mrs. Ali');
-  
   });
 
   it("name set to number error",()=>{
@@ -53,13 +42,8 @@ describe('Student Dashboard Testcase 12 - Profile Edit and Save General Case', (
     cy.get('input[name="name"]').clear()
     cy.get('input[name="name"]').type('100');
     cy.get("[data-testid='save-button']").click();
-    cy.on('window:alert', (message) => {
-      expect(message).to.equal("Name cannot be only numbers.");
-    });
-    //press cancel button
+    cy.on('window:alert', (message) => { expect(message).to.equal("Name cannot be only numbers."); });
     cy.get("[data-testid='cancel-button']").click();
-    
-
   });
 
   it('age changed', () => {
@@ -88,29 +72,22 @@ describe('Student Dashboard Testcase 12 - Profile Edit and Save General Case', (
     cy.get("[data-testid='shown_name']").should('contain', 'Musa');
     cy.get("[data-testid='shown_age']").should('contain', '17');
     cy.get("[data-testid='shown_gender']").should('contain', 'Other');
-
   });
-   
-    
-
 });
 
 
 describe('Student Dashboard Testcase 13 - Profile Edit and Save Name Null Case', () => {
   beforeEach(() => {
-    // Visit the login page and log in as a student
     cy.visit('localhost:3000/login');
     cy.get('input[name="email"]').type('bye@gmail.com');
     cy.get('input[name="password"]').type('SEISANNOYING1234');
     cy.get('input[value="student"]').check();
     cy.get('button[type="submit"]').click({ multiple: true });
     
-    // Verify that the user is redirected to the home page after logging in
     cy.url().should('include', '/');
     cy.wait(500);
 
-    // Now visit the summarizer page
-    cy.visit('localhost:3000/dash-student'); // Replace with your actual summarizer page route if different
+    cy.visit('localhost:3000/dash-student'); 
   });
 
   it('should not allow empty name', () => {
@@ -124,46 +101,38 @@ describe('Student Dashboard Testcase 13 - Profile Edit and Save Name Null Case',
 
 describe('Student Dashboard Testcase 14 - Enrolled Courses Display', () => {
   beforeEach(() => {
-    // Visit the login page and log in as a student
     cy.visit('localhost:3000/login');
     cy.get('input[name="email"]').type('bye@gmail.com');
     cy.get('input[name="password"]').type('SEISANNOYING1234');
     cy.get('input[value="student"]').check();
     cy.get('button[type="submit"]').click({ multiple: true });
     
-    // Verify that the user is redirected to the home page after logging in
     cy.url().should('include', '/');
     cy.wait(500);
 
-    // Now visit the summarizer page
-    cy.visit('localhost:3000/dash-student'); // Replace with your actual summarizer page route if different
+    cy.visit('localhost:3000/dash-student'); 
   });
 
   it('should display enrolled courses only', () => {
-    cy.get('[data-testid="enrolled-courses"]').children().should('have.length', 1); // Replace with the actual selector and expected count
+    cy.get('[data-testid="enrolled-courses"]').children().should('have.length', 1); 
   });
 });
 
 describe('Student Dashboard Testcase 15 - No Courses Display', () => {
   beforeEach(() => {
-    // Visit the login page and log in as a student
     cy.visit('localhost:3000/login');
     cy.get('input[name="email"]').type('bye2@gmail.com');
     cy.get('input[name="password"]').type('SEISANNOYING1234');
     cy.get('input[value="student"]').check();
     cy.get('button[type="submit"]').click({ multiple: true });
     
-    // Verify that the user is redirected to the home page after logging in
     cy.url().should('include', '/');
     cy.wait(500);
 
-    // Now visit the summarizer page
-    cy.visit('localhost:3000/dash-student'); // Replace with your actual summarizer page route if different
+    cy.visit('localhost:3000/dash-student'); 
   });
 
   it('should show no courses message when no courses are enrolled', () => {
-    // Assuming you would have some message displayed when no courses are enrolled.
-    // You need to replace 'no-courses-message' with the actual test id or selector of that message.
     cy.get('[data-testid="enrolled-courses"]').children().should('have.length', 0);
   });
 });

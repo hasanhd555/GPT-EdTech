@@ -35,7 +35,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, description, imageUrl,co
         {/* Card.Text displays the course description and is styled for subheading appearance */}
         <Card.Text className={styles.courseSubHeading}>{truncateDescription(description, 10)}</Card.Text>
         <div className="d-flex justify-content-around">
-    <Button variant="outline-primary" onClick={() => navigate(`/edit-course?id=${course_id}`)}>Edit</Button>
+    <Button variant="outline-primary" data-testid="edit-course-button" onClick={() => navigate(`/edit-course?id=${course_id}`)}>Edit</Button>
     <Button variant="outline-success" onClick={() => navigate(`/course-analytics?id=${course_id}`)}>View Analytic</Button>
   </div>
       </Card.Body>

@@ -82,30 +82,35 @@ function EditCourseDetails({ courseId }: CourseDetailsProps) {
                 <Field
                   name="title"
                   className="form-control mb-2 text-primary"
+                  data-testid="course-title-input"
                 />
 
                 <ErrorMessage
                   name="title"
                   component="div"
                   className="text-danger"
+                  data-testid="course-title-error"
                 />
                 <h5 className="fw-bold">Course Description</h5>
                 <Field
                   as="textarea"
                   name="description"
                   className="form-control  text-primary"
+                  data-testid="course-content-input"
                 />
 
                 <ErrorMessage
                   name="description"
                   component="div"
                   className="text-danger"
+                  data-testid="course-content-error"
                 />
                 <div className="d-flex justify-content-center mt-3">
                   <Button
                     type="submit"
                     disabled={isSubmitting || saving}
                     className="btn btn-success me-2"
+                    data-testid="save-course-button"
                   >
                     Save Changes
                   </Button>
@@ -132,7 +137,7 @@ function EditCourseDetails({ courseId }: CourseDetailsProps) {
             <hr />
 
             <div className="text-center mt-3 mb-3">
-              <Button variant="primary" onClick={() => setEditMode(true)}>
+              <Button variant="primary" onClick={() => setEditMode(true)} data-testid="edit-course-button">
                 Edit Course Details
               </Button>
             </div>
