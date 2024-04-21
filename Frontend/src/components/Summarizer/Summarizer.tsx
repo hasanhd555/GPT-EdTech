@@ -86,7 +86,7 @@ const Summarizer = () => {
         ],
         model: "gpt-3.5-turbo", // Specify the model to use for summarization
         temperature: 0.1, // Low temperature for deterministic output
-        max_tokens: (wordCount+2)/2, // Maximum token length for the summary
+        max_tokens: Math.round((wordCount+2)/2), // Maximum token length for the summary
         top_p: 1,
         frequency_penalty: 0, // No penalty on frequency to allow repeated information if necessary
         presence_penalty: 0.5, // Slight penalty to encourage diversity in the summary

@@ -277,6 +277,7 @@ function QuizPage() {
                   key={optionIndex}
                   onClick={() => handleOptionSelect(questionIndex, optionIndex)}
                   disabled={submitted}
+                  data-testid={`question${questionIndex}-option${optionIndex}`}
                 >
                   {String.fromCharCode(65 + optionIndex)}) {option}
                 </Button>
@@ -287,19 +288,19 @@ function QuizPage() {
       ))}
 
       <div className="d-grid gap-2 my-5 ">
-        <Button variant={selectedOptions.includes(-1) ? ("primary disabled"):("primary")} size="lg" onClick={handleSubmit}>
+        <Button data-testid="submit-button" variant={selectedOptions.includes(-1) ? ("primary disabled"):("primary")} size="lg" onClick={handleSubmit}>
           Submit
         </Button>
       </div>
 
       {/* Modal for quiz results */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal data-testid="submit-modal" show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Quiz Results</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {/* Display quiz results */}
-          <h4 className="text-center">
+          <h4 data-testid="quiz-score" className="text-center">
             Score: {correctCount * 10}/{totalPoints}
           </h4>
           <h5>Answer Key:</h5>
